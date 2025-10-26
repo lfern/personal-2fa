@@ -1,7 +1,7 @@
 
 /* ====================================
    Personal 2FA - Secure Local 2FA App
-   Generated: 2025-10-26T11:23:10.019Z
+   Generated: 2025-10-26T11:27:39.278Z
    
    Security Features:
    - AES-256-GCM encryption
@@ -139,6 +139,8 @@ const logger = new Logger();
 
 // Export for use in other modules
 
+  // Export to global scope
+  window.logger = logger;
 
 })();
 
@@ -335,6 +337,7 @@ const notificationSystem = new NotificationSystem();
 
   // Export to global scope
   window.NotificationSystem = NotificationSystem;
+  window.notificationSystem = notificationSystem;
 
 })();
 

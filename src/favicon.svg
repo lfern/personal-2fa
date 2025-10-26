@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="30" fill="#2563eb" stroke="#1e40af" stroke-width="2"/>
+  
+  <!-- Lock body -->
+  <rect x="20" y="28" width="24" height="18" rx="2" fill="#ffffff" stroke="#2563eb" stroke-width="1"/>
+  
+  <!-- Lock shackle -->
+  <path d="M 24 28 L 24 20 Q 24 16 28 16 L 36 16 Q 40 16 40 20 L 40 28" 
+        fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+  
+  <!-- Keyhole -->
+  <circle cx="32" cy="34" r="2.5" fill="#2563eb"/>
+  <rect x="30.5" y="36" width="3" height="6" fill="#2563eb"/>
+  
+  <!-- 2FA indicator dots -->
+  <circle cx="18" cy="18" r="2" fill="#10b981"/>
+  <circle cx="46" cy="18" r="2" fill="#10b981"/>
+  
+  <!-- Security badge -->
+  <text x="32" y="56" font-family="Arial, sans-serif" font-size="8" font-weight="bold" text-anchor="middle" fill="#ffffff">2FA</text>
+</svg>

@@ -43,6 +43,17 @@ class SingleFileBuild {
         `<script>\n${js}\n</script>`
       );
       
+      // Replace favicon with inline SVG data URL
+      const faviconSvg = this.getFaviconDataUrl();
+      standalone = standalone.replace(
+        /<link rel="icon"[^>]*href="\.\/favicon\.svg"[^>]*>/g,
+        `<link rel="icon" type="image/svg+xml" href="${faviconSvg}">`
+      );
+      standalone = standalone.replace(
+        /<link rel="icon"[^>]*href="\.\/favicon\.ico"[^>]*>/g,
+        '' // Remove ICO reference for standalone
+      );
+      
       // Add standalone notice
       const standaloneNotice = `
 <!-- 
@@ -133,6 +144,30 @@ class SingleFileBuild {
     console.log('  - Email to yourself (scan for security)');
     console.log('  - Store in cloud (but verify integrity)');
     console.log('  - Share with others (they can verify code)');
+  }
+
+  /**
+   * Get favicon as data URL
+   */
+  getFaviconDataUrl() {
+    try {
+      const faviconPath = path.join(__dirname, 'src', 'favicon.svg');
+      if (fs.existsSync(faviconPath)) {
+        const svgContent = fs.readFileSync(faviconPath, 'utf8');
+        const encodedSvg = Buffer.from(svgContent).toString('base64');
+        return `data:image/svg+xml;base64,${encodedSvg}`;
+      }
+    } catch (error) {
+      console.log('⚠️ Could not read favicon, using default');
+    }
+    
+    // Default simple favicon as data URL
+    const defaultSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+      <circle cx="16" cy="16" r="14" fill="#2563eb"/>
+      <text x="16" y="21" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="white">2FA</text>
+    </svg>`;
+    const encodedDefault = Buffer.from(defaultSvg).toString('base64');
+    return `data:image/svg+xml;base64,${encodedDefault}`;
   }
 }
 

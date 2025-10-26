@@ -27,8 +27,8 @@
   4. Import from Google Authenticator or add manually
   5. Export QR codes for backup (not stored in app)
   
-  File size: 153.56 KB
-  Build date: 2025-10-26T11:23:10.138Z
+  File size: 155.02 KB
+  Build date: 2025-10-26T11:27:39.409Z
   
   ⚠️ IMPORTANT SECURITY NOTES:
   - Only use on HTTPS or localhost for camera access
@@ -41,7 +41,7 @@
 
 <!-- 
   Personal 2FA - Secure Local Authenticator
-  Build: 2025-10-26T11:23:10.014Z
+  Build: 2025-10-26T11:27:39.275Z
   Version: 1.0.0
   
   Security Notice:
@@ -53,10 +53,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Personal 2FA - Secure Local Authenticator</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4NCiAgPCEtLSBCYWNrZ3JvdW5kIGNpcmNsZSAtLT4NCiAgPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzAiIGZpbGw9IiMyNTYzZWIiIHN0cm9rZT0iIzFlNDBhZiIgc3Ryb2tlLXdpZHRoPSIyIi8+DQogIA0KICA8IS0tIExvY2sgYm9keSAtLT4NCiAgPHJlY3QgeD0iMjAiIHk9IjI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMTgiIHJ4PSIyIiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMSIvPg0KICANCiAgPCEtLSBMb2NrIHNoYWNrbGUgLS0+DQogIDxwYXRoIGQ9Ik0gMjQgMjggTCAyNCAyMCBRIDI0IDE2IDI4IDE2IEwgMzYgMTYgUSA0MCAxNiA0MCAyMCBMIDQwIDI4IiANCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+DQogIA0KICA8IS0tIEtleWhvbGUgLS0+DQogIDxjaXJjbGUgY3g9IjMyIiBjeT0iMzQiIHI9IjIuNSIgZmlsbD0iIzI1NjNlYiIvPg0KICA8cmVjdCB4PSIzMC41IiB5PSIzNiIgd2lkdGg9IjMiIGhlaWdodD0iNiIgZmlsbD0iIzI1NjNlYiIvPg0KICANCiAgPCEtLSAyRkEgaW5kaWNhdG9yIGRvdHMgLS0+DQogIDxjaXJjbGUgY3g9IjE4IiBjeT0iMTgiIHI9IjIiIGZpbGw9IiMxMGI5ODEiLz4NCiAgPGNpcmNsZSBjeD0iNDYiIGN5PSIxOCIgcj0iMiIgZmlsbD0iIzEwYjk4MSIvPg0KICANCiAgPCEtLSBTZWN1cml0eSBiYWRnZSAtLT4NCiAgPHRleHQgeD0iMzIiIHk9IjU2IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOCIgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiNmZmZmZmYiPjJGQTwvdGV4dD4NCjwvc3ZnPg==">
+  
+  
   <style>
 /**
  * Personal 2FA - Styles
- * Build: 2025-10-26T11:23:10.030Z
+ * Build: 2025-10-26T11:27:39.293Z
  * Mobile-first responsive design
  */
 
@@ -1336,7 +1341,7 @@ select:focus {
 
 /* ====================================
    Personal 2FA - Secure Local 2FA App
-   Generated: 2025-10-26T11:23:10.019Z
+   Generated: 2025-10-26T11:27:39.278Z
    
    Security Features:
    - AES-256-GCM encryption
@@ -1474,6 +1479,8 @@ const logger = new Logger();
 
 // Export for use in other modules
 
+  // Export to global scope
+  window.logger = logger;
 
 })();
 
@@ -1670,6 +1677,7 @@ const notificationSystem = new NotificationSystem();
 
   // Export to global scope
   window.NotificationSystem = NotificationSystem;
+  window.notificationSystem = notificationSystem;
 
 })();
 

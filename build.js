@@ -46,6 +46,9 @@ class PersonalBuildScript {
       // Copy CSS
       await this.processCSS();
       
+      // Copy favicon
+      await this.copyFavicon();
+      
       console.log('✅ Build completed successfully!');
       this.showBuildInfo();
       
@@ -200,7 +203,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Handle export default statements
     content = content.replace(/export\s+default\s+(\w+);?\s*/g, (match, name) => {
-      // For default exports, we can assign to the module name or just remove
+      // For default exports, add to global exports
+      exportedNames.push(name);
       return ''; // Remove the export default statement
     });
     
@@ -238,6 +242,29 @@ ${content}${globalAssignments}
     
     fs.writeFileSync(path.join(this.distDir, 'app.css'), buildComment + css);
     console.log('✅ CSS processed');
+  }
+
+  /**
+   * Copy favicon files
+   */
+  async copyFavicon() {
+    console.log('🎨 Processing favicon...');
+    
+    const faviconSvg = path.join(this.srcDir, 'favicon.svg');
+    
+    if (fs.existsSync(faviconSvg)) {
+      // Copy SVG favicon
+      fs.copyFileSync(faviconSvg, path.join(this.distDir, 'favicon.svg'));
+      
+      // Generate ICO favicon from SVG (simplified approach)
+      // For now, just copy the SVG content and create a simple ICO reference
+      const svgContent = fs.readFileSync(faviconSvg, 'utf8');
+      fs.writeFileSync(path.join(this.distDir, 'favicon.svg'), svgContent);
+      
+      console.log('✅ Favicon processed (SVG)');
+    } else {
+      console.log('⚠️ No favicon.svg found, skipping favicon generation');
+    }
   }
 
   /**
