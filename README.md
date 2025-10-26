@@ -1,6 +1,6 @@
 # Personal 2FA - Secure Local Authenticator
 
-� **[¡PRUEBA LA APLICACIÓN DIRECTAMENTE AQUÍ!](https://lfern.github.io/personal-2fa/dist/personal-2fa-standalone.html)** 🚀
+🚀 **[¡PRUEBA LA APLICACIÓN DIRECTAMENTE AQUÍ!](https://lfern.github.io/personal-2fa/personal-2fa-standalone.html)** 🚀
 
 �🔒 **Una aplicación 2FA completamente offline y segura** que importa desde Google Authenticator, permite exportar para backup y funciona como generador TOTP independiente.
 
@@ -306,8 +306,8 @@ npm run serve       # Servir build en local
 
 ### **Enlaces de Acceso Directo**
 
-- **🚀 [Aplicación Completa (Standalone)](https://lfern.github.io/personal-2fa/dist/personal-2fa-standalone.html)** - Archivo único con todo incluido
-- **📱 [Aplicación Modular](https://lfern.github.io/personal-2fa/dist/index.html)** - Versión con archivos separados
+- **🚀 [Aplicación Completa (Standalone)](https://lfern.github.io/personal-2fa/personal-2fa-standalone.html)** - Archivo único con todo incluido
+- **📱 [Aplicación Modular](https://lfern.github.io/personal-2fa/index.html)** - Versión con archivos separados
 - **📂 [Repositorio](https://github.com/lfern/personal-2fa)** - Código fuente completo
 
 ### **Cómo Funciona GitHub Pages**
@@ -369,7 +369,7 @@ Si eres fork/colaborador y quieres habilitar GitHub Pages en tu repositorio:
 
 ### **Tu Enlace Personal Será**
 ```
-https://[tu-usuario].github.io/personal-2fa/dist/personal-2fa-standalone.html
+https://[tu-usuario].github.io/personal-2fa/personal-2fa-standalone.html
 ```
 
 ### **Verificar que Funciona**
