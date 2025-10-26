@@ -164,7 +164,10 @@ class Personal2FAApp {
     
     // Manual add form
     this.elements.manualAddForm.addEventListener('submit', (e) => this.handleManualAdd(e));
-    this.elements.cancelManual.addEventListener('click', () => this.hideAllSections());
+    this.elements.cancelManual.addEventListener('click', () => {
+      this.hideAllSections();
+      this.updateActiveButton(null); // Clear active button state
+    });
     
     // Data management
     this.elements.clearAllData.addEventListener('click', () => this.handleClearAllData());
@@ -238,11 +241,40 @@ class Personal2FAApp {
   }
 
   /**
+   * Update active button state
+   */
+  updateActiveButton(activeButton) {
+    // Remove active class from all navigation buttons
+    const navButtons = [
+      this.elements.importBtn,
+      this.elements.exportBtn,
+      this.elements.addManualBtn,
+      this.elements.manageDataBtn
+    ];
+    
+    navButtons.forEach(btn => btn.classList.remove('active'));
+    
+    // Add active class to the current button
+    if (activeButton) {
+      activeButton.classList.add('active');
+    }
+  }
+
+  /**
    * Show import section and hide others
    */
   showImportSection() {
     this.hideAllSections();
+    this.updateActiveButton(this.elements.importBtn);
     this.elements.importSection.classList.remove('hidden');
+    
+    // Scroll to the section
+    setTimeout(() => {
+      this.elements.importSection.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }, 100);
   }
 
   /**
@@ -250,7 +282,16 @@ class Personal2FAApp {
    */
   showExportSection() {
     this.hideAllSections();
+    this.updateActiveButton(this.elements.exportBtn);
     this.elements.exportSection.classList.remove('hidden');
+    
+    // Scroll to the section
+    setTimeout(() => {
+      this.elements.exportSection.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }, 100);
   }
 
   /**
@@ -258,7 +299,16 @@ class Personal2FAApp {
    */
   showManualAddSection() {
     this.hideAllSections();
+    this.updateActiveButton(this.elements.addManualBtn);
     this.elements.manualAddSection.classList.remove('hidden');
+    
+    // Scroll to the section
+    setTimeout(() => {
+      this.elements.manualAddSection.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }, 100);
   }
 
   /**
@@ -267,8 +317,17 @@ class Personal2FAApp {
   showDataManagementSection() {
     logger.log('🗑️ Showing data management section...');
     this.hideAllSections();
+    this.updateActiveButton(this.elements.manageDataBtn);
     this.elements.dataManagementSection.classList.remove('hidden');
     this.initializeLogsToggle();
+    
+    // Scroll to the section with smooth animation
+    setTimeout(() => {
+      this.elements.dataManagementSection.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }, 100); // Small delay to ensure the section is visible before scrolling
   }
 
   /**
@@ -283,6 +342,9 @@ class Personal2FAApp {
     ];
     
     sections.forEach(section => section.classList.add('hidden'));
+    
+    // Clear active states when hiding sections via other means (like cancel buttons)
+    // Note: This will be overridden by updateActiveButton when showing a new section
   }
 
   /**
@@ -408,6 +470,7 @@ class Personal2FAApp {
       // Reset form and hide section
       this.elements.manualAddForm.reset();
       this.hideAllSections();
+      this.updateActiveButton(null); // Clear active button state
       
       // Refresh display
       this.refreshTOTPCodes();

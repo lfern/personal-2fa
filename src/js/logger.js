@@ -5,7 +5,8 @@
 
 class Logger {
   constructor() {
-    // Default to enabled logs, but check localStorage for user preference
+    // Default to disabled logs for end users, but check localStorage for user preference
+    // Developers can enable logs via the UI toggle in Data Management section
     this.logsEnabled = this.getLogPreference();
   }
 
@@ -16,11 +17,11 @@ class Logger {
   getLogPreference() {
     try {
       const saved = localStorage.getItem('personal-2fa-logs-enabled');
-      // Default to true if no preference saved
-      return saved !== null ? JSON.parse(saved) : true;
+      // Default to false if no preference saved (logs disabled for end users)
+      return saved !== null ? JSON.parse(saved) : false;
     } catch (error) {
-      // If localStorage fails, default to true
-      return true;
+      // If localStorage fails, default to false
+      return false;
     }
   }
 
