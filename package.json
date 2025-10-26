@@ -1,0 +1,35 @@
+{
+  "name": "personal-2fa",
+  "version": "1.0.0",
+  "description": "Secure Local 2FA Application - Import from Google Authenticator, Export for backup, Use as TOTP generator",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:custom": "node build.js",
+    "build:single": "node build.js && node build-single.js",
+    "preview": "vite preview",
+    "serve": "npx http-server dist-vite -p 3000",
+    "serve-old": "npx http-server dist -p 3000"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "jsqr": "^1.4.0",
+    "protobufjs": "^7.2.5",
+    "qrcode": "^1.5.3",
+    "qrcode-reader": "^1.0.4"
+  },
+  "keywords": [
+    "2fa",
+    "totp",
+    "authenticator",
+    "security",
+    "offline",
+    "local",
+    "google-authenticator"
+  ],
+  "author": "",
+  "license": "MIT"
+}
