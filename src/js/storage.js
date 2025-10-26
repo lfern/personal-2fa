@@ -93,7 +93,6 @@ export class SecureStorage {
     
     // Derive encryption key from password
     this.encryptionKey = await cryptoManager.deriveKey(password, salt);
-    console.log('🔧 Derived encryption key:', this.encryptionKey, 'Type:', typeof this.encryptionKey);
     
     // Store password verification hash
     const passwordHash = await cryptoManager.hash(password);
@@ -222,8 +221,6 @@ export class SecureStorage {
     if (!this.encryptionKey) {
       throw new Error('Encryption key not available. Please unlock storage first.');
     }
-    
-    console.log('🔧 Using encryption key:', this.encryptionKey, 'Type:', typeof this.encryptionKey, 'Constructor:', this.encryptionKey.constructor.name);
     
     // Fallback to localStorage if IndexedDB is not available
     if (!this.db) {
