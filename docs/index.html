@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- 
+  Personal 2FA - Secure Local Authenticator
+  Build: 2025-10-26T11:13:19.866Z
+  Version: 1.0.0
+  
+  Security Notice:
+  - This app works 100% offline
+  - All data is encrypted locally
+  - No external connections
+  - Code is readable and inspectable
+-->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal 2FA - Secure Local Authenticator</title>
+  <link rel="stylesheet" href="./app.css">
+  <!-- jsQR Library for QR Code Detection -->
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+</head>
+<body>
+  <!-- Security Status Header -->
+  <header class="security-header">
+    <div class="container">
+      <h1>🔒 Personal 2FA</h1>
+      <div class="security-indicators">
+        <span class="indicator" id="crypto-status">🔐 Cifrado: AES-256</span>
+        <span class="indicator" id="storage-status">🏠 Local</span>
+        <span class="indicator" id="network-status">📡 Offline ✅</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Notification System -->
+  <div id="notification-container" class="notification-container"></div>
+
+  <!-- Main App Container -->
+  <main class="app-container">
+    
+    <!-- Loading Screen -->
+    <section id="loading-screen" class="screen active">
+      <div class="loading-card">
+        <div class="loading-spinner"></div>
+        <h2>🔍 Verificando configuración...</h2>
+        <p>Comprobando si ya tienes una contraseña maestra configurada</p>
+      </div>
+    </section>
+    
+    <!-- First Time Setup -->
+    <section id="setup-screen" class="screen">
+      <div class="setup-card">
+        <h2>🛡️ Configuración Inicial de Seguridad</h2>
+        <div class="security-notice">
+          <h3>Esta aplicación es completamente segura:</h3>
+          <ul>
+            ✅ Funciona 100% offline - Sin conexiones a internet<br>
+            ✅ Todos los datos se cifran antes de guardarse<br>
+            ✅ Tus códigos nunca salen de tu dispositivo<br>
+            ✅ Código fuente completamente inspecciónable<br>
+            ✅ Compatible con Google Authenticator
+          </ul>
+        </div>
+        
+        <div class="password-setup">
+          <label for="master-password">Crear contraseña maestra:</label>
+          <input type="password" id="master-password" placeholder="Contraseña segura para cifrar tus datos">
+          <input type="password" id="confirm-password" placeholder="Confirmar contraseña">
+          <button id="setup-complete" class="btn-primary">🔒 Crear Almacén Seguro</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Login Screen -->
+    <section id="login-screen" class="screen">
+      <div class="login-card">
+        <h2>🔓 Desbloquear Personal 2FA</h2>
+        <input type="password" id="login-password" placeholder="Contraseña maestra">
+        <button id="login-btn" class="btn-primary">Desbloquear</button>
+        <div id="login-error" class="error-message"></div>
+      </div>
+    </section>
+
+    <!-- Main App Screen -->
+    <section id="main-screen" class="screen">
+      
+      <!-- Action Buttons -->
+      <div class="action-bar">
+        <button id="import-btn" class="btn-action">📥 Importar de Google Auth</button>
+        <button id="export-btn" class="btn-action">💾 Exportar Backup</button>
+        <button id="add-manual-btn" class="btn-action">➕ Añadir Manual</button>
+        <button id="manage-data-btn" class="btn-secondary">🗑️ Gestionar Datos</button>
+        <button id="lock-btn" class="btn-secondary">🔒 Bloquear</button>
+      </div>
+
+      <!-- Import Section -->
+      <div id="import-section" class="section hidden">
+        <h3>📱 Importar desde Google Authenticator</h3>
+        <div class="import-options">
+          <div class="qr-scanner">
+            <video id="qr-video" autoplay></video>
+            <canvas id="qr-canvas" style="display: none;"></canvas>
+            <button id="start-camera" class="btn-primary">📹 Activar Cámara</button>
+            <button id="stop-camera" class="btn-secondary hidden">⏹️ Detener</button>
+          </div>
+          <div class="scan-status">
+            <div id="scan-result"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export Section -->
+      <div id="export-section" class="section hidden">
+        <h3>💾 Exportar para Backup</h3>
+        <p class="export-notice">
+          ⚠️ <strong>Importante:</strong> Este export es solo para backup. 
+          Los códigos NO se guardarán en esta app, solo se generan para que puedas importarlos en otra aplicación.
+        </p>
+        <div class="export-options">
+          <button id="export-google-format" class="btn-primary">📱 Formato Google Authenticator</button>
+          <button id="export-individual-qr" class="btn-primary">📄 QR Individuales</button>
+          <button id="export-json-backup" class="btn-primary">📋 Backup JSON</button>
+        </div>
+        <div id="export-result" class="export-result"></div>
+      </div>
+
+      <!-- TOTP Codes Display -->
+      <div id="codes-section" class="section">
+        <h3>🔢 Códigos de Autenticación</h3>
+        <div id="totp-list" class="totp-list">
+          <!-- Los códigos TOTP se generarán aquí dinámicamente -->
+        </div>
+        <div id="empty-state" class="empty-state">
+          <p>No hay códigos configurados.</p>
+          <p>Importa desde Google Authenticator o añade manualmente.</p>
+        </div>
+      </div>
+
+      <!-- Data Management Section -->
+      <div id="data-management-section" class="section hidden">
+        <h3>🗑️ Gestión de Datos</h3>
+        <div class="data-management-content">
+          
+          <!-- Developer Options -->
+          <div class="dev-options">
+            <h4>⚙️ Opciones de Desarrollo</h4>
+            <div class="option-item">
+              <label class="toggle-label">
+                <input type="checkbox" id="logs-enabled-toggle">
+                <span class="toggle-slider"></span>
+                <span class="toggle-text">📝 Mostrar logs de depuración</span>
+              </label>
+              <p class="option-description">
+                Activa los mensajes de depuración en la consola del navegador (desactivado por defecto). 
+                Útil para desarrolladores y resolución de problemas. Los errores críticos siempre se muestran.
+              </p>
+            </div>
+          </div>
+
+          <!-- Danger Zone -->
+          <div class="warning-box">
+            <h4>⚠️ Eliminar Todos los Datos</h4>
+            <p class="warning-text">
+              Esta acción eliminará <strong>permanentemente</strong> todos los códigos 2FA y datos almacenados, 
+              <strong>pero mantiene tu contraseña maestra y configuraciones básicas</strong>.
+            </p>
+            <p class="warning-text">
+              <strong>🚨 NO HAY FORMA DE RECUPERAR LOS CÓDIGOS UNA VEZ ELIMINADOS</strong>
+            </p>
+            <button id="clear-all-data" class="btn-danger">🗑️ Eliminar Todos los Datos</button>
+          </div>
+
+          <!-- Factory Reset Zone -->
+          <div class="factory-reset-box">
+            <h4>🔄 Reset Completo de la Aplicación</h4>
+            <p class="factory-reset-text">
+              Esta acción <strong>RESETEA COMPLETAMENTE</strong> la aplicación, eliminando:
+            </p>
+            <ul class="factory-reset-list">
+              <li>🔐 Contraseña maestra configurada</li>
+              <li>🗑️ Todos los códigos 2FA y datos</li>
+              <li>⚙️ Todas las configuraciones y preferencias</li>
+              <li>💾 Todo el historial y caché local</li>
+            </ul>
+            <p class="factory-reset-text">
+              <strong>🚨 LA APLICACIÓN VOLVERÁ AL ESTADO INICIAL COMO SI NUNCA SE HUBIERA USADO</strong>
+            </p>
+            <button id="factory-reset" class="btn-factory-reset">🔄 Reset Completo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manual Add Section -->
+      <div id="manual-add-section" class="section hidden">
+        <h3>➕ Añadir Código Manualmente</h3>
+        <form id="manual-add-form">
+          <input type="text" id="manual-issuer" placeholder="Servicio (ej: Google, GitHub)" required>
+          <input type="text" id="manual-label" placeholder="Cuenta (ej: user@gmail.com)" required>
+          <input type="text" id="manual-secret" placeholder="Código secreto (Base32)" required>
+          <div class="advanced-options">
+            <label>
+              Algoritmo: 
+              <select id="manual-algorithm">
+                <option value="SHA1">SHA1 (estándar)</option>
+                <option value="SHA256">SHA256</option>
+                <option value="SHA512">SHA512</option>
+              </select>
+            </label>
+            <label>
+              Dígitos: 
+              <select id="manual-digits">
+                <option value="6">6 (estándar)</option>
+                <option value="8">8</option>
+              </select>
+            </label>
+            <label>
+              Período: 
+              <input type="number" id="manual-period" value="30" min="15" max="300">s
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">✅ Añadir Código</button>
+            <button type="button" id="cancel-manual" class="btn-secondary">❌ Cancelar</button>
+          </div>
+        </form>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Security verification panel (dev mode) -->
+  <div id="security-panel" class="security-panel">
+    <h4>🔍 Verificación de Seguridad</h4>
+    <div id="security-checks"></div>
+  </div>
+
+  <script src="./personal-2fa.js"></script>
+</body>
+</html>

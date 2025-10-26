@@ -54,15 +54,21 @@ npm run build
 
 # Los archivos estaran en dist/
 # - index.html (archivo principal)
-# - personal-2fa.js (JavaScript legible)
+# - personal-2fa.js (JavaScript legible)  
+# - personal-2fa-standalone.html (archivo único)
 # - *.css (estilos)
 ```
 
-### Opción 3: Archivo Único Portable
+### Opción 3: Build para GitHub Pages
 ```bash
-# TODO: Script para generar un solo HTML con todo incluido
-npm run build:single
+# Generar build y copiar a /docs para GitHub Pages
+npm run build:docs
+
+# Crea /docs/ con mismos archivos que /dist/
+# Listo para configurar GitHub Pages con carpeta /docs
 ```
+
+
 
 ## 🔐 Flujo de Seguridad
 
@@ -290,8 +296,10 @@ export default defineConfig({
 ```bash
 npm run dev         # Servidor desarrollo (localhost:3000)
 npm run build       # Build producción (dist/)
+npm run build:docs  # Build + copiar a /docs para GitHub Pages
 npm run preview     # Vista previa del build
 npm run serve       # Servir build en local
+npm run serve-docs  # Servir /docs en local
 ```
 
 ## 🤝 Contribuir
@@ -364,7 +372,7 @@ Si eres fork/colaborador y quieres habilitar GitHub Pages en tu repositorio:
 2. **Settings** → **Pages** (en el menú lateral)  
 3. **Source**: Deploy from a branch
 4. **Branch**: `main` 
-5. **Folder**: `/ (root)`
+5. **Folder**: `/docs`
 6. **Save** → Esperar 1-2 minutos
 
 ### **Tu Enlace Personal Será**

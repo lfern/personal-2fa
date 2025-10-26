@@ -8,9 +8,11 @@
     "build": "vite build",
     "build:custom": "node build.js",
     "build:single": "node build.js && node build-single.js",
+    "build:docs": "npm run build:single && node copy-to-docs.js",
     "preview": "vite preview",
     "serve": "npx http-server dist-vite -p 3000",
-    "serve-old": "npx http-server dist -p 3000"
+    "serve-old": "npx http-server dist -p 3000",
+    "serve-docs": "npx http-server docs -p 3000"
   },
   "devDependencies": {
     "vite": "^5.0.0"

@@ -1,1 +1,25 @@
+# Dependencies
 node_modules/
+
+# Build outputs (generated automatically)
+dist/
+dist-vite/
+
+# Keep docs/ for GitHub Pages (manually maintained)
+# docs/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
