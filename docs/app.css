@@ -1,6 +1,6 @@
 /**
  * Personal 2FA - Styles
- * Build: 2025-10-26T11:27:39.293Z
+ * Build: 2025-10-26T11:57:24.188Z
  * Mobile-first responsive design
  */
 
@@ -296,6 +296,40 @@ body {
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.language-selector select {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  vertical-align: middle;
+}
+
+.language-selector select:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.language-selector option {
+  background: #2a5298;
+  color: white;
 }
 
 .security-header h1 {

@@ -16,6 +16,7 @@ class PersonalBuildScript {
     this.distDir = path.join(__dirname, 'dist');
     this.jsModules = [
       'js/logger.js',
+      'js/i18n.js',
       'js/notification.js',
       'js/crypto.js',
       'js/storage.js',
@@ -159,6 +160,12 @@ ${content}
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🚀 Personal 2FA starting...');
+  
+  // Make i18n available globally if it exists
+  if (typeof i18n !== 'undefined') {
+    window.i18n = i18n;
+    console.log('🌐 i18n made available globally via build script');
+  }
   
   // App will be initialized by main.js
   if (typeof Personal2FAApp !== 'undefined') {

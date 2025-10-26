@@ -17,11 +17,19 @@
   <!-- Security Status Header -->
   <header class="security-header">
     <div class="container">
-      <h1>🔒 Personal 2FA</h1>
-      <div class="security-indicators">
-        <span class="indicator" id="crypto-status">🔐 Cifrado: AES-256</span>
-        <span class="indicator" id="storage-status">🏠 Local</span>
-        <span class="indicator" id="network-status">📡 Offline ✅</span>
+      <h1 data-i18n="appName">🔒 Personal 2FA</h1>
+      <div class="header-controls">
+        <div class="language-selector">
+          <select id="language-select" title="Language / Idioma">
+            <option value="es">🇪🇸 ES</option>
+            <option value="en">🇺🇸 EN</option>
+          </select>
+        </div>
+        <div class="security-indicators">
+          <span class="indicator" id="crypto-status" data-i18n="encryption">🔐 Cifrado: AES-256</span>
+          <span class="indicator" id="storage-status" data-i18n="storage">🏠 Local</span>
+          <span class="indicator" id="network-status">📡 Offline ✅</span>
+        </div>
       </div>
     </div>
   </header>
@@ -36,31 +44,31 @@
     <section id="loading-screen" class="screen active">
       <div class="loading-card">
         <div class="loading-spinner"></div>
-        <h2>🔍 Verificando configuración...</h2>
-        <p>Comprobando si ya tienes una contraseña maestra configurada</p>
+        <h2 data-i18n="loadingTitle">🔍 Verificando configuración...</h2>
+        <p data-i18n="loadingMessage">Comprobando si ya tienes una contraseña maestra configurada</p>
       </div>
     </section>
     
     <!-- First Time Setup -->
     <section id="setup-screen" class="screen">
       <div class="setup-card">
-        <h2>🛡️ Configuración Inicial de Seguridad</h2>
+        <h2 data-i18n="setupTitle">🛡️ Configuración Inicial de Seguridad</h2>
         <div class="security-notice">
-          <h3>Esta aplicación es completamente segura:</h3>
+          <h3 data-i18n="setupSecurity">Esta aplicación es completamente segura:</h3>
           <ul>
-            ✅ Funciona 100% offline - Sin conexiones a internet<br>
-            ✅ Todos los datos se cifran antes de guardarse<br>
-            ✅ Tus códigos nunca salen de tu dispositivo<br>
-            ✅ Código fuente completamente inspecciónable<br>
-            ✅ Compatible con Google Authenticator
+            <span data-i18n="setupFeatures.offline">✅ Funciona 100% offline - Sin conexiones a internet</span><br>
+            <span data-i18n="setupFeatures.encrypted">✅ Todos los datos se cifran antes de guardarse</span><br>
+            <span data-i18n="setupFeatures.local">✅ Tus códigos nunca salen de tu dispositivo</span><br>
+            <span data-i18n="setupFeatures.inspectable">✅ Código fuente completamente inspecciónable</span><br>
+            <span data-i18n="setupFeatures.compatible">✅ Compatible con Google Authenticator</span>
           </ul>
         </div>
         
         <div class="password-setup">
-          <label for="master-password">Crear contraseña maestra:</label>
-          <input type="password" id="master-password" placeholder="Contraseña segura para cifrar tus datos">
-          <input type="password" id="confirm-password" placeholder="Confirmar contraseña">
-          <button id="setup-complete" class="btn-primary">🔒 Crear Almacén Seguro</button>
+          <label for="master-password" data-i18n="masterPasswordLabel">Crear contraseña maestra:</label>
+          <input type="password" id="master-password" data-i18n="masterPasswordPlaceholder" placeholder="Contraseña segura para cifrar tus datos">
+          <input type="password" id="confirm-password" data-i18n="confirmPasswordPlaceholder" placeholder="Confirmar contraseña">
+          <button id="setup-complete" class="btn-primary" data-i18n="createVault">🔒 Crear Almacén Seguro</button>
         </div>
       </div>
     </section>
@@ -68,9 +76,9 @@
     <!-- Login Screen -->
     <section id="login-screen" class="screen">
       <div class="login-card">
-        <h2>🔓 Desbloquear Personal 2FA</h2>
-        <input type="password" id="login-password" placeholder="Contraseña maestra">
-        <button id="login-btn" class="btn-primary">Desbloquear</button>
+        <h2 data-i18n="loginTitle">🔓 Desbloquear Personal 2FA</h2>
+        <input type="password" id="login-password" data-i18n="loginPlaceholder" placeholder="Contraseña maestra">
+        <button id="login-btn" class="btn-primary" data-i18n="unlockButton">Desbloquear</button>
         <div id="login-error" class="error-message"></div>
       </div>
     </section>

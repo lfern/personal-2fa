@@ -12,6 +12,7 @@ import { qrManager } from './qr.js';
 import { googleAuthManager } from './googleAuth.js';
 import logger from './logger.js';
 import notificationSystem from './notification.js';
+import i18n from './i18n.js';
 
 
 
@@ -45,6 +46,9 @@ class Personal2FAApp {
       
       // Initialize QR manager
       qrManager.init(this.elements.qrVideo, this.elements.qrCanvas);
+      
+      // Initialize language selector
+      this.initializeLanguageSelector();
       
       // Check security status
       this.performSecurityChecks();
@@ -146,7 +150,10 @@ class Personal2FAApp {
       cryptoStatus: document.getElementById('crypto-status'),
       storageStatus: document.getElementById('storage-status'),
       networkStatus: document.getElementById('network-status'),
-      securityChecks: document.getElementById('security-checks')
+      securityChecks: document.getElementById('security-checks'),
+      
+      // Language selector
+      languageSelect: document.getElementById('language-select')
     };
     
 
@@ -199,6 +206,9 @@ class Personal2FAApp {
     this.elements.clearAllData.addEventListener('click', () => this.handleClearAllData());
     this.elements.factoryReset.addEventListener('click', () => this.handleFactoryReset());
     this.elements.logsEnabledToggle.addEventListener('change', (e) => this.handleLogsToggle(e));
+    
+    // Language selector
+    this.elements.languageSelect.addEventListener('change', (e) => this.handleLanguageChange(e));
     
     // Network status monitoring
     window.addEventListener('online', () => this.updateNetworkStatus());
@@ -1326,7 +1336,11 @@ class Personal2FAApp {
    */
   updateNetworkStatus() {
     const isOnline = navigator.onLine;
-    this.elements.networkStatus.textContent = isOnline ? '📡 Online ⚠️' : '📡 Offline ✅';
+    if (window.i18n) {
+      this.elements.networkStatus.textContent = isOnline ? window.i18n.t('networkOnline') : window.i18n.t('networkOffline');
+    } else {
+      this.elements.networkStatus.textContent = isOnline ? '📡 Online ⚠️' : '📡 Offline ✅';
+    }
     this.elements.networkStatus.className = `indicator ${isOnline ? 'warning' : 'secure'}`;
   }
 
@@ -1337,6 +1351,79 @@ class Personal2FAApp {
     this.securityCheckInterval = setInterval(() => {
       this.performSecurityChecks();
     }, 30000); // Check every 30 seconds
+  }
+
+  /**
+   * Initialize language selector
+   */
+  initializeLanguageSelector() {
+    // Wait for i18n to be available with a short polling interval
+    const waitForI18n = () => {
+      if (this.elements.languageSelect && window.i18n) {
+        // Set current language in selector to match what's stored
+        const currentLang = window.i18n.getCurrentLanguage();
+        this.elements.languageSelect.value = currentLang;
+        
+        // Also update the selector whenever language changes programmatically
+        this.updateLanguageSelectorValue = () => {
+          if (this.elements.languageSelect && window.i18n) {
+            this.elements.languageSelect.value = window.i18n.getCurrentLanguage();
+          }
+        };
+        
+        logger.log('🌐 Language selector initialized with:', currentLang);
+      } else if (this.elements.languageSelect) {
+        // Try again in a few milliseconds
+        setTimeout(waitForI18n, 10);
+      }
+    };
+    waitForI18n();
+  }
+
+  /**
+   * Handle language change
+   */
+  handleLanguageChange(event) {
+    const newLanguage = event.target.value;
+    logger.log(`🌐 Language change requested: ${newLanguage}`);
+    
+    if (window.i18n) {
+      window.i18n.setLanguage(newLanguage);
+      logger.log(`🌐 Language changed to: ${newLanguage}`);
+      
+      // Ensure the selector shows the correct value
+      this.elements.languageSelect.value = newLanguage;
+      
+      // Update dynamic content that's not handled by data-i18n attributes
+      this.updateDynamicTranslations();
+      
+      // Force a manual check to ensure all translations are updated
+      setTimeout(() => {
+        if (window.i18n && window.i18n.updateUI) {
+          window.i18n.updateUI();
+          // Double-check selector value is correct
+          if (this.elements.languageSelect.value !== newLanguage) {
+            this.elements.languageSelect.value = newLanguage;
+          }
+          logger.log('🌐 Forced UI update completed');
+        }
+      }, 100);
+    } else {
+      logger.error('❌ window.i18n not available for language change');
+    }
+  }
+
+  /**
+   * Update dynamic translations that can't use data-i18n attributes
+   */
+  updateDynamicTranslations() {
+    if (!window.i18n) return;
+    
+    // Update security indicators that are set dynamically
+    const status = cryptoManager.getSecurityStatus();
+    this.elements.cryptoStatus.textContent = status.isSecure ? window.i18n.t('encryption') : '⚠️ ' + window.i18n.t('encryption');
+    this.elements.storageStatus.textContent = window.i18n.t('storage');
+    this.updateNetworkStatus();
   }
 }
 
