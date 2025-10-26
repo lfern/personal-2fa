@@ -549,11 +549,8 @@ class Personal2FAApp {
     try {
       // First confirmation dialog
       const firstConfirm = await notificationSystem.confirm(
-        `¿Estás seguro de que quieres eliminar este código 2FA?<br><br>` +
-        `Servicio: ${issuer}<br>` +
-        `Cuenta: ${label}<br><br>` +
-        `⚠️ Esta acción no se puede deshacer.`,
-        'Eliminar código 2FA'
+        i18n.t('deleteCodeMessage').replace('{issuer}', issuer).replace('{label}', label),
+        i18n.t('deleteCodeTitle')
       );
 
       if (!firstConfirm) {
@@ -562,17 +559,16 @@ class Personal2FAApp {
       }
 
       // Second confirmation with text input for safety
+      const deleteWord = i18n.getCurrentLanguage() === 'es' ? 'ELIMINAR' : 'DELETE';
       const confirmText = await notificationSystem.prompt(
-        `Para confirmar la eliminación, escribe: <strong>ELIMINAR</strong><br><br>` +
-        `Servicio: ${issuer}<br>` +
-        `Cuenta: ${label}`,
+        i18n.t('deletePromptMessage').replace('{issuer}', issuer).replace('{label}', label),
         '',
-        'Confirmación de eliminación'
+        i18n.t('deleteConfirmationTitle')
       );
 
-      if (confirmText !== 'ELIMINAR') {
+      if (confirmText !== deleteWord) {
         logger.log('🔒 Delete cancelled - incorrect confirmation text');
-        notificationSystem.showNotification('❌ Texto incorrecto. Debes escribir exactamente "ELIMINAR"', 'error');
+        notificationSystem.showNotification(i18n.t('deleteTextError'), 'error');
         return;
       }
 
@@ -624,12 +620,8 @@ class Personal2FAApp {
     try {
       // First confirmation - Basic warning
       const firstConfirm = await notificationSystem.confirm(
-        '⚠️ ADVERTENCIA: Estás a punto de eliminar TODOS los códigos 2FA y datos de la aplicación.<br><br>' +
-        '🚨 Esta acción NO se puede deshacer.<br>' +
-        '🚨 Perderás el acceso a todas las cuentas configuradas.<br>' +
-        '🚨 NO podrás recuperar esta información.<br><br>' +
-        '¿Estás absolutamente seguro de que quieres continuar?',
-        'BORRAR TODOS LOS DATOS'
+        i18n.t('clearAllWarning'),
+        i18n.t('deleteAllDataTitle')
       );
       
       if (!firstConfirm) {
@@ -638,35 +630,23 @@ class Personal2FAApp {
       }
 
       // Second confirmation - Text input required
+      const deleteAllPhrase = i18n.getCurrentLanguage() === 'es' ? 'BORRAR TODO' : 'DELETE ALL';
       const secondConfirm = await notificationSystem.prompt(
-        '🚨 CONFIRMACIÓN FINAL 🚨<br><br>' +
-        'Vas a eliminar permanentemente:<br>' +
-        '• Todos los códigos 2FA guardados<br>' +
-        '• Configuraciones de la aplicación<br>' +
-        '• Datos de IndexedDB y localStorage<br>' +
-        '• Contraseña maestra configurada<br><br>' +
-        '⚠️ DESPUÉS DE ESTO TENDRÁS QUE:<br>' +
-        '• Configurar de nuevo todos tus códigos 2FA<br>' +
-        '• Crear una nueva contraseña maestra<br>' +
-        '• Volver a importar desde otras aplicaciones<br><br>' +
-        'Escribe "BORRAR TODO" si realmente quieres continuar:',
+        i18n.t('clearAllFinalConfirm'),
         '',
-        'Confirmación de texto'
+        i18n.t('textConfirmationTitle')
       );
       
-      if (secondConfirm !== 'BORRAR TODO') {
+      if (secondConfirm !== deleteAllPhrase) {
         logger.log('🔒 Clear data cancelled - incorrect confirmation text');
-        notificationSystem.showNotification('❌ Cancelado. Para confirmar debes escribir exactamente "BORRAR TODO"', 'error');
+        notificationSystem.showNotification(i18n.t('clearAllTextError'), 'error');
         return;
       }
 
       // Third and final confirmation
       const finalConfirm = await notificationSystem.confirm(
-        '🔥 ÚLTIMA OPORTUNIDAD 🔥<br><br>' +
-        'Esta es tu última oportunidad para cancelar.<br>' +
-        'Una vez que hagas clic en "Confirmar", NO HAY VUELTA ATRÁS.<br><br>' +
-        '¿Proceder con la eliminación TOTAL e IRREVERSIBLE de todos los datos?',
-        'CONFIRMACIÓN FINAL'
+        i18n.t('clearAllLastChance'),
+        i18n.t('finalConfirmationTitle')
       );
       
       if (!finalConfirm) {
@@ -677,7 +657,7 @@ class Personal2FAApp {
       logger.log('🗑️ User confirmed data deletion. Proceeding...');
       
       // Show progress message
-      const progressId = notificationSystem.showNotification('🗑️ Eliminando todos los datos... Por favor espera...', 'progress', 0);
+      const progressId = notificationSystem.showNotification(i18n.t('clearAllProgress'), 'progress', 0);
       
       // Clear all data
       await this.clearAllApplicationData();
@@ -687,9 +667,7 @@ class Personal2FAApp {
       
       // Show success message
       notificationSystem.showNotification(
-        '✅ Datos eliminados exitosamente<br><br>' +
-        'Todos los datos han sido eliminados de forma permanente.<br>' +
-        'La página se recargará para reiniciar la aplicación.',
+        i18n.t('clearAllSuccess'),
         'success',
         3000
       );
@@ -1437,6 +1415,19 @@ class Personal2FAApp {
     this.elements.cryptoStatus.textContent = status.isSecure ? window.i18n.t('encryption') : '⚠️ ' + window.i18n.t('encryption');
     this.elements.storageStatus.textContent = window.i18n.t('storage');
     this.updateNetworkStatus();
+    
+    // Update notification buttons if any are currently visible
+    document.querySelectorAll('.btn-confirm').forEach(btn => {
+      if (btn.textContent === 'Confirmar' || btn.textContent === 'Confirm') {
+        btn.textContent = window.i18n.t('confirm');
+      }
+    });
+    
+    document.querySelectorAll('.btn-cancel').forEach(btn => {
+      if (btn.textContent === 'Cancelar' || btn.textContent === 'Cancel') {
+        btn.textContent = window.i18n.t('cancel');
+      }
+    });
   }
 }
 

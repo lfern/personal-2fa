@@ -155,6 +155,141 @@ export class NotificationSystem {
     }
 
     /**
+     * Simple confirm dialog - returns Promise
+     */
+    async confirm(message, title = '') {
+        return new Promise((resolve) => {
+            const confirmId = `confirm-${Date.now()}`;
+            
+            const notification = document.createElement('div');
+            notification.id = confirmId;
+            notification.className = 'notification notification-confirm';
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <span class="notification-icon">⚠️</span>
+                    <div class="notification-message">
+                        ${title ? `<strong>${title}</strong><br><br>` : ''}
+                        ${message}
+                        <div class="confirm-buttons">
+                            <button class="btn-cancel">${window.i18n?.t?.('cancel') || 'Cancelar'}</button>
+                            <button class="btn-confirm">${window.i18n?.t?.('confirm') || 'Confirmar'}</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add to container
+            if (this.container) {
+                this.container.appendChild(notification);
+            } else {
+                document.body.appendChild(notification);
+            }
+
+            const cancelBtn = notification.querySelector('.btn-cancel');
+            const confirmBtn = notification.querySelector('.btn-confirm');
+
+            const cleanup = () => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            };
+
+            cancelBtn.onclick = () => {
+                cleanup();
+                resolve(false);
+            };
+
+            confirmBtn.onclick = () => {
+                cleanup();
+                resolve(true);
+            };
+
+            // Animate in
+            requestAnimationFrame(() => {
+                notification.classList.add('notification-show');
+            });
+
+            // Focus confirm button
+            setTimeout(() => confirmBtn.focus(), 100);
+        });
+    }
+
+    /**
+     * Simple prompt dialog - returns Promise
+     */
+    async prompt(message, defaultValue = '', title = '') {
+        return new Promise((resolve) => {
+            const promptId = `prompt-${Date.now()}`;
+            
+            const notification = document.createElement('div');
+            notification.id = promptId;
+            notification.className = 'notification notification-prompt';
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <span class="notification-icon">💬</span>
+                    <div class="notification-message">
+                        ${title ? `<strong>${title}</strong><br><br>` : ''}
+                        ${message}
+                        <input type="text" class="prompt-input" value="${defaultValue}" style="width: 100%; margin: 10px 0; padding: 5px;">
+                        <div class="confirm-buttons">
+                            <button class="btn-cancel">${window.i18n?.t?.('cancel') || 'Cancelar'}</button>
+                            <button class="btn-confirm">${window.i18n?.t?.('accept') || 'Aceptar'}</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add to container
+            if (this.container) {
+                this.container.appendChild(notification);
+            } else {
+                document.body.appendChild(notification);
+            }
+
+            const input = notification.querySelector('.prompt-input');
+            const cancelBtn = notification.querySelector('.btn-cancel');
+            const confirmBtn = notification.querySelector('.btn-confirm');
+
+            const cleanup = () => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            };
+
+            cancelBtn.onclick = () => {
+                cleanup();
+                resolve(null);
+            };
+
+            confirmBtn.onclick = () => {
+                cleanup();
+                resolve(input.value);
+            };
+
+            // Enter key submits
+            input.onkeypress = (e) => {
+                if (e.key === 'Enter') {
+                    cleanup();
+                    resolve(input.value);
+                }
+            };
+
+            // Animate in and focus
+            requestAnimationFrame(() => {
+                notification.classList.add('notification-show');
+                input.focus();
+            });
+        });
+    }
+
+    /**
+     * Alias for showNotification
+     */
+    show(message, type = 'info', duration = 3000) {
+        return this.showNotification(message, type, duration);
+    }
+
+    /**
      * Clear all notifications
      */
     clearAll() {
