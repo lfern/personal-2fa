@@ -220,19 +220,16 @@ class Personal2FAApp {
     // Manual add form
     this.elements.manualAddForm.addEventListener('submit', (e) => this.handleManualAdd(e));
     this.elements.cancelManual.addEventListener('click', () => {
-      this.hideAllSections();
-      this.updateActiveButton(null); // Clear active button state
+      this.showCodesSection(); // Show codes section when canceling
     });
     
     // Cancel buttons for import/export
     this.elements.cancelImport.addEventListener('click', () => {
-      this.hideAllSections();
-      this.updateActiveButton(null); // Clear active button state
+      this.showCodesSection(); // Show codes section when canceling
     });
     
     this.elements.cancelExport.addEventListener('click', () => {
-      this.hideAllSections();
-      this.updateActiveButton(null); // Clear active button state
+      this.showCodesSection(); // Show codes section when canceling
     });
     
     // Data management
@@ -316,6 +313,7 @@ class Personal2FAApp {
         // Store password for export functionality
         cryptoManager.setMasterPassword(password);
         this.showScreen('main');
+        this.showCodesSection(); // Show codes section by default
         this.refreshTOTPCodes();
         logger.log('✅ Storage unlocked successfully');
       } else {
@@ -425,13 +423,23 @@ class Personal2FAApp {
       this.elements.importSection,
       this.elements.exportSection,
       this.elements.manualAddSection,
-      this.elements.dataManagementSection
+      this.elements.dataManagementSection,
+      this.elements.codesSection
     ];
     
     sections.forEach(section => section.classList.add('hidden'));
     
     // Clear active states when hiding sections via other means (like cancel buttons)
     // Note: This will be overridden by updateActiveButton when showing a new section
+  }
+
+  /**
+   * Show only the codes section (default view)
+   */
+  showCodesSection() {
+    this.hideAllSections();
+    this.elements.codesSection.classList.remove('hidden');
+    this.updateActiveButton(null); // No button should be active in default view
   }
 
   /**
@@ -554,10 +562,9 @@ class Personal2FAApp {
       
       logger.log(`✅ Added manual TOTP: ${secret.issuer}:${secret.label}`);
       
-      // Reset form and hide section
+      // Reset form and show codes section
       this.elements.manualAddForm.reset();
-      this.hideAllSections();
-      this.updateActiveButton(null); // Clear active button state
+      this.showCodesSection();
       
       // Refresh display
       this.refreshTOTPCodes();
@@ -667,12 +674,9 @@ class Personal2FAApp {
       notificationSystem.showNotification(resultMessage, importedCount > 0 ? 'success' : 'warning');
 
       if (importedCount > 0) {
-        // Refresh display
+        // Refresh display and show codes section
         this.refreshTOTPCodes();
-        
-        // Hide import section and show codes
-        this.hideAllSections();
-        this.updateActiveButton(this.elements.codesBtn);
+        this.showCodesSection();
       }
 
       // Clear file input
@@ -827,12 +831,9 @@ class Personal2FAApp {
       notificationSystem.showNotification(resultMessage, importedCount > 0 ? 'success' : 'warning');
 
       if (importedCount > 0) {
-        // Refresh display
+        // Refresh display and show codes section
         this.refreshTOTPCodes();
-        
-        // Hide import section and show codes
-        this.hideAllSections();
-        this.updateActiveButton(this.elements.codesBtn);
+        this.showCodesSection();
       }
 
       // Clear file input
