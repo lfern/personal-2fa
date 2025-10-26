@@ -17,7 +17,7 @@ class Logger {
   getLogPreference() {
     try {
       const saved = localStorage.getItem('personal-2fa-logs-enabled');
-      // Default to false if no preference saved (logs disabled for end users)
+      // Default to false (logs disabled for end users)
       return saved !== null ? JSON.parse(saved) : false;
     } catch (error) {
       // If localStorage fails, default to false

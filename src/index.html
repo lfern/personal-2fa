@@ -21,6 +21,9 @@
     </div>
   </header>
 
+  <!-- Notification System -->
+  <div id="notification-container" class="notification-container"></div>
+
   <!-- Main App Container -->
   <main class="app-container">
     
@@ -138,12 +141,31 @@
           <div class="warning-box">
             <h4>⚠️ Eliminar Todos los Datos</h4>
             <p class="warning-text">
-              Esta acción eliminará <strong>permanentemente</strong> todos los códigos 2FA, configuraciones y datos almacenados en la aplicación.
+              Esta acción eliminará <strong>permanentemente</strong> todos los códigos 2FA y datos almacenados, 
+              <strong>pero mantiene tu contraseña maestra y configuraciones básicas</strong>.
             </p>
             <p class="warning-text">
-              <strong>🚨 NO HAY FORMA DE RECUPERAR ESTA INFORMACIÓN UNA VEZ ELIMINADA</strong>
+              <strong>🚨 NO HAY FORMA DE RECUPERAR LOS CÓDIGOS UNA VEZ ELIMINADOS</strong>
             </p>
             <button id="clear-all-data" class="btn-danger">🗑️ Eliminar Todos los Datos</button>
+          </div>
+
+          <!-- Factory Reset Zone -->
+          <div class="factory-reset-box">
+            <h4>🔄 Reset Completo de la Aplicación</h4>
+            <p class="factory-reset-text">
+              Esta acción <strong>RESETEA COMPLETAMENTE</strong> la aplicación, eliminando:
+            </p>
+            <ul class="factory-reset-list">
+              <li>🔐 Contraseña maestra configurada</li>
+              <li>🗑️ Todos los códigos 2FA y datos</li>
+              <li>⚙️ Todas las configuraciones y preferencias</li>
+              <li>💾 Todo el historial y caché local</li>
+            </ul>
+            <p class="factory-reset-text">
+              <strong>🚨 LA APLICACIÓN VOLVERÁ AL ESTADO INICIAL COMO SI NUNCA SE HUBIERA USADO</strong>
+            </p>
+            <button id="factory-reset" class="btn-factory-reset">🔄 Reset Completo</button>
           </div>
         </div>
       </div>

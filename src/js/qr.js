@@ -26,7 +26,7 @@ export class QRManager {
   init(videoElement, canvasElement) {
     this.video = videoElement;
     this.canvas = canvasElement;
-    this.context = canvasElement.getContext('2d');
+    this.context = canvasElement.getContext('2d', { willReadFrequently: true });
   }
 
   /**

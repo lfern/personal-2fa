@@ -3,12 +3,17 @@
  * Coordinates all modules and manages application state
  */
 
+
+
 import { cryptoManager } from './crypto.js';
 import { storageManager } from './storage.js';
 import { totpGenerator } from './totp.js';
 import { qrManager } from './qr.js';
 import { googleAuthManager } from './googleAuth.js';
 import logger from './logger.js';
+import notificationSystem from './notification.js';
+
+
 
 class Personal2FAApp {
   constructor() {
@@ -123,6 +128,7 @@ class Personal2FAApp {
       
       // Data Management
       clearAllData: document.getElementById('clear-all-data'),
+      factoryReset: document.getElementById('factory-reset'),
       logsEnabledToggle: document.getElementById('logs-enabled-toggle'),
       
       // Security indicators
@@ -131,6 +137,8 @@ class Personal2FAApp {
       networkStatus: document.getElementById('network-status'),
       securityChecks: document.getElementById('security-checks')
     };
+    
+
   }
 
   /**
@@ -139,6 +147,13 @@ class Personal2FAApp {
   setupEventListeners() {
     // Setup screen
     this.elements.setupComplete.addEventListener('click', () => this.handleSetup());
+    
+    // Add Enter key support for passwords
+    this.elements.confirmPassword.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        this.handleSetup();
+      }
+    });
     
     // Login screen
     this.elements.loginBtn.addEventListener('click', () => this.handleLogin());
@@ -171,6 +186,7 @@ class Personal2FAApp {
     
     // Data management
     this.elements.clearAllData.addEventListener('click', () => this.handleClearAllData());
+    this.elements.factoryReset.addEventListener('click', () => this.handleFactoryReset());
     this.elements.logsEnabledToggle.addEventListener('change', (e) => this.handleLogsToggle(e));
     
     // Network status monitoring
@@ -185,29 +201,44 @@ class Personal2FAApp {
    * Handle master password setup
    */
   async handleSetup() {
-    const password = this.elements.masterPassword.value;
-    const confirmPassword = this.elements.confirmPassword.value;
-    
-    if (!password || password.length < 8) {
-      this.showError('Password must be at least 8 characters long');
-      return;
-    }
-    
-    if (password !== confirmPassword) {
-      this.showError('Passwords do not match');
-      return;
-    }
-    
     try {
+      const password = this.elements.masterPassword.value;
+      const confirmPassword = this.elements.confirmPassword.value;
+      
+      if (!password || password.length < 8) {
+        this.showError('La contraseña debe tener al menos 8 caracteres');
+        return;
+      }
+      
+      if (password !== confirmPassword) {
+        this.showError('Las contraseñas no coinciden');
+        return;
+      }
+      
       logger.log('🔐 Setting up master password...');
+      
+      // Show progress notification
+      const progressId = notificationSystem.showNotification(
+        '🔐 Configurando contraseña maestra...',
+        'progress',
+        0
+      );
+      
       await storageManager.setupMasterPassword(password);
+      
+      // Remove progress notification
+      notificationSystem.removeNotification(progressId);
+      
       this.isUnlocked = true;
       this.showScreen('main');
       this.refreshTOTPCodes();
+      
       logger.log('✅ Master password setup complete');
+      this.showSuccess('✅ Contraseña maestra configurada correctamente');
+      
     } catch (error) {
       logger.error('❌ Setup failed:', error);
-      this.showError('Setup failed: ' + error.message);
+      this.showError('Error en la configuración: ' + error.message);
     }
   }
 
@@ -639,6 +670,198 @@ class Personal2FAApp {
   }
 
   /**
+   * Handle factory reset (complete application reset)
+   */
+  async handleFactoryReset() {
+    try {
+      // Use notification system for confirmation instead of blocking alerts
+      return new Promise((resolve) => {
+        // First confirmation
+        notificationSystem.showConfirm(
+          '🔄 FACTORY RESET - ADVERTENCIA CRÍTICA',
+          '⚠️ Un Factory Reset ELIMINARÁ COMPLETAMENTE:<br><br>' +
+          '🔐 Tu contraseña maestra configurada<br>' +
+          '🗑️ TODOS los códigos 2FA guardados<br>' +
+          '⚙️ TODAS las configuraciones personalizadas<br>' +
+          '💾 TODO el historial y datos locales<br><br>' +
+          '🚨 <strong>LA APLICACIÓN VOLVERÁ AL ESTADO INICIAL</strong><br>' +
+          '🚨 <strong>COMO SI NUNCA LA HUBIERAS USADO</strong><br><br>' +
+          '¿Estás completamente seguro de que quieres continuar?',
+          () => {
+            // If confirmed, show second confirmation with text input
+            this.showFactoryResetTextConfirmation(resolve);
+          },
+          () => {
+            logger.log('🔒 Factory reset cancelled by user (first confirmation)');
+            resolve();
+          },
+          'Sí, Continuar',
+          'Cancelar'
+        );
+      });
+    } catch (error) {
+      logger.error('❌ Factory reset failed:', error);
+      notificationSystem.showNotification(
+        '❌ Error durante el factory reset: ' + error.message,
+        'error',
+        5000
+      );
+    }
+  }
+
+  /**
+   * Show text confirmation for factory reset
+   */
+  showFactoryResetTextConfirmation(resolve) {
+    const confirmId = `factory-confirm-${Date.now()}`;
+    
+    const confirmDialog = document.createElement('div');
+    confirmDialog.id = confirmId;
+    confirmDialog.className = 'notification notification-confirm factory-reset-confirm';
+    confirmDialog.innerHTML = `
+      <div class="notification-content confirm-content">
+        <div class="confirm-header">
+          <span class="notification-icon">⚠️</span>
+          <strong class="confirm-title">CONFIRMACIÓN DE FACTORY RESET</strong>
+        </div>
+        <div class="confirm-message">
+          Para proceder con el reset completo de la aplicación,<br>
+          escribe exactamente: <strong>FACTORY RESET</strong><br><br>
+          ⚠️ Esta acción es <strong>COMPLETAMENTE IRREVERSIBLE</strong><br>
+          ⚠️ Perderás <strong>TODO</strong> lo configurado en esta aplicación
+        </div>
+        <div class="factory-reset-input">
+          <input type="text" id="factory-reset-text" placeholder="Escribe: FACTORY RESET" 
+                 style="width: 100%; padding: 10px; margin: 10px 0; font-size: 14px; border: 2px solid #ccc; border-radius: 4px;">
+        </div>
+        <div class="confirm-buttons">
+          <button class="btn-confirm-cancel">Cancelar</button>
+          <button class="btn-confirm-ok">Continuar</button>
+        </div>
+      </div>
+    `;
+
+    const container = notificationSystem.container || document.body;
+    container.appendChild(confirmDialog);
+
+    // Get elements
+    const textInput = confirmDialog.querySelector('#factory-reset-text');
+    const cancelBtn = confirmDialog.querySelector('.btn-confirm-cancel');
+    const confirmBtn = confirmDialog.querySelector('.btn-confirm-ok');
+
+    // Focus input
+    setTimeout(() => textInput.focus(), 100);
+
+    // Handle input validation
+    textInput.addEventListener('input', () => {
+      const isValid = textInput.value === 'FACTORY RESET';
+      confirmBtn.style.opacity = isValid ? '1' : '0.5';
+      confirmBtn.disabled = !isValid;
+    });
+
+    // Handle enter key
+    textInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && textInput.value === 'FACTORY RESET') {
+        confirmBtn.click();
+      }
+    });
+
+    // Handle cancel
+    cancelBtn.addEventListener('click', () => {
+      notificationSystem.removeNotification(confirmId);
+      logger.log('🔒 Factory reset cancelled - text confirmation cancelled');
+      resolve();
+    });
+
+    // Handle confirm
+    confirmBtn.addEventListener('click', () => {
+      if (textInput.value !== 'FACTORY RESET') {
+        notificationSystem.showNotification('❌ Texto incorrecto. Debes escribir exactamente: FACTORY RESET', 'error');
+        return;
+      }
+      
+      notificationSystem.removeNotification(confirmId);
+      this.showFactoryResetFinalConfirmation(resolve);
+    });
+
+    // Animate in
+    requestAnimationFrame(() => {
+      confirmDialog.classList.add('notification-show');
+    });
+  }
+
+  /**
+   * Show final confirmation for factory reset
+   */
+  showFactoryResetFinalConfirmation(resolve) {
+    notificationSystem.showConfirm(
+      '🚨 ÚLTIMA ADVERTENCIA - FACTORY RESET 🚨',
+      '⚠️ Estás a punto de realizar un <strong>RESET COMPLETO</strong>.<br>' +
+      'La aplicación volverá al estado inicial.<br><br>' +
+      '❌ <strong>NO PODRÁS RECUPERAR NADA</strong><br>' +
+      '❌ <strong>NO HAY COPIAS DE SEGURIDAD</strong><br>' +
+      '❌ <strong>NO HAY FORMA DE DESHACER ESTA ACCIÓN</strong><br><br>' +
+      'Una vez que hagas clic en "Ejecutar Reset", la aplicación<br>' +
+      'se reseteará completamente como si nunca la hubieras usado.',
+      async () => {
+        logger.log('🔄 User confirmed factory reset. Proceeding with complete reset...');
+        
+        // Show progress notification
+        const progressId = notificationSystem.showNotification(
+          '🔄 Ejecutando Factory Reset... Por favor espera...',
+          'progress',
+          0 // No auto-hide
+        );
+
+        try {
+          // Update progress
+          notificationSystem.updateProgress(progressId, 'Limpiando almacenamiento local...', 25);
+          
+          // Perform complete factory reset
+          await this.performFactoryReset();
+          
+          // Update progress
+          notificationSystem.updateProgress(progressId, 'Factory Reset completado', 100);
+          
+        } catch (error) {
+          // Even if factory reset fails, force clear and continue
+          logger.error('Factory reset error, forcing cleanup:', error);
+          localStorage.clear();
+          sessionStorage.clear();
+          notificationSystem.updateProgress(progressId, 'Forzando limpieza...', 90);
+        }
+        
+        // Always remove progress notification and reload
+        setTimeout(() => {
+          notificationSystem.removeNotification(progressId);
+          
+          // Show completion and reload immediately
+          notificationSystem.showNotification(
+            '✅ FACTORY RESET COMPLETADO<br><br>' +
+            'La aplicación ha sido completamente reseteada.<br>' +
+            '🔄 Recargando página...',
+            'success',
+            2000
+          );
+
+          // Reload the page quickly
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        }, 500);
+        
+        resolve();
+      },
+      () => {
+        logger.log('🔒 Factory reset cancelled by user (final confirmation)');
+        resolve();
+      },
+      'Ejecutar Reset',
+      'Cancelar'
+    );
+  }
+
+  /**
    * Clear all application data from all storage mechanisms
    */
   async clearAllApplicationData() {
@@ -668,6 +891,142 @@ class Personal2FAApp {
       
     } catch (error) {
       logger.error('❌ Error during data cleanup:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Perform complete factory reset - more thorough than clearAllApplicationData
+   * Removes ALL traces of the application, including setup state
+   */
+  async performFactoryReset() {
+    logger.log('🔄 Starting FACTORY RESET - complete application reset...');
+    
+    // Add timeout to prevent hanging
+    const factoryResetPromise = this._doFactoryReset();
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Factory reset timeout')), 10000);
+    });
+    
+    try {
+      await Promise.race([factoryResetPromise, timeoutPromise]);
+      logger.log('✅ FACTORY RESET completed successfully');
+    } catch (error) {
+      logger.error('❌ Error during factory reset:', error);
+      // Force clear localStorage anyway
+      localStorage.clear();
+      sessionStorage.clear();
+      throw error;
+    }
+  }
+
+  /**
+   * Internal factory reset implementation
+   */
+  async _doFactoryReset() {
+    try {
+      // 1. Clear all application data first (TOTP secrets, etc.)
+      logger.log('🗑️ Clearing application data...');
+      await this.clearAllApplicationData();
+      
+      // 2. Clear ALL localStorage keys (including setup state)
+      logger.log('🗑️ Clearing ALL localStorage...');
+      localStorage.clear();
+      
+      // 3. Clear ALL sessionStorage
+      logger.log('🗑️ Clearing ALL sessionStorage...');
+      sessionStorage.clear();
+      
+      // 4. Clear ALL cookies for this domain
+      logger.log('🗑️ Clearing cookies...');
+      document.cookie.split(";").forEach(cookie => {
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${window.location.hostname}`;
+      });
+      
+      // 5. Clear IndexedDB completely (all databases)
+      logger.log('🗑️ Clearing ALL IndexedDB databases...');
+      try {
+        if ('indexedDB' in window) {
+          // Try to delete our specific database
+          const deleteReq = indexedDB.deleteDatabase('Personal2FA');
+          await new Promise((resolve) => {
+            deleteReq.onsuccess = () => resolve();
+            deleteReq.onerror = () => resolve(); // Continue even if it fails
+            setTimeout(() => resolve(), 2000); // Timeout after 2 seconds
+          });
+          logger.log(`🗑️ Deleted IndexedDB: Personal2FA`);
+        }
+      } catch (e) {
+        // Continue if IndexedDB cleanup fails
+        logger.error('IndexedDB cleanup failed, continuing:', e);
+      }
+      
+      // 6. Clear any Web SQL databases (legacy)
+      logger.log('🗑️ Clearing Web SQL (if exists)...');
+      try {
+        if ('openDatabase' in window) {
+          // Clear any Web SQL databases that might exist
+          const db = openDatabase('', '', '', '', '');
+          if (db) {
+            db.transaction(tx => tx.executeSql('DROP TABLE IF EXISTS data'));
+          }
+        }
+      } catch (e) {
+        // Web SQL might not be supported, ignore
+      }
+      
+      // 7. Clear Cache API if available
+      logger.log('🗑️ Clearing Cache API...');
+      try {
+        if ('caches' in window) {
+          const cacheNames = await caches.keys();
+          for (const cacheName of cacheNames) {
+            await caches.delete(cacheName);
+            logger.log(`🗑️ Deleted cache: ${cacheName}`);
+          }
+        }
+      } catch (e) {
+        // Continue if cache cleanup fails
+        logger.error('Cache cleanup failed, continuing:', e);
+      }
+      
+      // 8. Reset application state completely
+      logger.log('🔄 Resetting application state...');
+      this.currentScreen = 'setup';
+      this.isUnlocked = false;
+      this.isLoggedIn = false;
+      this.currentCodes = [];
+      this.totpTimers = new Map();
+      this.refreshInterval = null;
+      this.cryptoManager = null;
+      
+      // 9. Clear any service worker registrations
+      logger.log('🗑️ Clearing service workers...');
+      try {
+        if ('serviceWorker' in navigator) {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          for (const registration of registrations) {
+            await registration.unregister();
+            logger.log('🗑️ Unregistered service worker');
+          }
+        }
+      } catch (e) {
+        // Continue if service worker cleanup fails
+        logger.error('Service worker cleanup failed, continuing:', e);
+      }
+      
+      // 10. Force garbage collection if available
+      if (window.gc) {
+        window.gc();
+      }
+      
+      logger.log('🔄 Application state has been completely reset to initial state');
+      
+    } catch (error) {
+      logger.error('❌ Error during factory reset:', error);
       throw error;
     }
   }
@@ -905,8 +1264,7 @@ class Personal2FAApp {
    */
   showError(message) {
     logger.error('❌', message);
-    // TODO: Implement proper error display
-    alert(message);
+    notificationSystem.showNotification(message, 'error', 5000);
   }
 
   /**
@@ -914,8 +1272,7 @@ class Personal2FAApp {
    */
   showSuccess(message) {
     logger.log('✅', message);
-    // TODO: Implement proper success display (for now using alert)
-    alert(message);
+    notificationSystem.showNotification(message, 'success', 3000);
   }
 
   /**
@@ -977,7 +1334,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const app = new Personal2FAApp();
   app.init();
   
-  // Make app globally available for button actions and debugging
+  // Make app globally available for debugging
   window.app = app;
   window.Personal2FA = app;
 });

@@ -26,17 +26,39 @@ export class SecureStorage {
     if (this.isInitialized) return;
     
     return new Promise((resolve, reject) => {
+      if (!indexedDB) {
+        logger.error('IndexedDB not available, using localStorage fallback');
+        this.isInitialized = true;
+        resolve();
+        return;
+      }
+      
+      // Add timeout to prevent hanging
+      const timeout = setTimeout(() => {
+        logger.log('IndexedDB timeout - falling back to localStorage');
+        this.isInitialized = true; // Mark as initialized to continue
+        resolve(); // Resolve anyway to allow app to continue
+      }, 3000);
+      
       const request = indexedDB.open(this.dbName, this.dbVersion);
       
-      request.onerror = () => reject(new Error('Failed to open IndexedDB'));
+      request.onerror = (event) => {
+        clearTimeout(timeout);
+        logger.error('IndexedDB open error, falling back to localStorage');
+        this.isInitialized = true;
+        resolve(); // Continue with localStorage fallback
+      };
       
       request.onsuccess = (event) => {
+        clearTimeout(timeout);
+        logger.log('IndexedDB opened successfully');
         this.db = event.target.result;
         this.isInitialized = true;
         resolve();
       };
       
       request.onupgradeneeded = (event) => {
+        clearTimeout(timeout);
         const db = event.target.result;
         
         // Create secrets store for encrypted TOTP data
@@ -155,6 +177,28 @@ export class SecureStorage {
       lastUsed: null
     };
     
+    // Fallback to localStorage if IndexedDB is not available
+    if (!this.db) {
+      try {
+        // Get existing records
+        const existing = localStorage.getItem('personal-2fa-secrets');
+        const records = existing ? JSON.parse(existing) : [];
+        
+        // Generate simple ID
+        const id = records.length > 0 ? Math.max(...records.map(r => r.id || 0)) + 1 : 1;
+        record.id = id;
+        
+        // Add new record
+        records.push(record);
+        
+        // Save back to localStorage
+        localStorage.setItem('personal-2fa-secrets', JSON.stringify(records));
+        return Promise.resolve(id);
+      } catch (error) {
+        return Promise.reject(new Error('Failed to store TOTP secret in localStorage'));
+      }
+    }
+    
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([this.storeName], 'readwrite');
       const store = transaction.objectStore(this.storeName);
@@ -172,6 +216,46 @@ export class SecureStorage {
   async getAllTOTPSecrets() {
     if (!this.isUnlocked()) {
       throw new Error('Storage is locked. Unlock with master password first.');
+    }
+    
+    // Fallback to localStorage if IndexedDB is not available
+    if (!this.db) {
+      try {
+        const stored = localStorage.getItem('personal-2fa-secrets');
+        if (!stored) return [];
+        
+        const records = JSON.parse(stored);
+        const decryptedSecrets = [];
+        
+        for (const record of records) {
+          try {
+            // Reconstruct encrypted object for decryption
+            const encrypted = {
+              ciphertext: cryptoManager.base64ToBytes(record.encryptedSecret),
+              iv: cryptoManager.base64ToBytes(record.iv)
+            };
+            
+            // Decrypt the secret
+            const decryptedJson = await cryptoManager.decrypt(encrypted, this.encryptionKey);
+            const decryptedData = JSON.parse(decryptedJson);
+            decryptedSecrets.push({
+              id: record.id,
+              issuer: record.issuer,
+              label: record.label,
+              secret: decryptedData.secret,
+              algorithm: decryptedData.algorithm || 'SHA1',
+              digits: decryptedData.digits || 6,
+              period: decryptedData.period || 30
+            });
+          } catch (decryptError) {
+            logger.error('Failed to decrypt TOTP secret:', decryptError);
+          }
+        }
+        
+        return decryptedSecrets;
+      } catch (error) {
+        return [];
+      }
     }
     
     return new Promise((resolve, reject) => {
@@ -221,6 +305,22 @@ export class SecureStorage {
    * @returns {Promise<void>}
    */
   async deleteTOTPSecret(id) {
+    // Fallback to localStorage if IndexedDB is not available
+    if (!this.db) {
+      try {
+        const stored = localStorage.getItem('personal-2fa-secrets');
+        if (!stored) return Promise.resolve();
+        
+        const records = JSON.parse(stored);
+        const filteredRecords = records.filter(record => record.id !== id);
+        
+        localStorage.setItem('personal-2fa-secrets', JSON.stringify(filteredRecords));
+        return Promise.resolve();
+      } catch (error) {
+        return Promise.reject(new Error('Failed to delete TOTP secret from localStorage'));
+      }
+    }
+    
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([this.storeName], 'readwrite');
       const store = transaction.objectStore(this.storeName);
@@ -237,6 +337,25 @@ export class SecureStorage {
    * @returns {Promise<void>}
    */
   async updateLastUsed(id) {
+    // Fallback to localStorage if IndexedDB is not available
+    if (!this.db) {
+      try {
+        const stored = localStorage.getItem('personal-2fa-secrets');
+        if (!stored) return Promise.resolve();
+        
+        const records = JSON.parse(stored);
+        const record = records.find(r => r.id === id);
+        if (record) {
+          record.lastUsed = new Date().toISOString();
+          localStorage.setItem('personal-2fa-secrets', JSON.stringify(records));
+        }
+        
+        return Promise.resolve();
+      } catch (error) {
+        return Promise.reject(new Error('Failed to update timestamp in localStorage'));
+      }
+    }
+    
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([this.storeName], 'readwrite');
       const store = transaction.objectStore(this.storeName);
@@ -265,6 +384,16 @@ export class SecureStorage {
    * @returns {Promise<void>}
    */
   async setConfig(key, value) {
+    // Fallback to localStorage if IndexedDB is not available
+    if (!this.db) {
+      try {
+        localStorage.setItem(`personal-2fa-config-${key}`, JSON.stringify(value));
+        return Promise.resolve();
+      } catch (error) {
+        return Promise.reject(new Error(`Failed to store config in localStorage: ${key}`));
+      }
+    }
+    
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([this.configStore], 'readwrite');
       const store = transaction.objectStore(this.configStore);
@@ -281,6 +410,16 @@ export class SecureStorage {
    * @returns {Promise<any>} Config value
    */
   async getConfig(key) {
+    // Fallback to localStorage if IndexedDB is not available
+    if (!this.db) {
+      try {
+        const value = localStorage.getItem(`personal-2fa-config-${key}`);
+        return value ? JSON.parse(value) : null;
+      } catch (error) {
+        return null;
+      }
+    }
+    
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([this.configStore], 'readonly');
       const store = transaction.objectStore(this.configStore);
@@ -300,6 +439,30 @@ export class SecureStorage {
    * @returns {Promise<void>}
    */
   async clearAllData() {
+    // Fallback to localStorage if IndexedDB is not available
+    if (!this.db) {
+      try {
+        // Clear localStorage data
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && key.startsWith('personal-2fa-')) {
+            keysToRemove.push(key);
+          }
+        }
+        
+        keysToRemove.forEach(key => localStorage.removeItem(key));
+        
+        // Clear memory
+        this.encryptionKey = null;
+        this.isInitialized = false;
+        
+        return Promise.resolve();
+      } catch (error) {
+        return Promise.reject(new Error('Failed to clear localStorage data'));
+      }
+    }
+    
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([this.storeName, this.configStore], 'readwrite');
       
