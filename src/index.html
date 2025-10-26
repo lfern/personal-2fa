@@ -110,6 +110,17 @@
           </div>
         </div>
 
+        <!-- Encrypted Import -->
+        <div class="import-method">
+          <h4 data-i18n="encryptedImportTitle">🔒 Importar desde Backup Cifrado</h4>
+          <p data-i18n="encryptedImportDesc">Importa códigos desde un archivo cifrado (compatible con OpenSSL AES-256-CBC).</p>
+          <div class="encrypted-import">
+            <input type="file" id="encrypted-file-input" accept=".enc,.dat,.bin" style="display: none;">
+            <button id="select-encrypted-file" class="btn-primary" data-i18n="selectEncryptedFile">📂 Seleccionar Archivo Cifrado</button>
+            <span id="selected-encrypted-file-name" class="selected-file"></span>
+          </div>
+        </div>
+
         <!-- QR Import -->
         <div class="import-method">
           <h4 data-i18n="qrImportTitle">📱 Importar desde QR</h4>
@@ -138,6 +149,7 @@
           <button id="export-google-format" class="btn-primary" data-i18n="googleAuthFormat">📱 Formato Google Authenticator</button>
           <button id="export-individual-qr" class="btn-primary" data-i18n="individualQRs">📄 QR Individuales</button>
           <button id="export-json-backup" class="btn-primary" data-i18n="jsonBackup">📋 Backup JSON</button>
+          <button id="export-encrypted-backup" class="btn-primary" data-i18n="encryptedBackup">🔒 Backup Cifrado</button>
         </div>
         <div id="export-result" class="export-result"></div>
       </div>

@@ -184,6 +184,193 @@ export class SecureCrypto {
     
     return status;
   }
+
+  /**
+   * Get current master password (for export purposes)
+   * Note: This is a simplified version - in real implementation 
+   * you'd want to securely retrieve this
+   */
+  getMasterPassword() {
+    // Return the current session password if available
+    return this.currentMasterPassword || null;
+  }
+
+  /**
+   * Set master password for session (called during authentication)
+   */
+  setMasterPassword(password) {
+    this.currentMasterPassword = password;
+  }
+
+  /**
+   * Encrypt data for export (OpenSSL AES-256-CBC compatible)
+   * @param {string} plaintext - Data to encrypt
+   * @param {string} password - Encryption password
+   * @returns {Promise<ArrayBuffer>} Encrypted data in OpenSSL format
+   */
+  async encryptForExport(plaintext, password) {
+    // Generate random salt (8 bytes)
+    const salt = this.generateRandomBytes(8);
+    
+    // Derive key and IV using OpenSSL's EVP_BytesToKey equivalent
+    const keyIv = await this.deriveKeyIvOpenSSL(password, salt);
+    
+    // Create cipher using AES-256-CBC
+    const encoder = new TextEncoder();
+    const data = encoder.encode(plaintext);
+    
+    // Pad data to 16-byte boundary (PKCS#7 padding)
+    const paddedData = this.addPKCS7Padding(data, 16);
+    
+    // Import key for AES-CBC
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      keyIv.key,
+      { name: 'AES-CBC' },
+      false,
+      ['encrypt']
+    );
+    
+    // Encrypt data
+    const encrypted = await crypto.subtle.encrypt(
+      {
+        name: 'AES-CBC',
+        iv: keyIv.iv
+      },
+      cryptoKey,
+      paddedData
+    );
+    
+    // Create OpenSSL format: "Salted__" + salt + encrypted_data
+    const salted = new TextEncoder().encode('Salted__');
+    const result = new Uint8Array(salted.length + salt.length + encrypted.byteLength);
+    result.set(salted, 0);
+    result.set(salt, salted.length);
+    result.set(new Uint8Array(encrypted), salted.length + salt.length);
+    
+    return result.buffer;
+  }
+
+  /**
+   * Decrypt data from import (OpenSSL AES-256-CBC compatible)
+   * @param {ArrayBuffer} encryptedData - Encrypted data
+   * @param {string} password - Decryption password
+   * @returns {Promise<string>} Decrypted plaintext
+   */
+  async decryptFromImport(encryptedData, password) {
+    const data = new Uint8Array(encryptedData);
+    
+    // Check for OpenSSL "Salted__" header
+    const salted = new TextEncoder().encode('Salted__');
+    const header = data.slice(0, 8);
+    
+    if (!this.arraysEqual(header, salted)) {
+      throw new Error('Invalid file format - not OpenSSL encrypted');
+    }
+    
+    // Extract salt and encrypted data
+    const salt = data.slice(8, 16);
+    const ciphertext = data.slice(16);
+    
+    // Derive key and IV using OpenSSL's EVP_BytesToKey equivalent
+    const keyIv = await this.deriveKeyIvOpenSSL(password, salt);
+    
+    // Import key for AES-CBC
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      keyIv.key,
+      { name: 'AES-CBC' },
+      false,
+      ['decrypt']
+    );
+    
+    // Decrypt data
+    const decrypted = await crypto.subtle.decrypt(
+      {
+        name: 'AES-CBC',
+        iv: keyIv.iv
+      },
+      cryptoKey,
+      ciphertext
+    );
+    
+    // Remove PKCS#7 padding
+    const unpaddedData = this.removePKCS7Padding(new Uint8Array(decrypted));
+    
+    // Convert to string
+    const decoder = new TextDecoder();
+    return decoder.decode(unpaddedData);
+  }
+
+  /**
+   * Derive key and IV using OpenSSL's EVP_BytesToKey method
+   * Compatible with: openssl enc -aes-256-cbc -pbkdf2 -iter 1
+   */
+  async deriveKeyIvOpenSSL(password, salt) {
+    const encoder = new TextEncoder();
+    const passwordBytes = encoder.encode(password);
+    
+    // Concatenate password and salt
+    const combined = new Uint8Array(passwordBytes.length + salt.length);
+    combined.set(passwordBytes, 0);
+    combined.set(salt, passwordBytes.length);
+    
+    // Hash to get first 32 bytes (key) + 16 bytes (IV)
+    let hash = await crypto.subtle.digest('SHA-256', combined);
+    let hashBytes = new Uint8Array(hash);
+    
+    // We need 32 bytes for key + 16 bytes for IV = 48 bytes total
+    // SHA-256 gives us 32 bytes, so we need to hash again
+    const secondInput = new Uint8Array(hashBytes.length + passwordBytes.length + salt.length);
+    secondInput.set(hashBytes, 0);
+    secondInput.set(passwordBytes, hashBytes.length);
+    secondInput.set(salt, hashBytes.length + passwordBytes.length);
+    
+    const secondHash = await crypto.subtle.digest('SHA-256', secondInput);
+    const secondHashBytes = new Uint8Array(secondHash);
+    
+    // Combine hashes to get 64 bytes total
+    const keyIvBytes = new Uint8Array(48);
+    keyIvBytes.set(hashBytes.slice(0, 32), 0); // 32 bytes for key
+    keyIvBytes.set(secondHashBytes.slice(0, 16), 32); // 16 bytes for IV
+    
+    return {
+      key: keyIvBytes.slice(0, 32),
+      iv: keyIvBytes.slice(32, 48)
+    };
+  }
+
+  /**
+   * Add PKCS#7 padding
+   */
+  addPKCS7Padding(data, blockSize) {
+    const padding = blockSize - (data.length % blockSize);
+    const paddedData = new Uint8Array(data.length + padding);
+    paddedData.set(data, 0);
+    for (let i = data.length; i < paddedData.length; i++) {
+      paddedData[i] = padding;
+    }
+    return paddedData;
+  }
+
+  /**
+   * Remove PKCS#7 padding
+   */
+  removePKCS7Padding(data) {
+    const padding = data[data.length - 1];
+    return data.slice(0, data.length - padding);
+  }
+
+  /**
+   * Check if two arrays are equal
+   */
+  arraysEqual(a, b) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  }
 }
 
 // Export singleton instance

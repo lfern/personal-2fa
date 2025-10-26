@@ -119,6 +119,11 @@ class Personal2FAApp {
       selectJSONFile: document.getElementById('select-json-file'),
       selectedFileName: document.getElementById('selected-file-name'),
 
+      // Encrypted Import
+      encryptedFileInput: document.getElementById('encrypted-file-input'),
+      selectEncryptedFile: document.getElementById('select-encrypted-file'),
+      selectedEncryptedFileName: document.getElementById('selected-encrypted-file-name'),
+
       // QR Scanner
       qrVideo: document.getElementById('qr-video'),
       qrCanvas: document.getElementById('qr-canvas'),
@@ -130,6 +135,7 @@ class Personal2FAApp {
       exportGoogleFormat: document.getElementById('export-google-format'),
       exportIndividualQR: document.getElementById('export-individual-qr'),
       exportJSONBackup: document.getElementById('export-json-backup'),
+      exportEncryptedBackup: document.getElementById('export-encrypted-backup'),
       exportResult: document.getElementById('export-result'),
       
       // TOTP Display
@@ -195,6 +201,10 @@ class Personal2FAApp {
     this.elements.selectJSONFile.addEventListener('click', () => this.elements.jsonFileInput.click());
     this.elements.jsonFileInput.addEventListener('change', (e) => this.handleJSONFileSelect(e));
 
+    // Encrypted Import
+    this.elements.selectEncryptedFile.addEventListener('click', () => this.elements.encryptedFileInput.click());
+    this.elements.encryptedFileInput.addEventListener('change', (e) => this.handleEncryptedFileSelect(e));
+
     // QR Scanner
     this.elements.startCamera.addEventListener('click', () => this.startQRScanning());
     this.elements.stopCamera.addEventListener('click', () => this.stopQRScanning());
@@ -203,6 +213,7 @@ class Personal2FAApp {
     this.elements.exportGoogleFormat.addEventListener('click', () => this.exportGoogleFormat());
     this.elements.exportIndividualQR.addEventListener('click', () => this.exportIndividualQR());
     this.elements.exportJSONBackup.addEventListener('click', () => this.exportJSONBackup());
+    this.elements.exportEncryptedBackup.addEventListener('click', () => this.exportEncryptedBackup());
     
     // Manual add form
     this.elements.manualAddForm.addEventListener('submit', (e) => this.handleManualAdd(e));
@@ -289,6 +300,8 @@ class Personal2FAApp {
       
       if (success) {
         this.isUnlocked = true;
+        // Store password for export functionality
+        cryptoManager.setMasterPassword(password);
         this.showScreen('main');
         this.refreshTOTPCodes();
         logger.log('✅ Storage unlocked successfully');
@@ -683,6 +696,144 @@ class Personal2FAApp {
     }
 
     return true;
+  }
+
+  /**
+   * Handle encrypted file selection for import
+   */
+  handleEncryptedFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) {
+      this.elements.selectedEncryptedFileName.textContent = '';
+      return;
+    }
+
+    const allowedExtensions = ['.enc', '.dat', '.bin'];
+    const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+    
+    if (!allowedExtensions.includes(fileExtension)) {
+      notificationSystem.showNotification(i18n.t('invalidEncryptedFileType'), 'error');
+      this.elements.selectedEncryptedFileName.textContent = '';
+      return;
+    }
+
+    this.elements.selectedEncryptedFileName.textContent = file.name;
+    this.importEncryptedFile(file);
+  }
+
+  /**
+   * Import TOTP codes from encrypted file
+   */
+  async importEncryptedFile(file) {
+    try {
+      logger.log(`📥 Starting import from encrypted file: ${file.name}`);
+
+      // Read file content as ArrayBuffer
+      const fileContent = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.onerror = () => reject(new Error('Failed to read file'));
+        reader.readAsArrayBuffer(file);
+      });
+
+      // Ask for decryption password
+      const decryptionPassword = await notificationSystem.prompt(
+        i18n.t('enterDecryptionPassword'),
+        '',
+        i18n.t('decryptionPasswordTitle'),
+        'password'
+      );
+
+      if (!decryptionPassword) {
+        logger.log('🔒 Encrypted import cancelled by user');
+        return;
+      }
+
+      // Decrypt the data
+      let jsonData;
+      try {
+        const decryptedData = await cryptoManager.decryptFromImport(fileContent, decryptionPassword);
+        jsonData = JSON.parse(decryptedData);
+      } catch (decryptError) {
+        throw new Error(i18n.t('decryptionFailed'));
+      }
+
+      // Validate JSON structure
+      if (!this.validateJSONImport(jsonData)) {
+        throw new Error(i18n.t('invalidJSONStructure'));
+      }
+
+      // Show confirmation dialog
+      const importConfirm = await notificationSystem.confirm(
+        i18n.t('importConfirmMessage').replace('{count}', jsonData.secrets?.length || 0),
+        i18n.t('importConfirmTitle')
+      );
+
+      if (!importConfirm) {
+        logger.log('🔒 Encrypted import cancelled by user');
+        return;
+      }
+
+      // Import secrets (reuse the same logic as JSON import)
+      let importedCount = 0;
+      let duplicateCount = 0;
+      let errorCount = 0;
+
+      for (const secretData of jsonData.secrets || []) {
+        try {
+          // Check if secret already exists
+          const existingSecrets = await storageManager.getAllTOTPSecrets();
+          const isDuplicate = existingSecrets.some(existing => 
+            existing.issuer === secretData.issuer && 
+            existing.label === secretData.label
+          );
+
+          if (isDuplicate) {
+            duplicateCount++;
+            logger.log(`⚠️ Skipping duplicate: ${secretData.issuer}:${secretData.label}`);
+            continue;
+          }
+
+          // Add secret to storage
+          await storageManager.storeTOTPSecret(secretData);
+          importedCount++;
+          logger.log(`✅ Imported: ${secretData.issuer}:${secretData.label}`);
+
+        } catch (error) {
+          errorCount++;
+          logger.error(`❌ Failed to import ${secretData.issuer}:${secretData.label}:`, error);
+        }
+      }
+
+      // Show results
+      const resultMessage = i18n.t('importResultMessage')
+        .replace('{imported}', importedCount)
+        .replace('{duplicates}', duplicateCount)
+        .replace('{errors}', errorCount);
+
+      notificationSystem.showNotification(resultMessage, importedCount > 0 ? 'success' : 'warning');
+
+      if (importedCount > 0) {
+        // Refresh display
+        this.refreshTOTPCodes();
+        
+        // Hide import section and show codes
+        this.hideAllSections();
+        this.updateActiveButton(this.elements.codesBtn);
+      }
+
+      // Clear file input
+      this.elements.encryptedFileInput.value = '';
+      this.elements.selectedEncryptedFileName.textContent = '';
+
+    } catch (error) {
+      logger.error('❌ Encrypted import failed:', error);
+      notificationSystem.showNotification(i18n.t('importError') + error.message, 'error');
+      
+      // Clear file input
+      this.elements.encryptedFileInput.value = '';
+      this.elements.selectedEncryptedFileName.textContent = '';
+    }
   }
 
   /**
@@ -1254,6 +1405,79 @@ class Personal2FAApp {
       
     } catch (error) {
       logger.error('❌ JSON export failed:', error);
+      this.showError(i18n.t('exportError') + error.message);
+    }
+  }
+
+  /**
+   * Export encrypted backup (OpenSSL compatible)
+   */
+  async exportEncryptedBackup() {
+    try {
+      logger.log('🚀 Starting encrypted backup export...');
+      const secrets = await storageManager.getAllTOTPSecrets();
+      
+      if (secrets.length === 0) {
+        notificationSystem.showNotification(i18n.t('noCodesForExport'), 'warning');
+        return;
+      }
+
+      // Show password dialog
+      const exportOptions = [
+        { key: 'useCurrentPassword', text: i18n.t('useCurrentPassword') },
+        { key: 'useCustomPassword', text: i18n.t('useCustomPassword') }
+      ];
+
+      const passwordChoice = await notificationSystem.showOptions(
+        i18n.t('encryptedExportPasswordChoice'),
+        exportOptions,
+        i18n.t('encryptedExportTitle')
+      );
+
+      let encryptionPassword;
+      if (passwordChoice === 'useCurrentPassword') {
+        // Use current master password
+        encryptionPassword = cryptoManager.getMasterPassword();
+        if (!encryptionPassword) {
+          throw new Error(i18n.t('noMasterPasswordAvailable'));
+        }
+      } else if (passwordChoice === 'useCustomPassword') {
+        // Ask for custom password with confirmation
+        encryptionPassword = await notificationSystem.promptPasswordConfirm(
+          i18n.t('enterCustomPasswordPrompt'),
+          i18n.t('customPasswordTitle')
+        );
+        
+        if (!encryptionPassword) {
+          logger.log('🔒 Encrypted export cancelled by user');
+          return;
+        }
+      } else {
+        logger.log('🔒 Encrypted export cancelled by user');
+        return;
+      }
+
+      // Create JSON data
+      const jsonData = await googleAuthManager.exportToJSON(secrets);
+      
+      // Encrypt the data
+      const encryptedData = await cryptoManager.encryptForExport(jsonData, encryptionPassword);
+      
+      // Create download link
+      const blob = new Blob([encryptedData], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `personal-2fa-backup-${new Date().toISOString().split('T')[0]}.enc`;
+      link.click();
+      
+      URL.revokeObjectURL(url);
+      
+      this.elements.exportResult.innerHTML = `<div class="success">${i18n.t('encryptedBackupDownloaded')}</div>`;
+      logger.log('✅ Encrypted backup exported successfully');
+      
+    } catch (error) {
+      logger.error('❌ Encrypted export failed:', error);
       this.showError(i18n.t('exportError') + error.message);
     }
   }
