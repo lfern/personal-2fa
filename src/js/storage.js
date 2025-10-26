@@ -93,6 +93,7 @@ export class SecureStorage {
     
     // Derive encryption key from password
     this.encryptionKey = await cryptoManager.deriveKey(password, salt);
+    console.log('🔧 Derived encryption key:', this.encryptionKey, 'Type:', typeof this.encryptionKey);
     
     // Store password verification hash
     const passwordHash = await cryptoManager.hash(password);
@@ -218,6 +219,12 @@ export class SecureStorage {
       throw new Error('Storage is locked. Unlock with master password first.');
     }
     
+    if (!this.encryptionKey) {
+      throw new Error('Encryption key not available. Please unlock storage first.');
+    }
+    
+    console.log('🔧 Using encryption key:', this.encryptionKey, 'Type:', typeof this.encryptionKey, 'Constructor:', this.encryptionKey.constructor.name);
+    
     // Fallback to localStorage if IndexedDB is not available
     if (!this.db) {
       try {
@@ -229,14 +236,12 @@ export class SecureStorage {
         
         for (const record of records) {
           try {
-            // Reconstruct encrypted object for decryption
-            const encrypted = {
-              ciphertext: cryptoManager.base64ToBytes(record.encryptedSecret),
-              iv: cryptoManager.base64ToBytes(record.iv)
-            };
+            // Reconstruct encrypted data for decryption
+            const ciphertext = cryptoManager.base64ToBytes(record.encryptedSecret);
+            const iv = cryptoManager.base64ToBytes(record.iv);
             
             // Decrypt the secret
-            const decryptedJson = await cryptoManager.decrypt(encrypted, this.encryptionKey);
+            const decryptedJson = await cryptoManager.decrypt(ciphertext, iv, this.encryptionKey);
             const decryptedData = JSON.parse(decryptedJson);
             decryptedSecrets.push({
               id: record.id,
