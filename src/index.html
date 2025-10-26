@@ -95,6 +95,18 @@
         <button id="lock-btn" class="btn-secondary" data-i18n="lockBtn">🔒 Bloquear</button>
       </div>
 
+      <!-- TOTP Codes Display -->
+      <div id="codes-section" class="section">
+        <h3 data-i18n="codesTitle">🔢 Códigos de Autenticación</h3>
+        <div id="totp-list" class="totp-list">
+          <!-- Los códigos TOTP se generarán aquí dinámicamente -->
+        </div>
+        <div id="empty-state" class="empty-state">
+          <p data-i18n="emptyStateMessage">No hay códigos configurados.</p>
+          <p data-i18n="emptyStateSubtext">Importa desde Google Authenticator o añade manualmente.</p>
+        </div>
+      </div>
+
       <!-- Import Section -->
       <div id="import-section" class="section hidden">
         <h3 data-i18n="importSectionTitle">📱 Importar Códigos 2FA</h3>
@@ -136,6 +148,10 @@
         <div class="scan-status">
           <div id="scan-result"></div>
         </div>
+
+        <div class="form-actions">
+          <button type="button" id="cancel-import" class="btn-secondary" data-i18n="cancelBtn">❌ Cancelar</button>
+        </div>
       </div>
 
       <!-- Export Section -->
@@ -152,17 +168,9 @@
           <button id="export-encrypted-backup" class="btn-primary" data-i18n="encryptedBackup">🔒 Backup Cifrado</button>
         </div>
         <div id="export-result" class="export-result"></div>
-      </div>
 
-      <!-- TOTP Codes Display -->
-      <div id="codes-section" class="section">
-        <h3 data-i18n="codesTitle">🔢 Códigos de Autenticación</h3>
-        <div id="totp-list" class="totp-list">
-          <!-- Los códigos TOTP se generarán aquí dinámicamente -->
-        </div>
-        <div id="empty-state" class="empty-state">
-          <p data-i18n="emptyStateMessage">No hay códigos configurados.</p>
-          <p data-i18n="emptyStateSubtext">Importa desde Google Authenticator o añade manualmente.</p>
+        <div class="form-actions">
+          <button type="button" id="cancel-export" class="btn-secondary" data-i18n="cancelBtn">❌ Cancelar</button>
         </div>
       </div>
 

@@ -151,6 +151,8 @@ class Personal2FAApp {
       manualDigits: document.getElementById('manual-digits'),
       manualPeriod: document.getElementById('manual-period'),
       cancelManual: document.getElementById('cancel-manual'),
+      cancelImport: document.getElementById('cancel-import'),
+      cancelExport: document.getElementById('cancel-export'),
       
       // Data Management
       clearAllData: document.getElementById('clear-all-data'),
@@ -218,6 +220,17 @@ class Personal2FAApp {
     // Manual add form
     this.elements.manualAddForm.addEventListener('submit', (e) => this.handleManualAdd(e));
     this.elements.cancelManual.addEventListener('click', () => {
+      this.hideAllSections();
+      this.updateActiveButton(null); // Clear active button state
+    });
+    
+    // Cancel buttons for import/export
+    this.elements.cancelImport.addEventListener('click', () => {
+      this.hideAllSections();
+      this.updateActiveButton(null); // Clear active button state
+    });
+    
+    this.elements.cancelExport.addEventListener('click', () => {
       this.hideAllSections();
       this.updateActiveButton(null); // Clear active button state
     });
