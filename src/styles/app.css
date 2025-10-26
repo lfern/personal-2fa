@@ -331,13 +331,34 @@ body {
 
 /* Cards */
 .setup-card,
-.login-card {
+.login-card,
+.loading-card {
   background: white;
   border-radius: 15px;
   padding: 30px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   margin: 40px auto;
   max-width: 500px;
+}
+
+/* Loading Screen */
+.loading-card {
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 20px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .setup-card h2,

@@ -49,13 +49,23 @@ class Personal2FAApp {
       // Check security status
       this.performSecurityChecks();
       
-      // Determine initial screen
-      const isSetup = await storageManager.isSetup();
-      if (isSetup) {
-        this.showScreen('login');
-      } else {
-        this.showScreen('setup');
-      }
+      // Show loading screen while checking setup status
+      this.showScreen('loading');
+      
+      // Determine initial screen with a small delay for UX
+      setTimeout(async () => {
+        try {
+          const isSetup = await storageManager.isSetup();
+          if (isSetup) {
+            this.showScreen('login');
+          } else {
+            this.showScreen('setup');
+          }
+        } catch (error) {
+          logger.error('Error checking setup status:', error);
+          this.showScreen('setup'); // Default to setup if error
+        }
+      }, 800); // 800ms delay for smooth UX
       
       logger.log('✅ App initialization complete');
       
@@ -71,6 +81,7 @@ class Personal2FAApp {
   initDOMElements() {
     this.elements = {
       // Screens
+      loadingScreen: document.getElementById('loading-screen'),
       setupScreen: document.getElementById('setup-screen'),
       loginScreen: document.getElementById('login-screen'),
       mainScreen: document.getElementById('main-screen'),
@@ -1246,7 +1257,7 @@ class Personal2FAApp {
    * Show specific screen
    */
   showScreen(screenName) {
-    const screens = ['setup', 'login', 'main'];
+    const screens = ['loading', 'setup', 'login', 'main'];
     
     screens.forEach(screen => {
       const element = document.getElementById(`${screen}-screen`);
