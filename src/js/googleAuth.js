@@ -7,6 +7,7 @@
 
 import { qrManager } from './qr.js';
 import { totpGenerator } from './totp.js';
+import logger from './logger.js';
 
 export class GoogleAuthManager {
   constructor() {
@@ -20,37 +21,37 @@ export class GoogleAuthManager {
    */
   async importFromGoogleAuth(migrationUri) {
     try {
-      console.log('🔄 Importing from Google Authenticator...');
-      console.log('🔄 Migration URI:', migrationUri);
+      logger.log('🔄 Importing from Google Authenticator...');
+      logger.log('🔄 Migration URI:', migrationUri);
       
       // Parse the migration QR data
       const secrets = qrManager.parseMigrationQR(migrationUri);
-      console.log('🔄 Parsed secrets from QR manager:', secrets);
+      logger.log('🔄 Parsed secrets from QR manager:', secrets);
       
       if (!secrets || secrets.length === 0) {
-        console.error('❌ No secrets found - parsed result:', secrets);
+        logger.error('❌ No secrets found - parsed result:', secrets);
         throw new Error('No TOTP secrets found in migration data');
       }
       
-      console.log(`✅ Found ${secrets.length} TOTP secrets to import`);
+      logger.log(`✅ Found ${secrets.length} TOTP secrets to import`);
       
       // Validate and normalize each secret
       const validatedSecrets = [];
       for (const secret of secrets) {
         try {
-          console.log('🔄 Validating secret:', secret);
+          logger.log('🔄 Validating secret:', secret);
           const validated = await this.validateTOTPSecret(secret);
           validatedSecrets.push(validated);
-          console.log('✅ Validated secret:', validated);
+          logger.log('✅ Validated secret:', validated);
         } catch (error) {
-          console.warn(`⚠️ Skipping invalid secret for ${secret.issuer}:${secret.label}:`, error.message);
+          logger.warn(`⚠️ Skipping invalid secret for ${secret.issuer}:${secret.label}:`, error.message);
         }
       }
       
-      console.log('🔄 Final validated secrets:', validatedSecrets);
+      logger.log('🔄 Final validated secrets:', validatedSecrets);
       return validatedSecrets;
     } catch (error) {
-      console.error('❌ Import error:', error);
+      logger.error('❌ Import error:', error);
       throw new Error(`Import failed: ${error.message}`);
     }
   }
@@ -64,7 +65,7 @@ export class GoogleAuthManager {
    */
   async generateExportQRs(secrets, format = 'individual') {
     try {
-      console.log(`📤 Generating ${format} export QRs for ${secrets.length} secrets...`);
+      logger.log(`📤 Generating ${format} export QRs for ${secrets.length} secrets...`);
       
       if (format === 'individual') {
         return await this.generateIndividualQRs(secrets);
@@ -110,9 +111,9 @@ export class GoogleAuthManager {
           otpauthUri: otpauthUri
         });
         
-        console.log(`✅ Generated QR for ${secret.issuer}:${secret.label}`);
+        logger.log(`✅ Generated QR for ${secret.issuer}:${secret.label}`);
       } catch (error) {
-        console.error(`❌ Failed to generate QR for ${secret.issuer}:${secret.label}:`, error);
+        logger.error(`❌ Failed to generate QR for ${secret.issuer}:${secret.label}:`, error);
       }
     }
     
@@ -145,9 +146,9 @@ export class GoogleAuthManager {
           secrets: batch.map(s => ({ issuer: s.issuer, label: s.label }))
         });
         
-        console.log(`✅ Generated migration QR batch ${qrCodes.length} (${batch.length} secrets)`);
+        logger.log(`✅ Generated migration QR batch ${qrCodes.length} (${batch.length} secrets)`);
       } catch (error) {
-        console.error(`❌ Failed to generate migration QR batch ${i}:`, error);
+        logger.error(`❌ Failed to generate migration QR batch ${i}:`, error);
       }
     }
     
@@ -181,7 +182,7 @@ export class GoogleAuthManager {
       if (password) {
         // This would use the crypto module to encrypt the JSON
         // For now, return plain JSON (in production, encrypt this)
-        console.log('🔐 TODO: Encrypt backup with password');
+        logger.log('🔐 TODO: Encrypt backup with password');
       }
       
       return JSON.stringify(exportData, null, 2);
@@ -200,7 +201,7 @@ export class GoogleAuthManager {
     try {
       // If password provided, decrypt the backup
       if (password) {
-        console.log('🔓 TODO: Decrypt backup with password');
+        logger.log('🔓 TODO: Decrypt backup with password');
         // This would use the crypto module to decrypt
       }
       
@@ -221,11 +222,11 @@ export class GoogleAuthManager {
           const validated = await this.validateTOTPSecret(secret);
           validatedSecrets.push(validated);
         } catch (error) {
-          console.warn(`⚠️ Skipping invalid secret in backup:`, error.message);
+          logger.warn(`⚠️ Skipping invalid secret in backup:`, error.message);
         }
       }
       
-      console.log(`✅ Imported ${validatedSecrets.length} secrets from JSON backup`);
+      logger.log(`✅ Imported ${validatedSecrets.length} secrets from JSON backup`);
       return validatedSecrets;
     } catch (error) {
       throw new Error(`JSON import failed: ${error.message}`);
@@ -295,7 +296,7 @@ export class GoogleAuthManager {
    * @param {Object} secret - TOTP secret configuration
    */
   addSecretForExport(secret) {
-    console.log('📝 Adding secret for export-only mode (not storing permanently)');
+    logger.log('📝 Adding secret for export-only mode (not storing permanently)');
     
     // Add to temporary export list
     this.exportedSecrets.push({
@@ -303,7 +304,7 @@ export class GoogleAuthManager {
       addedAt: new Date().toISOString()
     });
     
-    console.log(`📤 Export queue now has ${this.exportedSecrets.length} secrets`);
+    logger.log(`📤 Export queue now has ${this.exportedSecrets.length} secrets`);
   }
 
   /**
@@ -318,7 +319,7 @@ export class GoogleAuthManager {
    * Clear export-only secrets
    */
   clearExportOnlySecrets() {
-    console.log('🗑️ Clearing export-only secrets queue');
+    logger.log('🗑️ Clearing export-only secrets queue');
     this.exportedSecrets = [];
   }
 

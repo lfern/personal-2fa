@@ -5,6 +5,7 @@
  */
 
 import { cryptoManager } from './crypto.js';
+import logger from './logger.js';
 
 export class SecureStorage {
   constructor() {
@@ -202,7 +203,7 @@ export class SecureStorage {
               lastUsed: record.lastUsed
             });
           } catch (error) {
-            console.error('Failed to decrypt TOTP secret:', error);
+            logger.error('Failed to decrypt TOTP secret:', error);
             // Skip corrupted records
           }
         }

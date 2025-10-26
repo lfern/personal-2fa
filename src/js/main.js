@@ -26,7 +26,7 @@ class Personal2FAApp {
    * Initialize the application
    */
   async init() {
-    console.log('🚀 Initializing Personal 2FA App...');
+    logger.log('🚀 Initializing Personal 2FA App...');
     
     try {
       // Initialize storage
@@ -52,10 +52,10 @@ class Personal2FAApp {
         this.showScreen('setup');
       }
       
-      console.log('✅ App initialization complete');
+      logger.log('✅ App initialization complete');
       
     } catch (error) {
-      console.error('❌ App initialization failed:', error);
+      logger.error('❌ App initialization failed:', error);
       this.showError('Failed to initialize app: ' + error.message);
     }
   }
@@ -196,14 +196,14 @@ class Personal2FAApp {
     }
     
     try {
-      console.log('🔐 Setting up master password...');
+      logger.log('🔐 Setting up master password...');
       await storageManager.setupMasterPassword(password);
       this.isUnlocked = true;
       this.showScreen('main');
       this.refreshTOTPCodes();
-      console.log('✅ Master password setup complete');
+      logger.log('✅ Master password setup complete');
     } catch (error) {
-      console.error('❌ Setup failed:', error);
+      logger.error('❌ Setup failed:', error);
       this.showError('Setup failed: ' + error.message);
     }
   }
@@ -220,19 +220,19 @@ class Personal2FAApp {
     }
     
     try {
-      console.log('🔓 Attempting to unlock storage...');
+      logger.log('🔓 Attempting to unlock storage...');
       const success = await storageManager.unlock(password);
       
       if (success) {
         this.isUnlocked = true;
         this.showScreen('main');
         this.refreshTOTPCodes();
-        console.log('✅ Storage unlocked successfully');
+        logger.log('✅ Storage unlocked successfully');
       } else {
         this.showLoginError('Invalid password');
       }
     } catch (error) {
-      console.error('❌ Login failed:', error);
+      logger.error('❌ Login failed:', error);
       this.showLoginError('Login failed: ' + error.message);
     }
   }
@@ -265,6 +265,7 @@ class Personal2FAApp {
    * Show data management section
    */
   showDataManagementSection() {
+    logger.log('🗑️ Showing data management section...');
     this.hideAllSections();
     this.elements.dataManagementSection.classList.remove('hidden');
     this.initializeLogsToggle();
@@ -289,7 +290,7 @@ class Personal2FAApp {
    */
   async startQRScanning() {
     try {
-      console.log('📹 Starting QR scanner...');
+      logger.log('📹 Starting QR scanner...');
       
       this.elements.startCamera.classList.add('hidden');
       this.elements.stopCamera.classList.remove('hidden');
@@ -300,7 +301,7 @@ class Personal2FAApp {
       });
       
     } catch (error) {
-      console.error('❌ Failed to start camera:', error);
+      logger.error('❌ Failed to start camera:', error);
       this.elements.scanResult.innerHTML = `<div class="error">❌ Camera Error: ${error.message}</div>`;
       this.elements.startCamera.classList.remove('hidden');
       this.elements.stopCamera.classList.add('hidden');
@@ -311,7 +312,7 @@ class Personal2FAApp {
    * Stop QR code scanning
    */
   stopQRScanning() {
-    console.log('⏹️ Stopping QR scanner...');
+    logger.log('⏹️ Stopping QR scanner...');
     
     qrManager.stopScanning();
     this.elements.startCamera.classList.remove('hidden');
@@ -324,18 +325,18 @@ class Personal2FAApp {
    */
   async handleQRDetected(qrData) {
     try {
-      console.log('🔍 QR Code detected:', qrData);
+      logger.log('🔍 QR Code detected:', qrData);
       
       // Stop scanning
       this.stopQRScanning();
       
       // Check if it's a migration QR
       if (qrData.startsWith('otpauth-migration://')) {
-        console.log('📱 Google Authenticator migration QR detected');
+        logger.log('📱 Google Authenticator migration QR detected');
         const secrets = await googleAuthManager.importFromGoogleAuth(qrData);
         await this.importTOTPSecrets(secrets);
       } else if (qrData.startsWith('otpauth://')) {
-        console.log('🔑 Individual TOTP QR detected');
+        logger.log('🔑 Individual TOTP QR detected');
         const secret = totpGenerator.parseOTPAuthURI(qrData);
         await this.importTOTPSecrets([secret]);
       } else {
@@ -343,7 +344,7 @@ class Personal2FAApp {
       }
       
     } catch (error) {
-      console.error('❌ QR processing failed:', error);
+      logger.error('❌ QR processing failed:', error);
       this.elements.scanResult.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
     }
   }
@@ -359,9 +360,9 @@ class Personal2FAApp {
         try {
           await storageManager.storeTOTPSecret(secret);
           importedCount++;
-          console.log(`✅ Imported: ${secret.issuer}:${secret.label}`);
+          logger.log(`✅ Imported: ${secret.issuer}:${secret.label}`);
         } catch (error) {
-          console.error(`❌ Failed to import ${secret.issuer}:${secret.label}:`, error);
+          logger.error(`❌ Failed to import ${secret.issuer}:${secret.label}:`, error);
         }
       }
       
@@ -375,7 +376,7 @@ class Personal2FAApp {
       this.refreshTOTPCodes();
       
     } catch (error) {
-      console.error('❌ Import failed:', error);
+      logger.error('❌ Import failed:', error);
       this.elements.scanResult.innerHTML = `<div class="error">❌ Import failed: ${error.message}</div>`;
     }
   }
@@ -402,7 +403,7 @@ class Personal2FAApp {
       // Store the secret
       await storageManager.storeTOTPSecret(validatedSecret);
       
-      console.log(`✅ Added manual TOTP: ${secret.issuer}:${secret.label}`);
+      logger.log(`✅ Added manual TOTP: ${secret.issuer}:${secret.label}`);
       
       // Reset form and hide section
       this.elements.manualAddForm.reset();
@@ -412,7 +413,7 @@ class Personal2FAApp {
       this.refreshTOTPCodes();
       
     } catch (error) {
-      console.error('❌ Manual add failed:', error);
+      logger.error('❌ Manual add failed:', error);
       this.showError('Failed to add TOTP: ' + error.message);
     }
   }
@@ -450,7 +451,7 @@ class Personal2FAApp {
       );
       
       if (!firstConfirm) {
-        console.log('🔒 Clear data cancelled by user (first confirmation)');
+        logger.log('🔒 Clear data cancelled by user (first confirmation)');
         return;
       }
 
@@ -470,7 +471,7 @@ class Personal2FAApp {
       );
       
       if (secondConfirm !== 'BORRAR TODO') {
-        console.log('🔒 Clear data cancelled - incorrect confirmation text');
+        logger.log('🔒 Clear data cancelled - incorrect confirmation text');
         alert('❌ Cancelado. Para confirmar debes escribir exactamente "BORRAR TODO"');
         return;
       }
@@ -484,11 +485,11 @@ class Personal2FAApp {
       );
       
       if (!finalConfirm) {
-        console.log('🔒 Clear data cancelled by user (final confirmation)');
+        logger.log('🔒 Clear data cancelled by user (final confirmation)');
         return;
       }
 
-      console.log('🗑️ User confirmed data deletion. Proceeding...');
+      logger.log('🗑️ User confirmed data deletion. Proceeding...');
       
       // Show progress message
       alert('🗑️ Eliminando todos los datos... Por favor espera...');
@@ -507,7 +508,7 @@ class Personal2FAApp {
       window.location.reload();
       
     } catch (error) {
-      console.error('❌ Error clearing data:', error);
+      logger.error('❌ Error clearing data:', error);
       this.showError('Error al eliminar los datos: ' + error.message);
     }
   }
@@ -516,21 +517,21 @@ class Personal2FAApp {
    * Clear all application data from all storage mechanisms
    */
   async clearAllApplicationData() {
-    console.log('🧹 Starting complete data cleanup...');
+    logger.log('🧹 Starting complete data cleanup...');
     
     try {
       // 1. Clear IndexedDB (TOTP secrets and encrypted data)
-      console.log('🗑️ Clearing IndexedDB...');
+      logger.log('🗑️ Clearing IndexedDB...');
       if (storageManager) {
         await storageManager.clearAllData();
       }
       
       // 2. Clear localStorage (settings, cached data)
-      console.log('🗑️ Clearing localStorage...');
+      logger.log('🗑️ Clearing localStorage...');
       localStorage.clear();
       
       // 3. Clear sessionStorage (temporary session data)
-      console.log('🗑️ Clearing sessionStorage...');
+      logger.log('🗑️ Clearing sessionStorage...');
       sessionStorage.clear();
       
       // 4. Reset application state
@@ -538,10 +539,10 @@ class Personal2FAApp {
       this.currentCodes = [];
       this.updateInterval = null;
       
-      console.log('✅ All application data cleared successfully');
+      logger.log('✅ All application data cleared successfully');
       
     } catch (error) {
-      console.error('❌ Error during data cleanup:', error);
+      logger.error('❌ Error during data cleanup:', error);
       throw error;
     }
   }
@@ -555,7 +556,7 @@ class Personal2FAApp {
       const qrCodes = await googleAuthManager.generateExportQRs(secrets, 'migration');
       this.displayExportResult(qrCodes, 'Google Authenticator Migration');
     } catch (error) {
-      console.error('❌ Google format export failed:', error);
+      logger.error('❌ Google format export failed:', error);
       this.showError('Export failed: ' + error.message);
     }
   }
@@ -569,7 +570,7 @@ class Personal2FAApp {
       const qrCodes = await googleAuthManager.generateExportQRs(secrets, 'individual');
       this.displayExportResult(qrCodes, 'Individual QR Codes');
     } catch (error) {
-      console.error('❌ Individual QR export failed:', error);
+      logger.error('❌ Individual QR export failed:', error);
       this.showError('Export failed: ' + error.message);
     }
   }
@@ -595,7 +596,7 @@ class Personal2FAApp {
       this.elements.exportResult.innerHTML = '<div class="success">✅ JSON backup downloaded!</div>';
       
     } catch (error) {
-      console.error('❌ JSON export failed:', error);
+      logger.error('❌ JSON export failed:', error);
       this.showError('Export failed: ' + error.message);
     }
   }
@@ -656,7 +657,7 @@ class Personal2FAApp {
       this.startTOTPRefresh();
       
     } catch (error) {
-      console.error('❌ Failed to refresh TOTP codes:', error);
+      logger.error('❌ Failed to refresh TOTP codes:', error);
       this.showError('Failed to load TOTP codes: ' + error.message);
     }
   }
@@ -721,7 +722,7 @@ class Personal2FAApp {
           }
         }
       } catch (error) {
-        console.error(`❌ Failed to update TOTP for secret ${secretId}:`, error);
+        logger.error(`❌ Failed to update TOTP for secret ${secretId}:`, error);
       }
     }
   }
@@ -730,7 +731,7 @@ class Personal2FAApp {
    * Lock the application
    */
   lockApp() {
-    console.log('🔒 Locking application...');
+    logger.log('🔒 Locking application...');
     
     // Clear timers
     if (this.refreshInterval) {
@@ -766,14 +767,14 @@ class Personal2FAApp {
     });
     
     this.currentScreen = screenName;
-    console.log(`📱 Showing ${screenName} screen`);
+    logger.log(`📱 Showing ${screenName} screen`);
   }
 
   /**
    * Show error message
    */
   showError(message) {
-    console.error('❌', message);
+    logger.error('❌', message);
     // TODO: Implement proper error display
     alert(message);
   }
