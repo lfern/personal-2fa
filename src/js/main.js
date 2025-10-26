@@ -1039,9 +1039,18 @@ class Personal2FAApp {
    */
   async exportGoogleFormat() {
     try {
+      logger.log('🚀 Starting Google format export...');
       const secrets = await storageManager.getAllTOTPSecrets();
+      logger.log(`📊 Found ${secrets.length} secrets to export`);
+      
+      if (secrets.length === 0) {
+        notificationSystem.showNotification(i18n.t('noCodesForExport'), 'warning');
+        return;
+      }
+
       const qrCodes = await googleAuthManager.generateExportQRs(secrets, 'migration');
-      this.displayExportResult(qrCodes, 'Google Authenticator Migration');
+      logger.log(`📱 Generated ${qrCodes.length} QR codes`);
+      this.displayExportResult(qrCodes, i18n.t('googleAuthMigrationTitle'));
     } catch (error) {
       logger.error('❌ Google format export failed:', error);
       this.showError(i18n.t('exportError') + error.message);
@@ -1053,9 +1062,18 @@ class Personal2FAApp {
    */
   async exportIndividualQR() {
     try {
+      logger.log('🚀 Starting individual QR export...');
       const secrets = await storageManager.getAllTOTPSecrets();
+      logger.log(`📊 Found ${secrets.length} secrets to export`);
+      
+      if (secrets.length === 0) {
+        notificationSystem.showNotification(i18n.t('noCodesForExport'), 'warning');
+        return;
+      }
+
       const qrCodes = await googleAuthManager.generateExportQRs(secrets, 'individual');
-      this.displayExportResult(qrCodes, 'Individual QR Codes');
+      logger.log(`📱 Generated ${qrCodes.length} QR codes`);
+      this.displayExportResult(qrCodes, i18n.t('individualQRTitle'));
     } catch (error) {
       logger.error('❌ Individual QR export failed:', error);
       this.showError(i18n.t('exportError') + error.message);
@@ -1092,18 +1110,30 @@ class Personal2FAApp {
    * Display export results
    */
   displayExportResult(qrCodes, title) {
+    if (!qrCodes || qrCodes.length === 0) {
+      this.elements.exportResult.innerHTML = `<p>${i18n.t('noQRGenerated')}</p>`;
+      return;
+    }
+
     let html = `<h4>${title}</h4>`;
     
     qrCodes.forEach((qr, index) => {
+      const qrTitle = qr.type === 'individual' 
+        ? `${qr.issuer}: ${qr.label}` 
+        : `${i18n.t('batchLabel')} ${qr.batchNumber}/${qr.totalBatches}`;
+      
       html += `
         <div class="export-qr">
-          <h5>${qr.type === 'individual' ? `${qr.issuer}: ${qr.label}` : `Batch ${qr.batchNumber}/${qr.totalBatches}`}</h5>
-          <img src="${qr.qrCode}" alt="QR Code" style="max-width: 300px;">
+          <h5>${qrTitle}</h5>
+          <img src="${qr.qrCode}" alt="QR Code ${index + 1}" style="max-width: 300px; border: 1px solid #ccc; padding: 10px;">
+          <br>
+          <small>${i18n.t('qrCodeInstruction')}</small>
         </div>
       `;
     });
     
     this.elements.exportResult.innerHTML = html;
+    logger.log(`✅ Displayed ${qrCodes.length} QR codes in export result`);
   }
 
   /**

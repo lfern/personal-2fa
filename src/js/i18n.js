@@ -147,6 +147,12 @@ class I18n {
         googleAuthFormat: '📱 Formato Google Authenticator',
         individualQRs: '📄 QR Individuales',
         jsonBackup: '📋 Backup JSON',
+        noCodesForExport: '⚠️ No hay códigos para exportar. Agrega algunos códigos primero.',
+        googleAuthMigrationTitle: '📱 Migración Google Authenticator',
+        individualQRTitle: '📄 Códigos QR Individuales', 
+        noQRGenerated: '⚠️ No se pudieron generar códigos QR.',
+        batchLabel: 'Lote',
+        qrCodeInstruction: 'Escanea este código QR con tu aplicación de autenticación',
         
         // Empty state
         emptyStateMessage: 'No hay códigos configurados.',
@@ -362,6 +368,13 @@ class I18n {
         exportNotice: '⚠️ <strong>Important:</strong> This export is for backup only. The codes will NOT be saved in this app, they are only generated so you can import them into another application.',
         googleAuthFormat: '📱 Google Authenticator Format',
         individualQRs: '📄 Individual QRs',
+        jsonBackup: '📋 JSON Backup',
+        noCodesForExport: '⚠️ No codes available for export. Add some codes first.',
+        googleAuthMigrationTitle: '📱 Google Authenticator Migration',
+        individualQRTitle: '📄 Individual QR Codes',
+        noQRGenerated: '⚠️ Could not generate QR codes.',
+        batchLabel: 'Batch',
+        qrCodeInstruction: 'Scan this QR code with your authentication app',
         jsonBackup: '📋 JSON Backup',
         
         // Empty state
