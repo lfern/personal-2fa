@@ -548,11 +548,12 @@ class Personal2FAApp {
   async handleDeleteTOTP(secretId, issuer, label) {
     try {
       // First confirmation dialog
-      const firstConfirm = confirm(
-        `¿Estás seguro de que quieres eliminar este código 2FA?\n\n` +
-        `Servicio: ${issuer}\n` +
-        `Cuenta: ${label}\n\n` +
-        `⚠️ Esta acción no se puede deshacer.`
+      const firstConfirm = await notificationSystem.confirm(
+        `¿Estás seguro de que quieres eliminar este código 2FA?<br><br>` +
+        `Servicio: ${issuer}<br>` +
+        `Cuenta: ${label}<br><br>` +
+        `⚠️ Esta acción no se puede deshacer.`,
+        'Eliminar código 2FA'
       );
 
       if (!firstConfirm) {
@@ -561,14 +562,17 @@ class Personal2FAApp {
       }
 
       // Second confirmation with text input for safety
-      const confirmText = prompt(
-        `Para confirmar la eliminación, escribe: ELIMINAR\n\n` +
-        `Servicio: ${issuer}\n` +
-        `Cuenta: ${label}`
+      const confirmText = await notificationSystem.prompt(
+        `Para confirmar la eliminación, escribe: <strong>ELIMINAR</strong><br><br>` +
+        `Servicio: ${issuer}<br>` +
+        `Cuenta: ${label}`,
+        '',
+        'Confirmación de eliminación'
       );
 
       if (confirmText !== 'ELIMINAR') {
         logger.log('🔒 Delete cancelled - incorrect confirmation text');
+        notificationSystem.showNotification('❌ Texto incorrecto. Debes escribir exactamente "ELIMINAR"', 'error');
         return;
       }
 
@@ -619,12 +623,13 @@ class Personal2FAApp {
   async handleClearAllData() {
     try {
       // First confirmation - Basic warning
-      const firstConfirm = confirm(
-        '⚠️ ADVERTENCIA: Estás a punto de eliminar TODOS los códigos 2FA y datos de la aplicación.\n\n' +
-        '🚨 Esta acción NO se puede deshacer.\n' +
-        '🚨 Perderás el acceso a todas las cuentas configuradas.\n' +
-        '🚨 NO podrás recuperar esta información.\n\n' +
-        '¿Estás absolutamente seguro de que quieres continuar?'
+      const firstConfirm = await notificationSystem.confirm(
+        '⚠️ ADVERTENCIA: Estás a punto de eliminar TODOS los códigos 2FA y datos de la aplicación.<br><br>' +
+        '🚨 Esta acción NO se puede deshacer.<br>' +
+        '🚨 Perderás el acceso a todas las cuentas configuradas.<br>' +
+        '🚨 NO podrás recuperar esta información.<br><br>' +
+        '¿Estás absolutamente seguro de que quieres continuar?',
+        'BORRAR TODOS LOS DATOS'
       );
       
       if (!firstConfirm) {
@@ -632,33 +637,36 @@ class Personal2FAApp {
         return;
       }
 
-      // Second confirmation - More specific
-      const secondConfirm = confirm(
-        '🚨 CONFIRMACIÓN FINAL 🚨\n\n' +
-        'Vas a eliminar permanentemente:\n' +
-        '• Todos los códigos 2FA guardados\n' +
-        '• Configuraciones de la aplicación\n' +
-        '• Datos de IndexedDB y localStorage\n' +
-        '• Contraseña maestra configurada\n\n' +
-        '⚠️ DESPUÉS DE ESTO TENDRÁS QUE:\n' +
-        '• Configurar de nuevo todos tus códigos 2FA\n' +
-        '• Crear una nueva contraseña maestra\n' +
-        '• Volver a importar desde otras aplicaciones\n\n' +
-        'Escribe "BORRAR TODO" si realmente quieres continuar:'
+      // Second confirmation - Text input required
+      const secondConfirm = await notificationSystem.prompt(
+        '🚨 CONFIRMACIÓN FINAL 🚨<br><br>' +
+        'Vas a eliminar permanentemente:<br>' +
+        '• Todos los códigos 2FA guardados<br>' +
+        '• Configuraciones de la aplicación<br>' +
+        '• Datos de IndexedDB y localStorage<br>' +
+        '• Contraseña maestra configurada<br><br>' +
+        '⚠️ DESPUÉS DE ESTO TENDRÁS QUE:<br>' +
+        '• Configurar de nuevo todos tus códigos 2FA<br>' +
+        '• Crear una nueva contraseña maestra<br>' +
+        '• Volver a importar desde otras aplicaciones<br><br>' +
+        'Escribe "BORRAR TODO" si realmente quieres continuar:',
+        '',
+        'Confirmación de texto'
       );
       
       if (secondConfirm !== 'BORRAR TODO') {
         logger.log('🔒 Clear data cancelled - incorrect confirmation text');
-        alert('❌ Cancelado. Para confirmar debes escribir exactamente "BORRAR TODO"');
+        notificationSystem.showNotification('❌ Cancelado. Para confirmar debes escribir exactamente "BORRAR TODO"', 'error');
         return;
       }
 
       // Third and final confirmation
-      const finalConfirm = confirm(
-        '🔥 ÚLTIMA OPORTUNIDAD 🔥\n\n' +
-        'Esta es tu última oportunidad para cancelar.\n' +
-        'Una vez que hagas clic en "Aceptar", NO HAY VUELTA ATRÁS.\n\n' +
-        '¿Proceder con la eliminación TOTAL e IRREVERSIBLE de todos los datos?'
+      const finalConfirm = await notificationSystem.confirm(
+        '🔥 ÚLTIMA OPORTUNIDAD 🔥<br><br>' +
+        'Esta es tu última oportunidad para cancelar.<br>' +
+        'Una vez que hagas clic en "Confirmar", NO HAY VUELTA ATRÁS.<br><br>' +
+        '¿Proceder con la eliminación TOTAL e IRREVERSIBLE de todos los datos?',
+        'CONFIRMACIÓN FINAL'
       );
       
       if (!finalConfirm) {
@@ -669,16 +677,21 @@ class Personal2FAApp {
       logger.log('🗑️ User confirmed data deletion. Proceeding...');
       
       // Show progress message
-      alert('🗑️ Eliminando todos los datos... Por favor espera...');
+      const progressId = notificationSystem.showNotification('🗑️ Eliminando todos los datos... Por favor espera...', 'progress', 0);
       
       // Clear all data
       await this.clearAllApplicationData();
       
+      // Remove progress notification
+      notificationSystem.removeNotification(progressId);
+      
       // Show success message
-      alert(
-        '✅ Datos eliminados exitosamente\n\n' +
-        'Todos los datos han sido eliminados de forma permanente.\n' +
-        'La página se recargará para reiniciar la aplicación.'
+      notificationSystem.showNotification(
+        '✅ Datos eliminados exitosamente<br><br>' +
+        'Todos los datos han sido eliminados de forma permanente.<br>' +
+        'La página se recargará para reiniciar la aplicación.',
+        'success',
+        3000
       );
       
       // Reload the page to start fresh
