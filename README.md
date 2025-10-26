@@ -1,6 +1,8 @@
 # Personal 2FA - Secure Local Authenticator
 
-🔒 **Una aplicación 2FA completamente offline y segura** que importa desde Google Authenticator, permite exportar para backup y funciona como generador TOTP independiente.
+� **[¡PRUEBA LA APLICACIÓN DIRECTAMENTE AQUÍ!](https://lfern.github.io/personal-2fa/dist/personal-2fa-standalone.html)** 🚀
+
+�🔒 **Una aplicación 2FA completamente offline y segura** que importa desde Google Authenticator, permite exportar para backup y funciona como generador TOTP independiente.
 
 ## ✨ Características Principales
 
@@ -126,7 +128,89 @@ La app incluye indicadores de seguridad en tiempo real:
 Personal2FA.performSecurityChecks()
 ```
 
-## 🛠️ Arquitectura Técnica
+## � Almacenamiento de Datos y Verificación
+
+### 🗃️ **Dónde se Guardan los Datos**
+
+La aplicación utiliza **almacenamiento local del navegador** con cifrado:
+
+#### **Almacenamiento Principal: IndexedDB**
+- **Ubicación**: Base de datos `Personal2FA` en IndexedDB del navegador
+- **Datos**: Secretos TOTP cifrados con AES-256-GCM
+- **Persistencia**: Permanente hasta factory reset manual
+
+#### **Almacenamiento Fallback: localStorage** 
+- **Ubicación**: localStorage del navegador con prefijo `personal-2fa-`
+- **Uso**: Solo si IndexedDB falla o no está disponible
+- **Datos**: Misma estructura cifrada que IndexedDB
+
+### 🔍 **Cómo Verificar los Datos Manualmente**
+
+#### **Opción 1: Herramientas de Desarrollador (F12)**
+```
+1. Abrir DevTools (F12)
+2. Ir a pestaña "Application" 
+3. Sección "Storage":
+   - IndexedDB → Personal2FA → secrets (datos principales)
+   - Local Storage → buscar claves "personal-2fa-*" (fallback)
+```
+
+#### **Opción 2: Consola del Navegador**
+```javascript
+// Ver estado de IndexedDB
+console.log('IndexedDB disponible:', !!window.indexedDB);
+
+// Ver datos en localStorage (si existe)
+Object.keys(localStorage).filter(key => key.startsWith('personal-2fa')).forEach(key => {
+  console.log(key + ':', localStorage.getItem(key));
+});
+
+// Verificar base de datos Personal2FA
+const request = indexedDB.open('Personal2FA');
+request.onsuccess = (event) => {
+  console.log('Base de datos Personal2FA existe:', !!event.target.result);
+};
+```
+
+### 🗑️ **Verificar Borrado Completo (Factory Reset)**
+
+#### **Después del Factory Reset, verificar que NO existan:**
+
+1. **IndexedDB**: No debe existir base de datos `Personal2FA`
+2. **localStorage**: No deben existir claves con prefijo `personal-2fa-`
+3. **sessionStorage**: Debe estar limpio de datos de la app
+
+#### **Script de Verificación Completa:**
+```javascript
+// Ejecutar en consola del navegador DESPUÉS del factory reset
+console.log('=== VERIFICACIÓN POST FACTORY RESET ===');
+
+// Verificar localStorage
+const localKeys = Object.keys(localStorage).filter(k => k.includes('personal') || k.includes('2fa'));
+console.log('localStorage keys restantes:', localKeys.length === 0 ? '✅ LIMPIO' : '❌ ' + localKeys);
+
+// Verificar sessionStorage  
+const sessionKeys = Object.keys(sessionStorage).filter(k => k.includes('personal') || k.includes('2fa'));
+console.log('sessionStorage keys restantes:', sessionKeys.length === 0 ? '✅ LIMPIO' : '❌ ' + sessionKeys);
+
+// Verificar IndexedDB
+indexedDB.databases().then(dbs => {
+  const personal2faDB = dbs.find(db => db.name === 'Personal2FA');
+  console.log('IndexedDB Personal2FA:', !personal2faDB ? '✅ ELIMINADA' : '❌ AÚN EXISTE');
+});
+
+console.log('=== Si todo muestra ✅, el borrado fue exitoso ===');
+```
+
+### 📱 **Ubicaciones por Navegador**
+
+- **Chrome/Edge**: `%LOCALAPPDATA%\Google\Chrome\User Data\Default\IndexedDB\`
+- **Firefox**: `%APPDATA%\Mozilla\Firefox\Profiles\[profile]\storage\default\`
+- **Safari**: `~/Library/Safari/Databases/`
+
+⚠️ **Nota**: Los datos están cifrados, incluso accediendo a los archivos directamente son ilegibles sin la contraseña maestra.
+
+## �🛠️ Arquitectura Técnica
 
 ### **Stack de Seguridad**
 - **Web Crypto API**: Cifrado hardware-acelerado
@@ -218,6 +302,38 @@ npm run serve       # Servir build en local
 4. **Documentar cambios de seguridad**
 5. **Pull request** con descripción detallada
 
+## 🌐 GitHub Pages y Acceso Directo
+
+### **Enlaces de Acceso Directo**
+
+- **🚀 [Aplicación Completa (Standalone)](https://lfern.github.io/personal-2fa/dist/personal-2fa-standalone.html)** - Archivo único con todo incluido
+- **📱 [Aplicación Modular](https://lfern.github.io/personal-2fa/dist/index.html)** - Versión con archivos separados
+- **📂 [Repositorio](https://github.com/lfern/personal-2fa)** - Código fuente completo
+
+### **Cómo Funciona GitHub Pages**
+
+GitHub Pages sirve automáticamente los archivos estáticos desde:
+- **URL base**: `https://lfern.github.io/personal-2fa/`
+- **Archivos servidos**: Todo lo que esté en la rama `main`
+- **Carpeta dist/**: Los builds de producción están disponibles directamente
+
+### **Ventajas del Enlace Directo**
+
+✅ **Sin instalación**: Funciona inmediatamente desde el navegador  
+✅ **Siempre actualizado**: Refleja la última versión del repositorio  
+✅ **HTTPS garantizado**: GitHub Pages siempre usa HTTPS  
+✅ **Código verificable**: Puedes inspeccionar el código fuente en el repositorio  
+✅ **Completamente funcional**: Incluye todas las características  
+
+### **Seguridad del Enlace Directo**
+
+⚠️ **Importante**: Aunque el enlace es conveniente, para máxima seguridad:
+
+1. **Verifica el código**: Revisa el repositorio antes de usar
+2. **Descarga local**: Para uso sensible, descarga y ejecuta localmente
+3. **Inspecciona la red**: Confirma que no hay requests externos (F12 → Network)
+4. **Hash del archivo**: Compara checksums si quieres estar 100% seguro
+
 ## 📄 Licencia
 
 MIT License - Usa bajo tu responsabilidad
@@ -238,6 +354,31 @@ Sí, en navegadores móviles modernos. Para mejor experiencia, considera una PWA
 
 ### ¿Los datos salen del dispositivo?
 NO. Todo funciona offline. Los exports son solo para que tú los uses en otras apps.
+
+## 🔧 Configuración GitHub Pages (Para Desarrolladores)
+
+Si eres fork/colaborador y quieres habilitar GitHub Pages en tu repositorio:
+
+### **Activar GitHub Pages**
+1. Ve a tu repositorio en GitHub
+2. **Settings** → **Pages** (en el menú lateral)  
+3. **Source**: Deploy from a branch
+4. **Branch**: `main` 
+5. **Folder**: `/ (root)`
+6. **Save** → Esperar 1-2 minutos
+
+### **Tu Enlace Personal Será**
+```
+https://[tu-usuario].github.io/personal-2fa/dist/personal-2fa-standalone.html
+```
+
+### **Verificar que Funciona**
+```bash
+# Verificar que el enlace responde
+curl -I https://[tu-usuario].github.io/personal-2fa/dist/personal-2fa-standalone.html
+
+# Debe retornar HTTP 200 OK
+```
 
 ---
 
