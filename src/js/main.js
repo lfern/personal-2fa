@@ -101,6 +101,7 @@ class Personal2FAApp {
       loginError: document.getElementById('login-error'),
       
       // Main app elements
+      showCodesBtn: document.getElementById('show-codes-btn'),
       importBtn: document.getElementById('import-btn'),
       exportBtn: document.getElementById('export-btn'),
       addManualBtn: document.getElementById('add-manual-btn'),
@@ -193,6 +194,7 @@ class Personal2FAApp {
     });
     
     // Main navigation
+    this.elements.showCodesBtn.addEventListener('click', () => this.showCodesSection());
     this.elements.importBtn.addEventListener('click', () => this.showImportSection());
     this.elements.exportBtn.addEventListener('click', () => this.showExportSection());
     this.elements.addManualBtn.addEventListener('click', () => this.showManualAddSection());
@@ -331,6 +333,7 @@ class Personal2FAApp {
   updateActiveButton(activeButton) {
     // Remove active class from all navigation buttons
     const navButtons = [
+      this.elements.showCodesBtn,
       this.elements.importBtn,
       this.elements.exportBtn,
       this.elements.addManualBtn,
@@ -353,13 +356,7 @@ class Personal2FAApp {
     this.updateActiveButton(this.elements.importBtn);
     this.elements.importSection.classList.remove('hidden');
     
-    // Scroll to the section
-    setTimeout(() => {
-      this.elements.importSection.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
-    }, 100);
+    // No automatic scroll - sections are positioned naturally after codes
   }
 
   /**
@@ -370,13 +367,7 @@ class Personal2FAApp {
     this.updateActiveButton(this.elements.exportBtn);
     this.elements.exportSection.classList.remove('hidden');
     
-    // Scroll to the section
-    setTimeout(() => {
-      this.elements.exportSection.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
-    }, 100);
+    // No automatic scroll - sections are positioned naturally after codes
   }
 
   /**
@@ -387,13 +378,7 @@ class Personal2FAApp {
     this.updateActiveButton(this.elements.addManualBtn);
     this.elements.manualAddSection.classList.remove('hidden');
     
-    // Scroll to the section
-    setTimeout(() => {
-      this.elements.manualAddSection.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
-    }, 100);
+    // No automatic scroll - sections are positioned naturally after codes
   }
 
   /**
@@ -406,13 +391,7 @@ class Personal2FAApp {
     this.elements.dataManagementSection.classList.remove('hidden');
     this.initializeLogsToggle();
     
-    // Scroll to the section with smooth animation
-    setTimeout(() => {
-      this.elements.dataManagementSection.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
-    }, 100); // Small delay to ensure the section is visible before scrolling
+    // No automatic scroll - sections are positioned naturally after codes
   }
 
   /**
@@ -439,7 +418,7 @@ class Personal2FAApp {
   showCodesSection() {
     this.hideAllSections();
     this.elements.codesSection.classList.remove('hidden');
-    this.updateActiveButton(null); // No button should be active in default view
+    this.updateActiveButton(this.elements.showCodesBtn); // Mark "Ver Códigos" button as active
   }
 
   /**

@@ -32,6 +32,7 @@ class I18n {
         unlockButton: 'Desbloquear',
         
         // Main Navigation
+        showCodesBtn: '🔢 Ver Códigos',
         importBtn: '📥 Importar',
         exportBtn: '💾 Exportar Backup',
         addManualBtn: '➕ Añadir Manual',
@@ -294,6 +295,7 @@ class I18n {
         unlockButton: 'Unlock',
         
         // Main Navigation
+        showCodesBtn: '🔢 View Codes',
         importBtn: '📥 Import',
         exportBtn: '💾 Export Backup',
         addManualBtn: '➕ Add Manual',
