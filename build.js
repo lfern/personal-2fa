@@ -15,6 +15,8 @@ class PersonalBuildScript {
     this.srcDir = path.join(__dirname, 'src');
     this.distDir = path.join(__dirname, 'dist');
     this.jsModules = [
+      'js/logger.js',
+      'js/notification.js',
       'js/crypto.js',
       'js/storage.js',
       'js/totp.js', 
