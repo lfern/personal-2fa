@@ -1,8 +1,16 @@
-# Personal 2FA - Secure Local Authenticator
+# 🔐 Personal 2FA
 
-🚀 **[¡PRUEBA LA APLICACIÓN DIRECTAMENTE AQUÍ!](https://lfern.github.io/personal-2fa/personal-2fa-standalone.html)** 🚀
+> Secure, self-hosted TOTP authenticator with advanced encryption and multi-format backup support
 
-�🔒 **Una aplicación 2FA completamente offline y segura** que importa desde Google Authenticator, permite exportar para backup y funciona como generador TOTP independiente.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES2022-F7DF1E?logo=javascript)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![PWA](https://img.shields.io/badge/PWA-Ready-5A0FC8?logo=pwa)](https://web.dev/progressive-web-apps/)
+[![Encryption](https://img.shields.io/badge/Encryption-AES--256--GCM-red?logo=security)](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard)
+[![GitHub Release](https://img.shields.io/github/v/release/lfern/personal-2fa)](https://github.com/lfern/personal-2fa/releases)
+
+🚀 **[TRY THE APP DIRECTLY HERE!](https://lfern.github.io/personal-2fa/personal-2fa-standalone.html)** 🚀
+
+**Personal 2FA** is a secure, offline-first TOTP authenticator that gives you complete control over your two-factor authentication codes. Import from Google Authenticator, create encrypted backups, and never worry about losing access to your accounts again.
 
 ## ✨ Características Principales
 
