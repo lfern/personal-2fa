@@ -174,7 +174,9 @@ body {
 }
 
 .btn-confirm-cancel,
-.btn-confirm-ok {
+.btn-confirm-ok,
+.btn-cancel,
+.btn-confirm {
   padding: 8px 16px;
   border: none;
   border-radius: 6px;
@@ -185,23 +187,27 @@ body {
   min-width: 80px;
 }
 
-.btn-confirm-cancel {
+.btn-confirm-cancel,
+.btn-cancel {
   background: #f8f9fa;
   color: #6c757d;
   border: 1px solid #dee2e6;
 }
 
-.btn-confirm-cancel:hover {
+.btn-confirm-cancel:hover,
+.btn-cancel:hover {
   background: #e9ecef;
   color: #495057;
 }
 
-.btn-confirm-ok {
+.btn-confirm-ok,
+.btn-confirm {
   background: #007bff;
   color: white;
 }
 
-.btn-confirm-ok:hover {
+.btn-confirm-ok:hover,
+.btn-confirm:hover {
   background: #0056b3;
 }
 

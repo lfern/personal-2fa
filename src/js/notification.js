@@ -118,15 +118,15 @@ export class NotificationSystem {
                 </div>
                 <div class="confirm-message">${message}</div>
                 <div class="confirm-buttons">
-                    <button class="btn-confirm-cancel">${cancelText}</button>
-                    <button class="btn-confirm-ok">${confirmText}</button>
+                    <button class="btn-cancel">${cancelText}</button>
+                    <button class="btn-confirm">${confirmText}</button>
                 </div>
             </div>
         `;
 
         // Add event listeners
-        const cancelBtn = confirmDialog.querySelector('.btn-confirm-cancel');
-        const confirmBtn = confirmDialog.querySelector('.btn-confirm-ok');
+        const cancelBtn = confirmDialog.querySelector('.btn-cancel');
+        const confirmBtn = confirmDialog.querySelector('.btn-confirm');
         
         cancelBtn.addEventListener('click', () => {
             this.removeNotification(confirmId);
@@ -496,7 +496,7 @@ export class NotificationSystem {
             ).join('');
 
             const cancelBtn = `
-                <button class="cancel-btn" style="
+                <button class="btn-cancel" style="
                     padding: 10px 24px;
                     margin-top: 16px;
                     border: 2px solid #ccc;
@@ -532,7 +532,7 @@ export class NotificationSystem {
                     const key = e.target.getAttribute('data-key');
                     document.body.removeChild(modal);
                     resolve(key);
-                } else if (e.target.classList.contains('cancel-btn')) {
+                } else if (e.target.classList.contains('btn-cancel')) {
                     document.body.removeChild(modal);
                     resolve(null);
                 }
