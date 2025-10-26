@@ -1,7 +1,7 @@
 
 /* ====================================
    Personal 2FA - Secure Local 2FA App
-   Generated: 2025-10-26T11:20:32.595Z
+   Generated: 2025-10-26T11:23:10.019Z
    
    Security Features:
    - AES-256-GCM encryption
@@ -138,7 +138,7 @@ class Logger {
 const logger = new Logger();
 
 // Export for use in other modules
-export default logger;
+
 
 })();
 
@@ -332,7 +332,7 @@ class NotificationSystem {
 const notificationSystem = new NotificationSystem();
 
 // Export singleton instance as default
-export default notificationSystem;
+
   // Export to global scope
   window.NotificationSystem = NotificationSystem;
 

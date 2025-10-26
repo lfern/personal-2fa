@@ -198,6 +198,12 @@ document.addEventListener('DOMContentLoaded', function() {
       return ''; // Remove the export statement
     });
     
+    // Handle export default statements
+    content = content.replace(/export\s+default\s+(\w+);?\s*/g, (match, name) => {
+      // For default exports, we can assign to the module name or just remove
+      return ''; // Remove the export default statement
+    });
+    
     // Create global assignments for all exported names
     const globalAssignments = exportedNames.length > 0 
       ? '\n  // Export to global scope\n' + exportedNames.map(name => `  window.${name} = ${name};`).join('\n')
