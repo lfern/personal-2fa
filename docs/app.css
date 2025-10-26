@@ -1,6 +1,6 @@
 /**
  * Personal 2FA - Styles
- * Build: 2025-10-26T11:57:24.188Z
+ * Build: 2025-10-26T15:05:04.629Z
  * Mobile-first responsive design
  */
 
@@ -180,7 +180,9 @@ body {
 }
 
 .btn-confirm-cancel,
-.btn-confirm-ok {
+.btn-confirm-ok,
+.btn-cancel,
+.btn-confirm {
   padding: 8px 16px;
   border: none;
   border-radius: 6px;
@@ -191,23 +193,27 @@ body {
   min-width: 80px;
 }
 
-.btn-confirm-cancel {
+.btn-confirm-cancel,
+.btn-cancel {
   background: #f8f9fa;
   color: #6c757d;
   border: 1px solid #dee2e6;
 }
 
-.btn-confirm-cancel:hover {
+.btn-confirm-cancel:hover,
+.btn-cancel:hover {
   background: #e9ecef;
   color: #495057;
 }
 
-.btn-confirm-ok {
+.btn-confirm-ok,
+.btn-confirm {
   background: #007bff;
   color: white;
 }
 
-.btn-confirm-ok:hover {
+.btn-confirm-ok:hover,
+.btn-confirm:hover {
   background: #0056b3;
 }
 
@@ -776,6 +782,45 @@ select:focus {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-2px); }
   75% { transform: translateX(2px); }
+}
+
+/* Import Section */
+.import-method {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e9ecef;
+}
+
+.import-method h4 {
+  color: #2a5298;
+  margin-bottom: 8px;
+  font-size: 1.1em;
+}
+
+.import-method p {
+  color: #666;
+  margin-bottom: 15px;
+  font-size: 0.95em;
+}
+
+.json-import {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.selected-file {
+  color: #28a745;
+  font-size: 0.9em;
+  font-weight: 500;
+  margin-left: 10px;
+}
+
+.selected-file:empty {
+  display: none;
 }
 
 /* QR Scanner */

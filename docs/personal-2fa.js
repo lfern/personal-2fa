@@ -1,7 +1,7 @@
 
 /* ====================================
    Personal 2FA - Secure Local 2FA App
-   Generated: 2025-10-26T11:57:24.165Z
+   Generated: 2025-10-26T15:05:04.610Z
    
    Security Features:
    - AES-256-GCM encryption
@@ -183,7 +183,8 @@ class I18n {
         unlockButton: 'Desbloquear',
         
         // Main Navigation
-        importBtn: '📥 Importar de Google Auth',
+        showCodesBtn: '🔢 Ver Códigos',
+        importBtn: '📥 Importar',
         exportBtn: '💾 Exportar Backup',
         addManualBtn: '➕ Añadir Manual',
         manageDataBtn: '🗑️ Gestionar Datos',
@@ -229,6 +230,182 @@ class I18n {
         importSuccess: '✅ Códigos importados exitosamente!',
         deleteConfirm: '¿Estás seguro de que quieres eliminar este código 2FA?',
         
+        // Dialog titles and buttons
+        deleteCodeTitle: 'Eliminar código 2FA',
+        deleteAllDataTitle: 'BORRAR TODOS LOS DATOS',
+        textConfirmationTitle: 'Confirmación de texto',
+        deleteConfirmationTitle: 'Confirmación de eliminación',
+        finalConfirmationTitle: 'CONFIRMACIÓN FINAL',
+        confirm: 'Confirmar',
+        cancel: 'Cancelar',
+        accept: 'Aceptar',
+        
+        // Delete messages
+        deleteCodeMessage: '¿Estás seguro de que quieres eliminar este código 2FA?<br><br>Servicio: {issuer}<br>Cuenta: {label}<br><br>⚠️ Esta acción no se puede deshacer.',
+        deletePromptMessage: 'Para confirmar la eliminación, escribe: <strong>ELIMINAR</strong><br><br>Servicio: {issuer}<br>Cuenta: {label}',
+        deleteTextError: '❌ Texto incorrecto. Debes escribir exactamente "ELIMINAR"',
+        deleteSuccessMessage: '✅ Código eliminado: {issuer} - {label}',
+        deleteError: '❌ Error al eliminar el código. ID inválido.',
+        
+        // Clear all data messages
+        clearAllWarning: '⚠️ ADVERTENCIA: Estás a punto de eliminar TODOS los códigos 2FA y datos de la aplicación.<br><br>🚨 Esta acción NO se puede deshacer.<br>🚨 Perderás el acceso a todas las cuentas configuradas.<br>🚨 NO podrás recuperar esta información.<br><br>¿Estás absolutamente seguro de que quieres continuar?',
+        clearAllFinalConfirm: '🚨 CONFIRMACIÓN FINAL 🚨<br><br>Vas a eliminar permanentemente:<br>• Todos los códigos 2FA guardados<br>• Configuraciones de la aplicación<br>• Datos de IndexedDB y localStorage<br>• Contraseña maestra configurada<br><br>⚠️ DESPUÉS DE ESTO TENDRÁS QUE:<br>• Configurar de nuevo todos tus códigos 2FA<br>• Crear una nueva contraseña maestra<br>• Volver a importar desde otras aplicaciones<br><br>Escribe "BORRAR TODO" si realmente quieres continuar:',
+        clearAllLastChance: '🔥 ÚLTIMA OPORTUNIDAD 🔥<br><br>Esta es tu última oportunidad para cancelar.<br>Una vez que hagas clic en "Confirmar", NO HAY VUELTA ATRÁS.<br><br>¿Proceder con la eliminación TOTAL e IRREVERSIBLE de todos los datos?',
+        clearAllTextError: '❌ Cancelado. Para confirmar debes escribir exactamente "BORRAR TODO"',
+        clearAllProgress: '🗑️ Eliminando todos los datos... Por favor espera...',
+        clearAllSuccess: '✅ Datos eliminados exitosamente<br><br>Todos los datos han sido eliminados de forma permanente.<br>La página se recargará para reiniciar la aplicación.',
+        clearCodesProgress: '🧹 Borrando códigos TOTP...',
+        clearCodesSuccess: '✅ Códigos TOTP eliminados<br><br>Todos los códigos han sido borrados exitosamente.<br>Tu configuración y contraseña se han preservado.',
+        
+        // Error messages
+        initError: 'Error al inicializar la aplicación: ',
+        setupError: 'Error en la configuración: ',
+        loginError: 'Error de acceso: ',
+        deleteError: '❌ Error al eliminar: ',
+        clearDataError: 'Error al eliminar los datos: ',
+        exportError: 'Error de exportación: ',
+        totpLoadError: 'Error al cargar códigos TOTP: ',
+        addTotpError: 'Error al añadir TOTP: ',
+        securityWarning: 'Advertencia de seguridad: Web Crypto API no disponible. Por favor usa HTTPS o localhost.',
+        
+        // Login messages
+        enterPassword: 'Por favor introduce tu contraseña maestra',
+        loginFailed: 'Error de acceso: ',
+        
+        // Scanner messages
+        scanningQR: '🔍 Buscando códigos QR...',
+        cameraError: '❌ Error de cámara: ',
+        qrError: '❌ Error: ',
+        importSuccessMessage: '✅ ¡Códigos importados exitosamente!',
+        importFailedMessage: '❌ Error de importación: ',
+        
+        // Export messages
+        jsonDownloaded: '✅ ¡Backup JSON descargado!',
+        
+        // Setup messages
+        configuringPassword: '🔐 Configurando contraseña maestra...',
+        
+        // Action buttons
+        activateCamera: '📹 Activar Cámara',
+        stopCamera: '⏹️ Detener',
+        
+        // Section titles
+        codesTitle: '🔢 Códigos de Autenticación',
+        importSectionTitle: '📱 Importar Códigos 2FA',
+        exportSectionTitle: '💾 Exportar para Backup',
+        dataManagementTitle: '🗑️ Gestión de Datos',
+        manualAddTitle: '➕ Añadir Código Manualmente',
+        
+        // Export messages
+        exportNotice: '⚠️ <strong>Importante:</strong> Este export es solo para backup. Los códigos NO se guardarán en esta app, solo se generan para que puedas importarlos en otra aplicación.',
+        googleAuthFormat: '📱 Formato Google Authenticator',
+        individualQRs: '📄 QR Individuales',
+        jsonBackup: '📋 Backup JSON',
+        noCodesForExport: '⚠️ No hay códigos para exportar. Agrega algunos códigos primero.',
+        googleAuthMigrationTitle: '📱 Migración Google Authenticator',
+        individualQRTitle: '📄 Códigos QR Individuales', 
+        noQRGenerated: '⚠️ No se pudieron generar códigos QR.',
+        batchLabel: 'Lote',
+        qrCodeInstruction: 'Escanea este código QR con tu aplicación de autenticación',
+        
+        // Import messages
+        jsonImportTitle: '📋 Importar desde JSON',
+        jsonImportDesc: 'Importa códigos desde un archivo JSON exportado previamente.',
+        qrImportTitle: '📱 Importar desde QR',
+        qrImportDesc: 'Escanea códigos QR de Google Authenticator u otras apps.',
+        selectJSONFile: '📂 Seleccionar Archivo JSON',
+        invalidFileType: '❌ Por favor selecciona un archivo JSON válido.',
+        invalidJSONFormat: '❌ El archivo no contiene JSON válido.',
+        invalidJSONStructure: '❌ La estructura del archivo JSON no es válida para importar códigos 2FA.',
+        importConfirmTitle: '📥 Confirmar Importación',
+        importConfirmMessage: '¿Estás seguro de que quieres importar {count} códigos desde este archivo JSON?',
+        importResultMessage: '📊 Importación completada: {imported} importados, {duplicates} duplicados omitidos, {errors} errores.',
+        importError: '❌ Error al importar: ',
+        
+        // Encrypted export/import
+        encryptedBackup: '🔒 Backup Cifrado',
+        encryptedImportTitle: '🔒 Importar desde Backup Cifrado',
+        encryptedImportDesc: 'Importa códigos desde un archivo cifrado (compatible con OpenSSL AES-256-CBC).',
+        selectEncryptedFile: '📂 Seleccionar Archivo Cifrado',
+        encryptedExportTitle: '🔒 Exportar Backup Cifrado',
+        encryptedExportPasswordChoice: '¿Qué contraseña quieres usar para cifrar el backup?',
+        useCurrentPassword: '🔐 Usar contraseña maestra actual',
+        useCustomPassword: '🔑 Usar contraseña personalizada',
+        customPasswordTitle: '🔑 Contraseña Personalizada',
+        enterCustomPasswordPrompt: 'Introduce una contraseña para cifrar el backup (mínimo 8 caracteres):',
+        confirmPasswordTitle: '🔐 Confirmar Contraseña',
+        confirmCustomPasswordPrompt: 'Confirma la contraseña:',
+        noMasterPasswordAvailable: '❌ No hay contraseña maestra disponible para el cifrado.',
+        encryptedBackupDownloaded: '✅ ¡Backup cifrado descargado! Compatible con OpenSSL AES-256-CBC.',
+        decryptionPasswordTitle: '🔓 Contraseña de Descifrado',
+        enterDecryptionPassword: 'Introduce la contraseña para descifrar el archivo:',
+        decryptionFailed: '❌ Error al descifrar el archivo. Verifica la contraseña.',
+        invalidEncryptedFileType: '❌ Por favor selecciona un archivo cifrado válido (.enc, .dat, .bin).',
+        enterPassword: 'Introducir contraseña',
+        confirmPassword: 'Confirmar contraseña',
+        enterConfirmPassword: 'Confirma la contraseña',
+        passwordsMatch: 'Las contraseñas coinciden',
+        
+        // Empty state
+        emptyStateMessage: 'No hay códigos configurados.',
+        emptyStateSubtext: 'Importa desde Google Authenticator o añade manualmente.',
+        
+        // Data management
+        devOptions: '⚙️ Opciones de Desarrollo',
+        showDebugLogs: '📝 Mostrar logs de depuración',
+        debugDescription: 'Activa los mensajes de depuración en la consola del navegador (desactivado por defecto). Útil para desarrolladores y resolución de problemas. Los errores críticos siempre se muestran.',
+        
+        // Danger zone
+        deleteAllDataTitle: '⚠️ Eliminar Todos los Datos',
+        deleteAllDataWarning: 'Esta acción eliminará <strong>permanentemente</strong> todos los códigos 2FA y datos almacenados, <strong>pero mantiene tu contraseña maestra y configuraciones básicas</strong>.',
+        deleteAllDataNotice: '<strong>🚨 NO HAY FORMA DE RECUPERAR LOS CÓDIGOS UNA VEZ ELIMINADOS</strong>',
+        deleteAllDataBtn: '🗑️ Eliminar Todos los Datos',
+        
+        // Factory reset
+        factoryResetSectionTitle: '🔄 Reset Completo de la Aplicación',
+        factoryResetDescription: 'Esta acción <strong>RESETEA COMPLETAMENTE</strong> la aplicación, eliminando:',
+        factoryResetItems: {
+          password: '🔐 Contraseña maestra configurada',
+          codes: '🗑️ Todos los códigos 2FA y datos',
+          settings: '⚙️ Todas las configuraciones y preferencias',
+          history: '💾 Todo el historial y caché local'
+        },
+        factoryResetFinalWarning: '<strong>🚨 LA APLICACIÓN VOLVERÁ AL ESTADO INICIAL COMO SI NUNCA SE HUBIERA USADO</strong>',
+        factoryResetBtn: '🔄 Reset Completo',
+        
+        // Manual add form
+        servicePlaceholder: 'Servicio (ej: Google, GitHub)',
+        accountPlaceholder: 'Cuenta (ej: user@gmail.com)',
+        secretPlaceholder: 'Código secreto (Base32)',
+        algorithmLabel: 'Algoritmo:',
+        sha1Standard: 'SHA1 (estándar)',
+        digitsLabel: 'Dígitos:',
+        sixStandard: '6 (estándar)',
+        periodLabel: 'Período:',
+        addCodeBtn: '✅ Añadir Código',
+        manualAddTitle: '➕ Añadir Código Manualmente',
+        cancelBtn: '❌ Cancelar',
+        
+        // Security panel
+        securityVerification: '🔍 Verificación de Seguridad',
+        
+        // Factory Reset messages
+        factoryResetTitle: '🔄 FACTORY RESET - ADVERTENCIA CRÍTICA',
+        factoryResetWarning: '⚠️ Un Factory Reset ELIMINARÁ COMPLETAMENTE:<br><br>🔐 Tu contraseña maestra configurada<br>🗑️ TODOS los códigos 2FA guardados<br>⚙️ TODAS las configuraciones personalizadas<br>💾 TODO el historial y datos locales<br><br>🚨 <strong>LA APLICACIÓN VOLVERÁ AL ESTADO INICIAL</strong><br>🚨 <strong>COMO SI NUNCA LA HUBIERAS USADO</strong><br><br>¿Estás completamente seguro de que quieres continuar?',
+        factoryResetConfirmTitle: 'CONFIRMACIÓN DE FACTORY RESET',
+        factoryResetConfirmMessage: 'Para proceder con el reset completo de la aplicación,<br>escribe exactamente: <strong>FACTORY RESET</strong><br><br>⚠️ Esta acción es <strong>COMPLETAMENTE IRREVERSIBLE</strong><br>⚠️ Perderás <strong>TODO</strong> lo configurado en esta aplicación',
+        factoryResetPlaceholder: 'Escribe: FACTORY RESET',
+        factoryResetTextError: '❌ Texto incorrecto. Debes escribir exactamente: FACTORY RESET',
+        factoryResetFinalTitle: '🚨 ÚLTIMA ADVERTENCIA - FACTORY RESET 🚨',
+        factoryResetFinalMessage: '⚠️ Estás a punto de realizar un <strong>RESET COMPLETO</strong>.<br>La aplicación volverá al estado inicial.<br><br>❌ <strong>NO PODRÁS RECUPERAR NADA</strong><br>❌ <strong>NO HAY COPIAS DE SEGURIDAD</strong><br>❌ <strong>NO HAY FORMA DE DESHACER ESTA ACCIÓN</strong><br><br>Una vez que hagas clic en "Ejecutar Reset", la aplicación<br>se reseteará completamente como si nunca la hubieras usado.',
+        factoryResetProgress: '🔄 Ejecutando Factory Reset... Por favor espera...',
+        factoryResetClearing: 'Limpiando almacenamiento local...',
+        factoryResetForcing: 'Forzando limpieza...',
+        factoryResetComplete: '✅ FACTORY RESET COMPLETADO<br><br>La aplicación ha sido completamente reseteada.<br>🔄 Recargando página...',
+        factoryResetError: '❌ Error durante el factory reset: ',
+        continueBtn: 'Sí, Continuar',
+        executeResetBtn: 'Ejecutar Reset',
+        
         // Security Indicators
         encryption: '🔐 Cifrado: AES-256',
         storage: '🏠 Local',
@@ -269,7 +446,8 @@ class I18n {
         unlockButton: 'Unlock',
         
         // Main Navigation
-        importBtn: '📥 Import from Google Auth',
+        showCodesBtn: '🔢 View Codes',
+        importBtn: '📥 Import',
         exportBtn: '💾 Export Backup',
         addManualBtn: '➕ Add Manual',
         manageDataBtn: '🗑️ Manage Data',
@@ -314,6 +492,185 @@ class I18n {
         invalidPassword: 'Invalid password',
         importSuccess: '✅ Codes imported successfully!',
         deleteConfirm: 'Are you sure you want to delete this 2FA code?',
+        
+        // Dialog titles and buttons
+        deleteCodeTitle: 'Delete 2FA Code',
+        deleteAllDataTitle: 'DELETE ALL DATA',
+        textConfirmationTitle: 'Text Confirmation',
+        deleteConfirmationTitle: 'Delete Confirmation',
+        finalConfirmationTitle: 'FINAL CONFIRMATION',
+        confirm: 'Confirm',
+        cancel: 'Cancel',
+        accept: 'Accept',
+        
+        // Delete messages
+        deleteCodeMessage: 'Are you sure you want to delete this 2FA code?<br><br>Service: {issuer}<br>Account: {label}<br><br>⚠️ This action cannot be undone.',
+        deletePromptMessage: 'To confirm deletion, type: <strong>DELETE</strong><br><br>Service: {issuer}<br>Account: {label}',
+        deleteTextError: '❌ Incorrect text. You must type exactly "DELETE"',
+        deleteSuccessMessage: '✅ Code deleted: {issuer} - {label}',
+        deleteError: '❌ Error deleting code. Invalid ID.',
+        
+        // Clear all data messages
+        clearAllWarning: '⚠️ WARNING: You are about to delete ALL 2FA codes and application data.<br><br>🚨 This action CANNOT be undone.<br>🚨 You will lose access to all configured accounts.<br>🚨 You will NOT be able to recover this information.<br><br>Are you absolutely sure you want to continue?',
+        clearAllFinalConfirm: '🚨 FINAL CONFIRMATION 🚨<br><br>You are about to permanently delete:<br>• All saved 2FA codes<br>• Application configurations<br>• IndexedDB and localStorage data<br>• Configured master password<br><br>⚠️ AFTER THIS YOU WILL HAVE TO:<br>• Set up all your 2FA codes again<br>• Create a new master password<br>• Re-import from other applications<br><br>Type "DELETE ALL" if you really want to continue:',
+        clearAllLastChance: '🔥 LAST CHANCE 🔥<br><br>This is your last chance to cancel.<br>Once you click "Confirm", there is NO GOING BACK.<br><br>Proceed with TOTAL and IRREVERSIBLE deletion of all data?',
+        clearAllTextError: '❌ Cancelled. To confirm you must type exactly "DELETE ALL"',
+        clearAllProgress: '🗑️ Deleting all data... Please wait...',
+        clearAllSuccess: '✅ Data deleted successfully<br><br>All data has been permanently deleted.<br>The page will reload to restart the application.',
+        clearCodesProgress: '🧹 Clearing TOTP codes...',
+        clearCodesSuccess: '✅ TOTP codes cleared<br><br>All codes have been successfully deleted.<br>Your configuration and password have been preserved.',
+        
+        // Error messages
+        initError: 'Failed to initialize app: ',
+        setupError: 'Setup error: ',
+        loginError: 'Login error: ',
+        deleteError: '❌ Error deleting: ',
+        clearDataError: 'Error clearing data: ',
+        exportError: 'Export failed: ',
+        totpLoadError: 'Failed to load TOTP codes: ',
+        addTotpError: 'Failed to add TOTP: ',
+        securityWarning: 'Security warning: Web Crypto API not available. Please use HTTPS or localhost.',
+        
+        // Login messages
+        enterPassword: 'Please enter your master password',
+        loginFailed: 'Login failed: ',
+        
+        // Scanner messages
+        scanningQR: '🔍 Scanning for QR codes...',
+        cameraError: '❌ Camera Error: ',
+        qrError: '❌ Error: ',
+        importSuccessMessage: '✅ Codes imported successfully!',
+        importFailedMessage: '❌ Import failed: ',
+        
+        // Export messages
+        jsonDownloaded: '✅ JSON backup downloaded!',
+        
+        // Setup messages
+        configuringPassword: '🔐 Setting up master password...',
+        
+        // Action buttons
+        activateCamera: '📹 Start Camera',
+        stopCamera: '⏹️ Stop',
+        
+        // Section titles
+        codesTitle: '🔢 Authentication Codes',
+        importSectionTitle: '📱 Import 2FA Codes',
+        exportSectionTitle: '💾 Export for Backup',
+        dataManagementTitle: '🗑️ Data Management',
+        manualAddTitle: '➕ Add Code Manually',
+        
+        // Export messages
+        exportNotice: '⚠️ <strong>Important:</strong> This export is for backup only. The codes will NOT be saved in this app, they are only generated so you can import them into another application.',
+        googleAuthFormat: '📱 Google Authenticator Format',
+        individualQRs: '📄 Individual QRs',
+        jsonBackup: '📋 JSON Backup',
+        noCodesForExport: '⚠️ No codes available for export. Add some codes first.',
+        googleAuthMigrationTitle: '📱 Google Authenticator Migration',
+        individualQRTitle: '📄 Individual QR Codes',
+        noQRGenerated: '⚠️ Could not generate QR codes.',
+        batchLabel: 'Batch',
+        qrCodeInstruction: 'Scan this QR code with your authentication app',
+        
+        // Import messages
+        jsonImportTitle: '📋 Import from JSON',
+        jsonImportDesc: 'Import codes from a previously exported JSON file.',
+        qrImportTitle: '📱 Import from QR',
+        qrImportDesc: 'Scan QR codes from Google Authenticator or other apps.',
+        selectJSONFile: '📂 Select JSON File',
+        invalidFileType: '❌ Please select a valid JSON file.',
+        invalidJSONFormat: '❌ The file does not contain valid JSON.',
+        invalidJSONStructure: '❌ The JSON file structure is not valid for importing 2FA codes.',
+        importConfirmTitle: '📥 Confirm Import',
+        importConfirmMessage: 'Are you sure you want to import {count} codes from this JSON file?',
+        importResultMessage: '📊 Import completed: {imported} imported, {duplicates} duplicates skipped, {errors} errors.',
+        importError: '❌ Import error: ',
+        
+        // Encrypted export/import
+        encryptedBackup: '🔒 Encrypted Backup',
+        encryptedImportTitle: '🔒 Import from Encrypted Backup',
+        encryptedImportDesc: 'Import codes from an encrypted file (OpenSSL AES-256-CBC compatible).',
+        selectEncryptedFile: '📂 Select Encrypted File',
+        encryptedExportTitle: '🔒 Export Encrypted Backup',
+        encryptedExportPasswordChoice: 'Which password do you want to use to encrypt the backup?',
+        useCurrentPassword: '🔐 Use current master password',
+        useCustomPassword: '🔑 Use custom password',
+        customPasswordTitle: '🔑 Custom Password',
+        enterCustomPasswordPrompt: 'Enter a password to encrypt the backup (minimum 8 characters):',
+        confirmPasswordTitle: '🔐 Confirm Password',
+        confirmCustomPasswordPrompt: 'Confirm the password:',
+        noMasterPasswordAvailable: '❌ No master password available for encryption.',
+        encryptedBackupDownloaded: '✅ Encrypted backup downloaded! Compatible with OpenSSL AES-256-CBC.',
+        decryptionPasswordTitle: '🔓 Decryption Password',
+        enterDecryptionPassword: 'Enter the password to decrypt the file:',
+        decryptionFailed: '❌ Failed to decrypt file. Please check the password.',
+        invalidEncryptedFileType: '❌ Please select a valid encrypted file (.enc, .dat, .bin).',
+        enterPassword: 'Enter password',
+        confirmPassword: 'Confirm password',
+        enterConfirmPassword: 'Confirm the password',
+        passwordsMatch: 'Passwords match',
+        
+        // Empty state
+        jsonBackup: '📋 JSON Backup',
+        
+        // Empty state
+        emptyStateMessage: 'No codes configured.',
+        emptyStateSubtext: 'Import from Google Authenticator or add manually.',
+        
+        // Data management
+        devOptions: '⚙️ Development Options',
+        showDebugLogs: '📝 Show debug logs',
+        debugDescription: 'Enable debug messages in browser console (disabled by default). Useful for developers and troubleshooting. Critical errors are always shown.',
+        
+        // Danger zone
+        deleteAllDataTitle: '⚠️ Delete All Data',
+        deleteAllDataWarning: 'This action will <strong>permanently</strong> delete all 2FA codes and stored data, <strong>but keeps your master password and basic settings</strong>.',
+        deleteAllDataNotice: '<strong>🚨 THERE IS NO WAY TO RECOVER THE CODES ONCE DELETED</strong>',
+        deleteAllDataBtn: '🗑️ Delete All Data',
+        
+        // Factory reset
+        factoryResetSectionTitle: '🔄 Complete Application Reset',
+        factoryResetDescription: 'This action <strong>COMPLETELY RESETS</strong> the application, deleting:',
+        factoryResetItems: {
+          password: '🔐 Configured master password',
+          codes: '🗑️ All 2FA codes and data',
+          settings: '⚙️ All configurations and preferences',
+          history: '💾 All history and local cache'
+        },
+        factoryResetFinalWarning: '<strong>🚨 THE APPLICATION WILL RETURN TO INITIAL STATE AS IF IT WAS NEVER USED</strong>',
+        factoryResetBtn: '🔄 Complete Reset',
+        
+        // Manual add form
+        servicePlaceholder: 'Service (e.g., Google, GitHub)',
+        accountPlaceholder: 'Account (e.g., user@gmail.com)',
+        secretPlaceholder: 'Secret code (Base32)',
+        algorithmLabel: 'Algorithm:',
+        sha1Standard: 'SHA1 (standard)',
+        digitsLabel: 'Digits:',
+        sixStandard: '6 (standard)',
+        periodLabel: 'Period:',
+        addCodeBtn: '✅ Add Code',
+        manualAddTitle: '➕ Add Code Manually',
+        cancelBtn: '❌ Cancel',
+        
+        // Security panel
+        securityVerification: '🔍 Security Verification',
+        
+        // Factory Reset messages
+        factoryResetTitle: '🔄 FACTORY RESET - CRITICAL WARNING',
+        factoryResetWarning: '⚠️ A Factory Reset will COMPLETELY DELETE:<br><br>🔐 Your configured master password<br>🗑️ ALL saved 2FA codes<br>⚙️ ALL personalized settings<br>💾 ALL history and local data<br><br>🚨 <strong>THE APPLICATION WILL RETURN TO INITIAL STATE</strong><br>🚨 <strong>AS IF YOU NEVER USED IT</strong><br><br>Are you completely sure you want to continue?',
+        factoryResetConfirmTitle: 'FACTORY RESET CONFIRMATION',
+        factoryResetConfirmMessage: 'To proceed with the complete application reset,<br>type exactly: <strong>FACTORY RESET</strong><br><br>⚠️ This action is <strong>COMPLETELY IRREVERSIBLE</strong><br>⚠️ You will lose <strong>EVERYTHING</strong> configured in this application',
+        factoryResetPlaceholder: 'Type: FACTORY RESET',
+        factoryResetTextError: '❌ Incorrect text. You must type exactly: FACTORY RESET',
+        factoryResetFinalTitle: '🚨 LAST WARNING - FACTORY RESET 🚨',
+        factoryResetFinalMessage: '⚠️ You are about to perform a <strong>COMPLETE RESET</strong>.<br>The application will return to initial state.<br><br>❌ <strong>YOU WILL NOT BE ABLE TO RECOVER ANYTHING</strong><br>❌ <strong>THERE ARE NO BACKUPS</strong><br>❌ <strong>THERE IS NO WAY TO UNDO THIS ACTION</strong><br><br>Once you click "Execute Reset", the application<br>will be completely reset as if you never used it.',
+        factoryResetProgress: '🔄 Executing Factory Reset... Please wait...',
+        factoryResetClearing: 'Clearing local storage...',
+        factoryResetForcing: 'Forcing cleanup...',
+        factoryResetComplete: '✅ FACTORY RESET COMPLETED<br><br>The application has been completely reset.<br>🔄 Reloading page...',
+        factoryResetError: '❌ Error during factory reset: ',
+        continueBtn: 'Yes, Continue',
+        executeResetBtn: 'Execute Reset',
         
         // Security Indicators
         encryption: '🔐 Encryption: AES-256',
@@ -586,15 +943,15 @@ class NotificationSystem {
                 </div>
                 <div class="confirm-message">${message}</div>
                 <div class="confirm-buttons">
-                    <button class="btn-confirm-cancel">${cancelText}</button>
-                    <button class="btn-confirm-ok">${confirmText}</button>
+                    <button class="btn-cancel">${cancelText}</button>
+                    <button class="btn-confirm">${confirmText}</button>
                 </div>
             </div>
         `;
 
         // Add event listeners
-        const cancelBtn = confirmDialog.querySelector('.btn-confirm-cancel');
-        const confirmBtn = confirmDialog.querySelector('.btn-confirm-ok');
+        const cancelBtn = confirmDialog.querySelector('.btn-cancel');
+        const confirmBtn = confirmDialog.querySelector('.btn-confirm');
         
         cancelBtn.addEventListener('click', () => {
             this.removeNotification(confirmId);
@@ -623,6 +980,141 @@ class NotificationSystem {
     }
 
     /**
+     * Simple confirm dialog - returns Promise
+     */
+    async confirm(message, title = '') {
+        return new Promise((resolve) => {
+            const confirmId = `confirm-${Date.now()}`;
+            
+            const notification = document.createElement('div');
+            notification.id = confirmId;
+            notification.className = 'notification notification-confirm';
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <span class="notification-icon">⚠️</span>
+                    <div class="notification-message">
+                        ${title ? `<strong>${title}</strong><br><br>` : ''}
+                        ${message}
+                        <div class="confirm-buttons">
+                            <button class="btn-cancel">${window.i18n?.t?.('cancel') || 'Cancelar'}</button>
+                            <button class="btn-confirm">${window.i18n?.t?.('confirm') || 'Confirmar'}</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add to container
+            if (this.container) {
+                this.container.appendChild(notification);
+            } else {
+                document.body.appendChild(notification);
+            }
+
+            const cancelBtn = notification.querySelector('.btn-cancel');
+            const confirmBtn = notification.querySelector('.btn-confirm');
+
+            const cleanup = () => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            };
+
+            cancelBtn.onclick = () => {
+                cleanup();
+                resolve(false);
+            };
+
+            confirmBtn.onclick = () => {
+                cleanup();
+                resolve(true);
+            };
+
+            // Animate in
+            requestAnimationFrame(() => {
+                notification.classList.add('notification-show');
+            });
+
+            // Focus confirm button
+            setTimeout(() => confirmBtn.focus(), 100);
+        });
+    }
+
+    /**
+     * Simple prompt dialog - returns Promise
+     */
+    async prompt(message, defaultValue = '', title = '', inputType = 'text') {
+        return new Promise((resolve) => {
+            const promptId = `prompt-${Date.now()}`;
+            
+            const notification = document.createElement('div');
+            notification.id = promptId;
+            notification.className = 'notification notification-prompt';
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <span class="notification-icon">💬</span>
+                    <div class="notification-message">
+                        ${title ? `<strong>${title}</strong><br><br>` : ''}
+                        ${message}
+                        <input type="${inputType}" class="prompt-input" value="${defaultValue}" style="width: 100%; margin: 10px 0; padding: 8px; border: 2px solid #ddd; border-radius: 4px; font-size: 14px;">
+                        <div class="confirm-buttons">
+                            <button class="btn-cancel">${window.i18n?.t?.('cancel') || 'Cancelar'}</button>
+                            <button class="btn-confirm">${window.i18n?.t?.('accept') || 'Aceptar'}</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add to container
+            if (this.container) {
+                this.container.appendChild(notification);
+            } else {
+                document.body.appendChild(notification);
+            }
+
+            const input = notification.querySelector('.prompt-input');
+            const cancelBtn = notification.querySelector('.btn-cancel');
+            const confirmBtn = notification.querySelector('.btn-confirm');
+
+            const cleanup = () => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            };
+
+            cancelBtn.onclick = () => {
+                cleanup();
+                resolve(null);
+            };
+
+            confirmBtn.onclick = () => {
+                cleanup();
+                resolve(input.value);
+            };
+
+            // Enter key submits
+            input.onkeypress = (e) => {
+                if (e.key === 'Enter') {
+                    cleanup();
+                    resolve(input.value);
+                }
+            };
+
+            // Animate in and focus
+            requestAnimationFrame(() => {
+                notification.classList.add('notification-show');
+                input.focus();
+            });
+        });
+    }
+
+    /**
+     * Alias for showNotification
+     */
+    show(message, type = 'info', duration = 3000) {
+        return this.showNotification(message, type, duration);
+    }
+
+    /**
      * Clear all notifications
      */
     clearAll() {
@@ -633,9 +1125,268 @@ class NotificationSystem {
     }
 
     /**
+     * Prompt for password with confirmation (double entry)
+     * @param {string} message - The message to display
+     * @param {string} title - Optional dialog title
+     * @returns {Promise<string|null>} - The password if confirmed, null if cancelled
+     */
+    async promptPasswordConfirm(message, title = '') {
+        return new Promise((resolve) => {
+            const promptId = `prompt-password-${Date.now()}`;
+            
+            const notification = document.createElement('div');
+            notification.id = promptId;
+            notification.className = 'notification notification-prompt notification-password-confirm';
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <span class="notification-icon">🔐</span>
+                    <div class="notification-message">
+                        ${title ? `<strong>${title}</strong><br><br>` : ''}
+                        ${message}
+                        <div style="margin: 15px 0;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Contraseña:</label>
+                            <input type="password" class="prompt-input-1" placeholder="${window.i18n?.t?.('enterPassword') || 'Introducir contraseña'}" style="width: 100%; margin-bottom: 10px; padding: 8px; border: 2px solid #ddd; border-radius: 4px; font-size: 14px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Confirmar contraseña:</label>
+                            <input type="password" class="prompt-input-2" placeholder="${window.i18n?.t?.('confirmPassword') || 'Confirmar contraseña'}" style="width: 100%; padding: 8px; border: 2px solid #ddd; border-radius: 4px; font-size: 14px;">
+                            <div class="password-status" style="margin-top: 8px; font-size: 12px; min-height: 16px;"></div>
+                        </div>
+                        <div class="confirm-buttons">
+                            <button class="btn-cancel">${window.i18n?.t?.('cancel') || 'Cancelar'}</button>
+                            <button class="btn-confirm" disabled>${window.i18n?.t?.('accept') || 'Aceptar'}</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add to container
+            if (this.container) {
+                this.container.appendChild(notification);
+            } else {
+                document.body.appendChild(notification);
+            }
+
+            const input1 = notification.querySelector('.prompt-input-1');
+            const input2 = notification.querySelector('.prompt-input-2');
+            const statusDiv = notification.querySelector('.password-status');
+            const cancelBtn = notification.querySelector('.btn-cancel');
+            const confirmBtn = notification.querySelector('.btn-confirm');
+
+            // Password validation function
+            const validatePasswords = () => {
+                const pass1 = input1.value;
+                const pass2 = input2.value;
+                
+                if (pass1.length === 0 && pass2.length === 0) {
+                    statusDiv.textContent = '';
+                    statusDiv.style.color = '';
+                    confirmBtn.disabled = true;
+                    return;
+                }
+
+                if (pass1.length < 8) {
+                    statusDiv.textContent = window.i18n?.t?.('passwordTooShort') || 'La contraseña debe tener al menos 8 caracteres';
+                    statusDiv.style.color = '#dc3545';
+                    confirmBtn.disabled = true;
+                    return;
+                }
+
+                if (pass2.length === 0) {
+                    statusDiv.textContent = window.i18n?.t?.('enterConfirmPassword') || 'Confirma la contraseña';
+                    statusDiv.style.color = '#6c757d';
+                    confirmBtn.disabled = true;
+                    return;
+                }
+
+                if (pass1 !== pass2) {
+                    statusDiv.textContent = window.i18n?.t?.('passwordMismatch') || 'Las contraseñas no coinciden';
+                    statusDiv.style.color = '#dc3545';
+                    confirmBtn.disabled = true;
+                    return;
+                }
+
+                statusDiv.textContent = '✅ ' + (window.i18n?.t?.('passwordsMatch') || 'Las contraseñas coinciden');
+                statusDiv.style.color = '#28a745';
+                confirmBtn.disabled = false;
+            };
+
+            // Add event listeners for real-time validation
+            input1.oninput = validatePasswords;
+            input2.oninput = validatePasswords;
+
+            const cleanup = () => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            };
+
+            cancelBtn.onclick = () => {
+                cleanup();
+                resolve(null);
+            };
+
+            confirmBtn.onclick = () => {
+                if (!confirmBtn.disabled) {
+                    cleanup();
+                    resolve(input1.value);
+                }
+            };
+
+            // Enter key on second input submits if valid
+            input2.onkeypress = (e) => {
+                if (e.key === 'Enter' && !confirmBtn.disabled) {
+                    cleanup();
+                    resolve(input1.value);
+                }
+            };
+
+            // Tab navigation
+            input1.onkeydown = (e) => {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    input2.focus();
+                }
+            };
+
+            // Escape key cancels
+            const handleKeydown = (e) => {
+                if (e.key === 'Escape') {
+                    document.removeEventListener('keydown', handleKeydown);
+                    cleanup();
+                    resolve(null);
+                }
+            };
+            document.addEventListener('keydown', handleKeydown);
+
+            // Animate in and focus
+            requestAnimationFrame(() => {
+                notification.classList.add('notification-show');
+                input1.focus();
+            });
+        });
+    }
+
+    /**
+     * Show options dialog with multiple choices
+     * @param {string} message - The message to display
+     * @param {Array} options - Array of option objects with {key, text} properties
+     * @param {string} title - Optional dialog title
+     * @returns {Promise<string>} - The key of the selected option
+     */
+    async showOptions(message, options, title = '') {
+        return new Promise((resolve) => {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+            `;
+
+            const dialog = document.createElement('div');
+            dialog.className = 'modal-dialog';
+            dialog.style.cssText = `
+                background: white;
+                border-radius: 12px;
+                padding: 24px;
+                max-width: 400px;
+                width: 90%;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                text-align: center;
+            `;
+
+            const titleElement = title ? `<h3 style="margin: 0 0 16px 0; color: #333;">${title}</h3>` : '';
+            const messageElement = `<p style="margin: 0 0 20px 0; color: #666; line-height: 1.4;">${message}</p>`;
+            
+            const optionsHTML = options.map(option => 
+                `<button class="option-btn" data-key="${option.key}" style="
+                    display: block;
+                    width: 100%;
+                    padding: 12px 16px;
+                    margin: 8px 0;
+                    border: 2px solid #ddd;
+                    border-radius: 8px;
+                    background: white;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    font-size: 14px;
+                    text-align: left;
+                ">${option.text}</button>`
+            ).join('');
+
+            const cancelBtn = `
+                <button class="btn-cancel" style="
+                    padding: 10px 24px;
+                    margin-top: 16px;
+                    border: 2px solid #ccc;
+                    border-radius: 6px;
+                    background: #f8f9fa;
+                    cursor: pointer;
+                    font-size: 14px;
+                    color: #666;
+                ">${window.i18n?.t('cancelBtn') || 'Cancelar'}</button>
+            `;
+
+            dialog.innerHTML = titleElement + messageElement + optionsHTML + cancelBtn;
+            modal.appendChild(dialog);
+
+            // Add hover effects
+            dialog.addEventListener('mouseover', (e) => {
+                if (e.target.classList.contains('option-btn')) {
+                    e.target.style.borderColor = '#007bff';
+                    e.target.style.background = '#f8f9ff';
+                }
+            });
+
+            dialog.addEventListener('mouseout', (e) => {
+                if (e.target.classList.contains('option-btn')) {
+                    e.target.style.borderColor = '#ddd';
+                    e.target.style.background = 'white';
+                }
+            });
+
+            // Handle clicks
+            dialog.addEventListener('click', (e) => {
+                if (e.target.classList.contains('option-btn')) {
+                    const key = e.target.getAttribute('data-key');
+                    document.body.removeChild(modal);
+                    resolve(key);
+                } else if (e.target.classList.contains('btn-cancel')) {
+                    document.body.removeChild(modal);
+                    resolve(null);
+                }
+            });
+
+            // Handle escape key
+            const handleKeydown = (e) => {
+                if (e.key === 'Escape') {
+                    document.removeEventListener('keydown', handleKeydown);
+                    document.body.removeChild(modal);
+                    resolve(null);
+                }
+            };
+            document.addEventListener('keydown', handleKeydown);
+
+            document.body.appendChild(modal);
+
+            // Focus the first option
+            setTimeout(() => {
+                const firstOption = dialog.querySelector('.option-btn');
+                if (firstOption) firstOption.focus();
+            }, 100);
+        });
+    }
+
+    /**
      * Get icon for notification type
      * @param {string} type - Notification type
-     * @returns {string} - Icon emoji
+     * @returns {string} - Icon string
      */
     getIcon(type) {
         const icons = {
@@ -850,6 +1601,193 @@ class SecureCrypto {
                      status.randomAvailable;
     
     return status;
+  }
+
+  /**
+   * Get current master password (for export purposes)
+   * Note: This is a simplified version - in real implementation 
+   * you'd want to securely retrieve this
+   */
+  getMasterPassword() {
+    // Return the current session password if available
+    return this.currentMasterPassword || null;
+  }
+
+  /**
+   * Set master password for session (called during authentication)
+   */
+  setMasterPassword(password) {
+    this.currentMasterPassword = password;
+  }
+
+  /**
+   * Encrypt data for export (OpenSSL AES-256-CBC compatible)
+   * @param {string} plaintext - Data to encrypt
+   * @param {string} password - Encryption password
+   * @returns {Promise<ArrayBuffer>} Encrypted data in OpenSSL format
+   */
+  async encryptForExport(plaintext, password) {
+    // Generate random salt (8 bytes)
+    const salt = this.generateRandomBytes(8);
+    
+    // Derive key and IV using OpenSSL's EVP_BytesToKey equivalent
+    const keyIv = await this.deriveKeyIvOpenSSL(password, salt);
+    
+    // Create cipher using AES-256-CBC
+    const encoder = new TextEncoder();
+    const data = encoder.encode(plaintext);
+    
+    // Pad data to 16-byte boundary (PKCS#7 padding)
+    const paddedData = this.addPKCS7Padding(data, 16);
+    
+    // Import key for AES-CBC
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      keyIv.key,
+      { name: 'AES-CBC' },
+      false,
+      ['encrypt']
+    );
+    
+    // Encrypt data
+    const encrypted = await crypto.subtle.encrypt(
+      {
+        name: 'AES-CBC',
+        iv: keyIv.iv
+      },
+      cryptoKey,
+      paddedData
+    );
+    
+    // Create OpenSSL format: "Salted__" + salt + encrypted_data
+    const salted = new TextEncoder().encode('Salted__');
+    const result = new Uint8Array(salted.length + salt.length + encrypted.byteLength);
+    result.set(salted, 0);
+    result.set(salt, salted.length);
+    result.set(new Uint8Array(encrypted), salted.length + salt.length);
+    
+    return result.buffer;
+  }
+
+  /**
+   * Decrypt data from import (OpenSSL AES-256-CBC compatible)
+   * @param {ArrayBuffer} encryptedData - Encrypted data
+   * @param {string} password - Decryption password
+   * @returns {Promise<string>} Decrypted plaintext
+   */
+  async decryptFromImport(encryptedData, password) {
+    const data = new Uint8Array(encryptedData);
+    
+    // Check for OpenSSL "Salted__" header
+    const salted = new TextEncoder().encode('Salted__');
+    const header = data.slice(0, 8);
+    
+    if (!this.arraysEqual(header, salted)) {
+      throw new Error('Invalid file format - not OpenSSL encrypted');
+    }
+    
+    // Extract salt and encrypted data
+    const salt = data.slice(8, 16);
+    const ciphertext = data.slice(16);
+    
+    // Derive key and IV using OpenSSL's EVP_BytesToKey equivalent
+    const keyIv = await this.deriveKeyIvOpenSSL(password, salt);
+    
+    // Import key for AES-CBC
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      keyIv.key,
+      { name: 'AES-CBC' },
+      false,
+      ['decrypt']
+    );
+    
+    // Decrypt data
+    const decrypted = await crypto.subtle.decrypt(
+      {
+        name: 'AES-CBC',
+        iv: keyIv.iv
+      },
+      cryptoKey,
+      ciphertext
+    );
+    
+    // Remove PKCS#7 padding
+    const unpaddedData = this.removePKCS7Padding(new Uint8Array(decrypted));
+    
+    // Convert to string
+    const decoder = new TextDecoder();
+    return decoder.decode(unpaddedData);
+  }
+
+  /**
+   * Derive key and IV using OpenSSL's EVP_BytesToKey method
+   * Compatible with: openssl enc -aes-256-cbc -pbkdf2 -iter 1
+   */
+  async deriveKeyIvOpenSSL(password, salt) {
+    const encoder = new TextEncoder();
+    const passwordBytes = encoder.encode(password);
+    
+    // Concatenate password and salt
+    const combined = new Uint8Array(passwordBytes.length + salt.length);
+    combined.set(passwordBytes, 0);
+    combined.set(salt, passwordBytes.length);
+    
+    // Hash to get first 32 bytes (key) + 16 bytes (IV)
+    let hash = await crypto.subtle.digest('SHA-256', combined);
+    let hashBytes = new Uint8Array(hash);
+    
+    // We need 32 bytes for key + 16 bytes for IV = 48 bytes total
+    // SHA-256 gives us 32 bytes, so we need to hash again
+    const secondInput = new Uint8Array(hashBytes.length + passwordBytes.length + salt.length);
+    secondInput.set(hashBytes, 0);
+    secondInput.set(passwordBytes, hashBytes.length);
+    secondInput.set(salt, hashBytes.length + passwordBytes.length);
+    
+    const secondHash = await crypto.subtle.digest('SHA-256', secondInput);
+    const secondHashBytes = new Uint8Array(secondHash);
+    
+    // Combine hashes to get 64 bytes total
+    const keyIvBytes = new Uint8Array(48);
+    keyIvBytes.set(hashBytes.slice(0, 32), 0); // 32 bytes for key
+    keyIvBytes.set(secondHashBytes.slice(0, 16), 32); // 16 bytes for IV
+    
+    return {
+      key: keyIvBytes.slice(0, 32),
+      iv: keyIvBytes.slice(32, 48)
+    };
+  }
+
+  /**
+   * Add PKCS#7 padding
+   */
+  addPKCS7Padding(data, blockSize) {
+    const padding = blockSize - (data.length % blockSize);
+    const paddedData = new Uint8Array(data.length + padding);
+    paddedData.set(data, 0);
+    for (let i = data.length; i < paddedData.length; i++) {
+      paddedData[i] = padding;
+    }
+    return paddedData;
+  }
+
+  /**
+   * Remove PKCS#7 padding
+   */
+  removePKCS7Padding(data) {
+    const padding = data[data.length - 1];
+    return data.slice(0, data.length - padding);
+  }
+
+  /**
+   * Check if two arrays are equal
+   */
+  arraysEqual(a, b) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
   }
 }
 
@@ -1353,6 +2291,38 @@ class SecureStorage {
       
       clearSecrets.onerror = clearConfig.onerror = () => {
         reject(new Error('Failed to clear data'));
+      };
+    });
+  }
+
+  /**
+   * Clear only TOTP secrets but keep configuration and master password
+   * @returns {Promise<void>}
+   */
+  async clearAllTOTPSecrets() {
+    // Fallback to localStorage if IndexedDB is not available
+    if (!this.db) {
+      try {
+        // Clear only TOTP secrets from localStorage, keep config
+        localStorage.removeItem('personal-2fa-secrets');
+        return Promise.resolve();
+      } catch (error) {
+        return Promise.reject(new Error('Failed to clear TOTP secrets from localStorage'));
+      }
+    }
+
+    return new Promise((resolve, reject) => {
+      const transaction = this.db.transaction([this.storeName], 'readwrite');
+      const store = transaction.objectStore(this.storeName);
+      const clearRequest = store.clear();
+      
+      clearRequest.onsuccess = () => {
+        // Don't reset encryptionKey or isInitialized - keep them for continued use
+        resolve();
+      };
+      
+      clearRequest.onerror = () => {
+        reject(new Error('Failed to clear TOTP secrets'));
       };
     });
   }
@@ -3042,7 +4012,7 @@ class Personal2FAApp {
       
     } catch (error) {
       logger.error('❌ App initialization failed:', error);
-      this.showError('Failed to initialize app: ' + error.message);
+      this.showError(i18n.t('initError') + error.message);
     }
   }
 
@@ -3068,6 +4038,7 @@ class Personal2FAApp {
       loginError: document.getElementById('login-error'),
       
       // Main app elements
+      showCodesBtn: document.getElementById('show-codes-btn'),
       importBtn: document.getElementById('import-btn'),
       exportBtn: document.getElementById('export-btn'),
       addManualBtn: document.getElementById('add-manual-btn'),
@@ -3081,6 +4052,16 @@ class Personal2FAApp {
       manualAddSection: document.getElementById('manual-add-section'),
       dataManagementSection: document.getElementById('data-management-section'),
       
+      // JSON Import
+      jsonFileInput: document.getElementById('json-file-input'),
+      selectJSONFile: document.getElementById('select-json-file'),
+      selectedFileName: document.getElementById('selected-file-name'),
+
+      // Encrypted Import
+      encryptedFileInput: document.getElementById('encrypted-file-input'),
+      selectEncryptedFile: document.getElementById('select-encrypted-file'),
+      selectedEncryptedFileName: document.getElementById('selected-encrypted-file-name'),
+
       // QR Scanner
       qrVideo: document.getElementById('qr-video'),
       qrCanvas: document.getElementById('qr-canvas'),
@@ -3092,6 +4073,7 @@ class Personal2FAApp {
       exportGoogleFormat: document.getElementById('export-google-format'),
       exportIndividualQR: document.getElementById('export-individual-qr'),
       exportJSONBackup: document.getElementById('export-json-backup'),
+      exportEncryptedBackup: document.getElementById('export-encrypted-backup'),
       exportResult: document.getElementById('export-result'),
       
       // TOTP Display
@@ -3107,6 +4089,8 @@ class Personal2FAApp {
       manualDigits: document.getElementById('manual-digits'),
       manualPeriod: document.getElementById('manual-period'),
       cancelManual: document.getElementById('cancel-manual'),
+      cancelImport: document.getElementById('cancel-import'),
+      cancelExport: document.getElementById('cancel-export'),
       
       // Data Management
       clearAllData: document.getElementById('clear-all-data'),
@@ -3147,12 +4131,21 @@ class Personal2FAApp {
     });
     
     // Main navigation
+    this.elements.showCodesBtn.addEventListener('click', () => this.showCodesSection());
     this.elements.importBtn.addEventListener('click', () => this.showImportSection());
     this.elements.exportBtn.addEventListener('click', () => this.showExportSection());
     this.elements.addManualBtn.addEventListener('click', () => this.showManualAddSection());
     this.elements.manageDataBtn.addEventListener('click', () => this.showDataManagementSection());
     this.elements.lockBtn.addEventListener('click', () => this.lockApp());
     
+    // JSON Import
+    this.elements.selectJSONFile.addEventListener('click', () => this.elements.jsonFileInput.click());
+    this.elements.jsonFileInput.addEventListener('change', (e) => this.handleJSONFileSelect(e));
+
+    // Encrypted Import
+    this.elements.selectEncryptedFile.addEventListener('click', () => this.elements.encryptedFileInput.click());
+    this.elements.encryptedFileInput.addEventListener('change', (e) => this.handleEncryptedFileSelect(e));
+
     // QR Scanner
     this.elements.startCamera.addEventListener('click', () => this.startQRScanning());
     this.elements.stopCamera.addEventListener('click', () => this.stopQRScanning());
@@ -3161,12 +4154,21 @@ class Personal2FAApp {
     this.elements.exportGoogleFormat.addEventListener('click', () => this.exportGoogleFormat());
     this.elements.exportIndividualQR.addEventListener('click', () => this.exportIndividualQR());
     this.elements.exportJSONBackup.addEventListener('click', () => this.exportJSONBackup());
+    this.elements.exportEncryptedBackup.addEventListener('click', () => this.exportEncryptedBackup());
     
     // Manual add form
     this.elements.manualAddForm.addEventListener('submit', (e) => this.handleManualAdd(e));
     this.elements.cancelManual.addEventListener('click', () => {
-      this.hideAllSections();
-      this.updateActiveButton(null); // Clear active button state
+      this.showCodesSection(); // Show codes section when canceling
+    });
+    
+    // Cancel buttons for import/export
+    this.elements.cancelImport.addEventListener('click', () => {
+      this.showCodesSection(); // Show codes section when canceling
+    });
+    
+    this.elements.cancelExport.addEventListener('click', () => {
+      this.showCodesSection(); // Show codes section when canceling
     });
     
     // Data management
@@ -3194,12 +4196,12 @@ class Personal2FAApp {
       const confirmPassword = this.elements.confirmPassword.value;
       
       if (!password || password.length < 8) {
-        this.showError('La contraseña debe tener al menos 8 caracteres');
+        this.showError(i18n.t('passwordTooShort'));
         return;
       }
       
       if (password !== confirmPassword) {
-        this.showError('Las contraseñas no coinciden');
+        this.showError(i18n.t('passwordMismatch'));
         return;
       }
       
@@ -3207,7 +4209,7 @@ class Personal2FAApp {
       
       // Show progress notification
       const progressId = notificationSystem.showNotification(
-        '🔐 Configurando contraseña maestra...',
+        i18n.t('configuringPassword'),
         'progress',
         0
       );
@@ -3222,11 +4224,11 @@ class Personal2FAApp {
       this.refreshTOTPCodes();
       
       logger.log('✅ Master password setup complete');
-      this.showSuccess('✅ Contraseña maestra configurada correctamente');
+      this.showSuccess(i18n.t('setupComplete'));
       
     } catch (error) {
       logger.error('❌ Setup failed:', error);
-      this.showError('Error en la configuración: ' + error.message);
+      this.showError(i18n.t('setupError') + error.message);
     }
   }
 
@@ -3237,7 +4239,7 @@ class Personal2FAApp {
     const password = this.elements.loginPassword.value;
     
     if (!password) {
-      this.showLoginError('Please enter your master password');
+      this.showLoginError(i18n.t('enterPassword'));
       return;
     }
     
@@ -3247,15 +4249,18 @@ class Personal2FAApp {
       
       if (success) {
         this.isUnlocked = true;
+        // Store password for export functionality
+        cryptoManager.setMasterPassword(password);
         this.showScreen('main');
+        this.showCodesSection(); // Show codes section by default
         this.refreshTOTPCodes();
         logger.log('✅ Storage unlocked successfully');
       } else {
-        this.showLoginError('Invalid password');
+        this.showLoginError(i18n.t('invalidPassword'));
       }
     } catch (error) {
       logger.error('❌ Login failed:', error);
-      this.showLoginError('Login failed: ' + error.message);
+      this.showLoginError(i18n.t('loginFailed') + error.message);
     }
   }
 
@@ -3265,6 +4270,7 @@ class Personal2FAApp {
   updateActiveButton(activeButton) {
     // Remove active class from all navigation buttons
     const navButtons = [
+      this.elements.showCodesBtn,
       this.elements.importBtn,
       this.elements.exportBtn,
       this.elements.addManualBtn,
@@ -3287,13 +4293,7 @@ class Personal2FAApp {
     this.updateActiveButton(this.elements.importBtn);
     this.elements.importSection.classList.remove('hidden');
     
-    // Scroll to the section
-    setTimeout(() => {
-      this.elements.importSection.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
-    }, 100);
+    // No automatic scroll - sections are positioned naturally after codes
   }
 
   /**
@@ -3304,13 +4304,7 @@ class Personal2FAApp {
     this.updateActiveButton(this.elements.exportBtn);
     this.elements.exportSection.classList.remove('hidden');
     
-    // Scroll to the section
-    setTimeout(() => {
-      this.elements.exportSection.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
-    }, 100);
+    // No automatic scroll - sections are positioned naturally after codes
   }
 
   /**
@@ -3321,13 +4315,7 @@ class Personal2FAApp {
     this.updateActiveButton(this.elements.addManualBtn);
     this.elements.manualAddSection.classList.remove('hidden');
     
-    // Scroll to the section
-    setTimeout(() => {
-      this.elements.manualAddSection.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
-    }, 100);
+    // No automatic scroll - sections are positioned naturally after codes
   }
 
   /**
@@ -3340,13 +4328,7 @@ class Personal2FAApp {
     this.elements.dataManagementSection.classList.remove('hidden');
     this.initializeLogsToggle();
     
-    // Scroll to the section with smooth animation
-    setTimeout(() => {
-      this.elements.dataManagementSection.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
-    }, 100); // Small delay to ensure the section is visible before scrolling
+    // No automatic scroll - sections are positioned naturally after codes
   }
 
   /**
@@ -3357,13 +4339,23 @@ class Personal2FAApp {
       this.elements.importSection,
       this.elements.exportSection,
       this.elements.manualAddSection,
-      this.elements.dataManagementSection
+      this.elements.dataManagementSection,
+      this.elements.codesSection
     ];
     
     sections.forEach(section => section.classList.add('hidden'));
     
     // Clear active states when hiding sections via other means (like cancel buttons)
     // Note: This will be overridden by updateActiveButton when showing a new section
+  }
+
+  /**
+   * Show only the codes section (default view)
+   */
+  showCodesSection() {
+    this.hideAllSections();
+    this.elements.codesSection.classList.remove('hidden');
+    this.updateActiveButton(this.elements.showCodesBtn); // Mark "Ver Códigos" button as active
   }
 
   /**
@@ -3375,7 +4367,7 @@ class Personal2FAApp {
       
       this.elements.startCamera.classList.add('hidden');
       this.elements.stopCamera.classList.remove('hidden');
-      this.elements.scanResult.innerHTML = '<div class="scanning">🔍 Scanning for QR codes...</div>';
+      this.elements.scanResult.innerHTML = `<div class="scanning">${i18n.t('scanningQR')}</div>`;
       
       await qrManager.startScanning((qrData) => {
         this.handleQRDetected(qrData);
@@ -3383,7 +4375,7 @@ class Personal2FAApp {
       
     } catch (error) {
       logger.error('❌ Failed to start camera:', error);
-      this.elements.scanResult.innerHTML = `<div class="error">❌ Camera Error: ${error.message}</div>`;
+      this.elements.scanResult.innerHTML = `<div class="error">${i18n.t('cameraError')}${error.message}</div>`;
       this.elements.startCamera.classList.remove('hidden');
       this.elements.stopCamera.classList.add('hidden');
     }
@@ -3426,7 +4418,7 @@ class Personal2FAApp {
       
     } catch (error) {
       logger.error('❌ QR processing failed:', error);
-      this.elements.scanResult.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+      this.elements.scanResult.innerHTML = `<div class="error">${i18n.t('qrError')}${error.message}</div>`;
     }
   }
 
@@ -3449,7 +4441,7 @@ class Personal2FAApp {
       
       this.elements.scanResult.innerHTML = `
         <div class="success">
-          ✅ Successfully imported ${importedCount} TOTP secrets!
+          ${i18n.t('importSuccessMessage')} (${importedCount})
         </div>
       `;
       
@@ -3458,7 +4450,7 @@ class Personal2FAApp {
       
     } catch (error) {
       logger.error('❌ Import failed:', error);
-      this.elements.scanResult.innerHTML = `<div class="error">❌ Import failed: ${error.message}</div>`;
+      this.elements.scanResult.innerHTML = `<div class="error">${i18n.t('importFailedMessage')}${error.message}</div>`;
     }
   }
 
@@ -3486,17 +4478,291 @@ class Personal2FAApp {
       
       logger.log(`✅ Added manual TOTP: ${secret.issuer}:${secret.label}`);
       
-      // Reset form and hide section
+      // Reset form and show codes section
       this.elements.manualAddForm.reset();
-      this.hideAllSections();
-      this.updateActiveButton(null); // Clear active button state
+      this.showCodesSection();
       
       // Refresh display
       this.refreshTOTPCodes();
       
     } catch (error) {
       logger.error('❌ Manual add failed:', error);
-      this.showError('Failed to add TOTP: ' + error.message);
+      this.showError(i18n.t('addTotpError') + error.message);
+    }
+  }
+
+  /**
+   * Handle JSON file selection for import
+   */
+  handleJSONFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) {
+      this.elements.selectedFileName.textContent = '';
+      return;
+    }
+
+    if (!file.name.toLowerCase().endsWith('.json')) {
+      notificationSystem.showNotification(i18n.t('invalidFileType'), 'error');
+      this.elements.selectedFileName.textContent = '';
+      return;
+    }
+
+    this.elements.selectedFileName.textContent = file.name;
+    this.importJSONFile(file);
+  }
+
+  /**
+   * Import TOTP codes from JSON file
+   */
+  async importJSONFile(file) {
+    try {
+      logger.log(`📥 Starting import from JSON file: ${file.name}`);
+
+      // Read file content
+      const fileContent = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.onerror = () => reject(new Error('Failed to read file'));
+        reader.readAsText(file);
+      });
+
+      // Parse JSON
+      let jsonData;
+      try {
+        jsonData = JSON.parse(fileContent);
+      } catch (parseError) {
+        throw new Error(i18n.t('invalidJSONFormat'));
+      }
+
+      // Validate JSON structure
+      if (!this.validateJSONImport(jsonData)) {
+        throw new Error(i18n.t('invalidJSONStructure'));
+      }
+
+      // Show confirmation dialog
+      const importConfirm = await notificationSystem.confirm(
+        i18n.t('importConfirmMessage').replace('{count}', jsonData.secrets?.length || 0),
+        i18n.t('importConfirmTitle')
+      );
+
+      if (!importConfirm) {
+        logger.log('🔒 JSON import cancelled by user');
+        return;
+      }
+
+      // Import secrets
+      let importedCount = 0;
+      let duplicateCount = 0;
+      let errorCount = 0;
+
+      for (const secretData of jsonData.secrets || []) {
+        try {
+          // Check if secret already exists
+          const existingSecrets = await storageManager.getAllTOTPSecrets();
+          const isDuplicate = existingSecrets.some(existing => 
+            existing.issuer === secretData.issuer && 
+            existing.label === secretData.label
+          );
+
+          if (isDuplicate) {
+            duplicateCount++;
+            logger.log(`⚠️ Skipping duplicate: ${secretData.issuer}:${secretData.label}`);
+            continue;
+          }
+
+          // Add secret to storage
+          await storageManager.storeTOTPSecret(secretData);
+          importedCount++;
+          logger.log(`✅ Imported: ${secretData.issuer}:${secretData.label}`);
+
+        } catch (error) {
+          errorCount++;
+          logger.error(`❌ Failed to import ${secretData.issuer}:${secretData.label}:`, error);
+        }
+      }
+
+      // Show results
+      const resultMessage = i18n.t('importResultMessage')
+        .replace('{imported}', importedCount)
+        .replace('{duplicates}', duplicateCount)
+        .replace('{errors}', errorCount);
+
+      notificationSystem.showNotification(resultMessage, importedCount > 0 ? 'success' : 'warning');
+
+      if (importedCount > 0) {
+        // Refresh display and show codes section
+        this.refreshTOTPCodes();
+        this.showCodesSection();
+      }
+
+      // Clear file input
+      this.elements.jsonFileInput.value = '';
+      this.elements.selectedFileName.textContent = '';
+
+    } catch (error) {
+      logger.error('❌ JSON import failed:', error);
+      notificationSystem.showNotification(i18n.t('importError') + error.message, 'error');
+      
+      // Clear file input
+      this.elements.jsonFileInput.value = '';
+      this.elements.selectedFileName.textContent = '';
+    }
+  }
+
+  /**
+   * Validate JSON import structure
+   */
+  validateJSONImport(jsonData) {
+    if (!jsonData || typeof jsonData !== 'object') {
+      return false;
+    }
+
+    if (!Array.isArray(jsonData.secrets)) {
+      return false;
+    }
+
+    // Validate each secret
+    for (const secret of jsonData.secrets) {
+      if (!secret.issuer || !secret.label || !secret.secret) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Handle encrypted file selection for import
+   */
+  handleEncryptedFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) {
+      this.elements.selectedEncryptedFileName.textContent = '';
+      return;
+    }
+
+    const allowedExtensions = ['.enc', '.dat', '.bin'];
+    const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+    
+    if (!allowedExtensions.includes(fileExtension)) {
+      notificationSystem.showNotification(i18n.t('invalidEncryptedFileType'), 'error');
+      this.elements.selectedEncryptedFileName.textContent = '';
+      return;
+    }
+
+    this.elements.selectedEncryptedFileName.textContent = file.name;
+    this.importEncryptedFile(file);
+  }
+
+  /**
+   * Import TOTP codes from encrypted file
+   */
+  async importEncryptedFile(file) {
+    try {
+      logger.log(`📥 Starting import from encrypted file: ${file.name}`);
+
+      // Read file content as ArrayBuffer
+      const fileContent = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.onerror = () => reject(new Error('Failed to read file'));
+        reader.readAsArrayBuffer(file);
+      });
+
+      // Ask for decryption password
+      const decryptionPassword = await notificationSystem.prompt(
+        i18n.t('enterDecryptionPassword'),
+        '',
+        i18n.t('decryptionPasswordTitle'),
+        'password'
+      );
+
+      if (!decryptionPassword) {
+        logger.log('🔒 Encrypted import cancelled by user');
+        return;
+      }
+
+      // Decrypt the data
+      let jsonData;
+      try {
+        const decryptedData = await cryptoManager.decryptFromImport(fileContent, decryptionPassword);
+        jsonData = JSON.parse(decryptedData);
+      } catch (decryptError) {
+        throw new Error(i18n.t('decryptionFailed'));
+      }
+
+      // Validate JSON structure
+      if (!this.validateJSONImport(jsonData)) {
+        throw new Error(i18n.t('invalidJSONStructure'));
+      }
+
+      // Show confirmation dialog
+      const importConfirm = await notificationSystem.confirm(
+        i18n.t('importConfirmMessage').replace('{count}', jsonData.secrets?.length || 0),
+        i18n.t('importConfirmTitle')
+      );
+
+      if (!importConfirm) {
+        logger.log('🔒 Encrypted import cancelled by user');
+        return;
+      }
+
+      // Import secrets (reuse the same logic as JSON import)
+      let importedCount = 0;
+      let duplicateCount = 0;
+      let errorCount = 0;
+
+      for (const secretData of jsonData.secrets || []) {
+        try {
+          // Check if secret already exists
+          const existingSecrets = await storageManager.getAllTOTPSecrets();
+          const isDuplicate = existingSecrets.some(existing => 
+            existing.issuer === secretData.issuer && 
+            existing.label === secretData.label
+          );
+
+          if (isDuplicate) {
+            duplicateCount++;
+            logger.log(`⚠️ Skipping duplicate: ${secretData.issuer}:${secretData.label}`);
+            continue;
+          }
+
+          // Add secret to storage
+          await storageManager.storeTOTPSecret(secretData);
+          importedCount++;
+          logger.log(`✅ Imported: ${secretData.issuer}:${secretData.label}`);
+
+        } catch (error) {
+          errorCount++;
+          logger.error(`❌ Failed to import ${secretData.issuer}:${secretData.label}:`, error);
+        }
+      }
+
+      // Show results
+      const resultMessage = i18n.t('importResultMessage')
+        .replace('{imported}', importedCount)
+        .replace('{duplicates}', duplicateCount)
+        .replace('{errors}', errorCount);
+
+      notificationSystem.showNotification(resultMessage, importedCount > 0 ? 'success' : 'warning');
+
+      if (importedCount > 0) {
+        // Refresh display and show codes section
+        this.refreshTOTPCodes();
+        this.showCodesSection();
+      }
+
+      // Clear file input
+      this.elements.encryptedFileInput.value = '';
+      this.elements.selectedEncryptedFileName.textContent = '';
+
+    } catch (error) {
+      logger.error('❌ Encrypted import failed:', error);
+      notificationSystem.showNotification(i18n.t('importError') + error.message, 'error');
+      
+      // Clear file input
+      this.elements.encryptedFileInput.value = '';
+      this.elements.selectedEncryptedFileName.textContent = '';
     }
   }
 
@@ -3514,12 +4780,18 @@ class Personal2FAApp {
    */
   async handleDeleteTOTP(secretId, issuer, label) {
     try {
+      // Ensure ID is a number (it comes as string from HTML onclick)
+      const numericId = parseInt(secretId, 10);
+      if (isNaN(numericId)) {
+        logger.error('❌ Invalid secret ID:', secretId);
+        notificationSystem.showNotification(i18n.t('deleteError'), 'error');
+        return;
+      }
+
       // First confirmation dialog
-      const firstConfirm = confirm(
-        `¿Estás seguro de que quieres eliminar este código 2FA?\n\n` +
-        `Servicio: ${issuer}\n` +
-        `Cuenta: ${label}\n\n` +
-        `⚠️ Esta acción no se puede deshacer.`
+      const firstConfirm = await notificationSystem.confirm(
+        i18n.t('deleteCodeMessage').replace('{issuer}', issuer).replace('{label}', label),
+        i18n.t('deleteCodeTitle')
       );
 
       if (!firstConfirm) {
@@ -3528,46 +4800,49 @@ class Personal2FAApp {
       }
 
       // Second confirmation with text input for safety
-      const confirmText = prompt(
-        `Para confirmar la eliminación, escribe: ELIMINAR\n\n` +
-        `Servicio: ${issuer}\n` +
-        `Cuenta: ${label}`
+      const deleteWord = i18n.getCurrentLanguage() === 'es' ? 'ELIMINAR' : 'DELETE';
+      const confirmText = await notificationSystem.prompt(
+        i18n.t('deletePromptMessage').replace('{issuer}', issuer).replace('{label}', label),
+        '',
+        i18n.t('deleteConfirmationTitle')
       );
 
-      if (confirmText !== 'ELIMINAR') {
+      if (confirmText !== deleteWord) {
         logger.log('🔒 Delete cancelled - incorrect confirmation text');
+        notificationSystem.showNotification(i18n.t('deleteTextError'), 'error');
         return;
       }
 
-      logger.log(`🗑️ Deleting TOTP: ${issuer}:${label} (ID: ${secretId})`);
+      logger.log(`🗑️ Deleting TOTP: ${issuer}:${label} (ID: ${numericId})`);
 
-      // Add animation before deleting
-      const totpElement = document.querySelector(`[data-id="${secretId}"]`);
+      // Delete from storage first
+      await storageManager.deleteTOTPSecret(numericId);
+
+      logger.log(`✅ Successfully deleted TOTP: ${issuer}:${label}`);
+
+      // Add animation to element if it exists
+      const totpElement = document.querySelector(`[data-id="${numericId}"]`);
       if (totpElement) {
         totpElement.classList.add('deleting');
         
-        // Wait for animation to complete before actually deleting
-        setTimeout(async () => {
-          // Delete from storage
-          await storageManager.deleteTOTPSecret(secretId);
-
-          logger.log(`✅ Successfully deleted TOTP: ${issuer}:${label}`);
-
-          // Refresh the display
+        // Wait for animation to complete before refreshing
+        setTimeout(() => {
           this.refreshTOTPCodes();
         }, 500); // Animation duration
       } else {
-        // If element not found, delete immediately
-        await storageManager.deleteTOTPSecret(secretId);
+        // If element not found, refresh immediately
         this.refreshTOTPCodes();
       }
 
-      // Show success message briefly (more subtle than alert)
-      logger.log(`✅ Código eliminado: ${issuer}:${label}`);
+      // Show success message
+      notificationSystem.showNotification(
+        i18n.t('deleteSuccessMessage').replace('{issuer}', issuer).replace('{label}', label),
+        'success'
+      );
 
     } catch (error) {
       logger.error('❌ Failed to delete TOTP:', error);
-      this.showError(`❌ Error al eliminar: ${error.message}`);
+      this.showError(i18n.t('deleteError') + error.message);
     }
   }
 
@@ -3586,12 +4861,9 @@ class Personal2FAApp {
   async handleClearAllData() {
     try {
       // First confirmation - Basic warning
-      const firstConfirm = confirm(
-        '⚠️ ADVERTENCIA: Estás a punto de eliminar TODOS los códigos 2FA y datos de la aplicación.\n\n' +
-        '🚨 Esta acción NO se puede deshacer.\n' +
-        '🚨 Perderás el acceso a todas las cuentas configuradas.\n' +
-        '🚨 NO podrás recuperar esta información.\n\n' +
-        '¿Estás absolutamente seguro de que quieres continuar?'
+      const firstConfirm = await notificationSystem.confirm(
+        i18n.t('clearAllWarning'),
+        i18n.t('deleteAllDataTitle')
       );
       
       if (!firstConfirm) {
@@ -3599,33 +4871,24 @@ class Personal2FAApp {
         return;
       }
 
-      // Second confirmation - More specific
-      const secondConfirm = confirm(
-        '🚨 CONFIRMACIÓN FINAL 🚨\n\n' +
-        'Vas a eliminar permanentemente:\n' +
-        '• Todos los códigos 2FA guardados\n' +
-        '• Configuraciones de la aplicación\n' +
-        '• Datos de IndexedDB y localStorage\n' +
-        '• Contraseña maestra configurada\n\n' +
-        '⚠️ DESPUÉS DE ESTO TENDRÁS QUE:\n' +
-        '• Configurar de nuevo todos tus códigos 2FA\n' +
-        '• Crear una nueva contraseña maestra\n' +
-        '• Volver a importar desde otras aplicaciones\n\n' +
-        'Escribe "BORRAR TODO" si realmente quieres continuar:'
+      // Second confirmation - Text input required
+      const deleteAllPhrase = i18n.getCurrentLanguage() === 'es' ? 'BORRAR TODO' : 'DELETE ALL';
+      const secondConfirm = await notificationSystem.prompt(
+        i18n.t('clearAllFinalConfirm'),
+        '',
+        i18n.t('textConfirmationTitle')
       );
       
-      if (secondConfirm !== 'BORRAR TODO') {
+      if (secondConfirm !== deleteAllPhrase) {
         logger.log('🔒 Clear data cancelled - incorrect confirmation text');
-        alert('❌ Cancelado. Para confirmar debes escribir exactamente "BORRAR TODO"');
+        notificationSystem.showNotification(i18n.t('clearAllTextError'), 'error');
         return;
       }
 
       // Third and final confirmation
-      const finalConfirm = confirm(
-        '🔥 ÚLTIMA OPORTUNIDAD 🔥\n\n' +
-        'Esta es tu última oportunidad para cancelar.\n' +
-        'Una vez que hagas clic en "Aceptar", NO HAY VUELTA ATRÁS.\n\n' +
-        '¿Proceder con la eliminación TOTAL e IRREVERSIBLE de todos los datos?'
+      const finalConfirm = await notificationSystem.confirm(
+        i18n.t('clearAllLastChance'),
+        i18n.t('finalConfirmationTitle')
       );
       
       if (!finalConfirm) {
@@ -3636,24 +4899,27 @@ class Personal2FAApp {
       logger.log('🗑️ User confirmed data deletion. Proceeding...');
       
       // Show progress message
-      alert('🗑️ Eliminando todos los datos... Por favor espera...');
+      const progressId = notificationSystem.showNotification(i18n.t('clearCodesProgress'), 'progress', 0);
       
-      // Clear all data
-      await this.clearAllApplicationData();
+      // Clear only TOTP codes (keep configuration and master password)
+      await this.clearOnlyTOTPCodes();
+      
+      // Remove progress notification
+      notificationSystem.removeNotification(progressId);
       
       // Show success message
-      alert(
-        '✅ Datos eliminados exitosamente\n\n' +
-        'Todos los datos han sido eliminados de forma permanente.\n' +
-        'La página se recargará para reiniciar la aplicación.'
+      notificationSystem.showNotification(
+        i18n.t('clearCodesSuccess'),
+        'success',
+        3000
       );
       
-      // Reload the page to start fresh
-      window.location.reload();
+      // Refresh the display without reloading the page
+      this.refreshTOTPCodes();
       
     } catch (error) {
       logger.error('❌ Error clearing data:', error);
-      this.showError('Error al eliminar los datos: ' + error.message);
+      this.showError(i18n.t('clearDataError') + error.message);
     }
   }
 
@@ -3666,15 +4932,8 @@ class Personal2FAApp {
       return new Promise((resolve) => {
         // First confirmation
         notificationSystem.showConfirm(
-          '🔄 FACTORY RESET - ADVERTENCIA CRÍTICA',
-          '⚠️ Un Factory Reset ELIMINARÁ COMPLETAMENTE:<br><br>' +
-          '🔐 Tu contraseña maestra configurada<br>' +
-          '🗑️ TODOS los códigos 2FA guardados<br>' +
-          '⚙️ TODAS las configuraciones personalizadas<br>' +
-          '💾 TODO el historial y datos locales<br><br>' +
-          '🚨 <strong>LA APLICACIÓN VOLVERÁ AL ESTADO INICIAL</strong><br>' +
-          '🚨 <strong>COMO SI NUNCA LA HUBIERAS USADO</strong><br><br>' +
-          '¿Estás completamente seguro de que quieres continuar?',
+          i18n.t('factoryResetTitle'),
+          i18n.t('factoryResetWarning'),
           () => {
             // If confirmed, show second confirmation with text input
             this.showFactoryResetTextConfirmation(resolve);
@@ -3683,14 +4942,14 @@ class Personal2FAApp {
             logger.log('🔒 Factory reset cancelled by user (first confirmation)');
             resolve();
           },
-          'Sí, Continuar',
-          'Cancelar'
+          i18n.t('continueBtn'),
+          i18n.t('cancel')
         );
       });
     } catch (error) {
       logger.error('❌ Factory reset failed:', error);
       notificationSystem.showNotification(
-        '❌ Error durante el factory reset: ' + error.message,
+        i18n.t('factoryResetError') + error.message,
         'error',
         5000
       );
@@ -3710,21 +4969,18 @@ class Personal2FAApp {
       <div class="notification-content confirm-content">
         <div class="confirm-header">
           <span class="notification-icon">⚠️</span>
-          <strong class="confirm-title">CONFIRMACIÓN DE FACTORY RESET</strong>
+          <strong class="confirm-title">${i18n.t('factoryResetConfirmTitle')}</strong>
         </div>
         <div class="confirm-message">
-          Para proceder con el reset completo de la aplicación,<br>
-          escribe exactamente: <strong>FACTORY RESET</strong><br><br>
-          ⚠️ Esta acción es <strong>COMPLETAMENTE IRREVERSIBLE</strong><br>
-          ⚠️ Perderás <strong>TODO</strong> lo configurado en esta aplicación
+          ${i18n.t('factoryResetConfirmMessage')}
         </div>
         <div class="factory-reset-input">
-          <input type="text" id="factory-reset-text" placeholder="Escribe: FACTORY RESET" 
+          <input type="text" id="factory-reset-text" placeholder="${i18n.t('factoryResetPlaceholder')}" 
                  style="width: 100%; padding: 10px; margin: 10px 0; font-size: 14px; border: 2px solid #ccc; border-radius: 4px;">
         </div>
         <div class="confirm-buttons">
-          <button class="btn-confirm-cancel">Cancelar</button>
-          <button class="btn-confirm-ok">Continuar</button>
+          <button class="btn-confirm-cancel">${i18n.t('cancel')}</button>
+          <button class="btn-confirm-ok">${i18n.t('continueBtn')}</button>
         </div>
       </div>
     `;
@@ -3764,7 +5020,7 @@ class Personal2FAApp {
     // Handle confirm
     confirmBtn.addEventListener('click', () => {
       if (textInput.value !== 'FACTORY RESET') {
-        notificationSystem.showNotification('❌ Texto incorrecto. Debes escribir exactamente: FACTORY RESET', 'error');
+        notificationSystem.showNotification(i18n.t('factoryResetTextError'), 'error');
         return;
       }
       
@@ -3783,27 +5039,21 @@ class Personal2FAApp {
    */
   showFactoryResetFinalConfirmation(resolve) {
     notificationSystem.showConfirm(
-      '🚨 ÚLTIMA ADVERTENCIA - FACTORY RESET 🚨',
-      '⚠️ Estás a punto de realizar un <strong>RESET COMPLETO</strong>.<br>' +
-      'La aplicación volverá al estado inicial.<br><br>' +
-      '❌ <strong>NO PODRÁS RECUPERAR NADA</strong><br>' +
-      '❌ <strong>NO HAY COPIAS DE SEGURIDAD</strong><br>' +
-      '❌ <strong>NO HAY FORMA DE DESHACER ESTA ACCIÓN</strong><br><br>' +
-      'Una vez que hagas clic en "Ejecutar Reset", la aplicación<br>' +
-      'se reseteará completamente como si nunca la hubieras usado.',
+      i18n.t('factoryResetFinalTitle'),
+      i18n.t('factoryResetFinalMessage'),
       async () => {
         logger.log('🔄 User confirmed factory reset. Proceeding with complete reset...');
         
         // Show progress notification
         const progressId = notificationSystem.showNotification(
-          '🔄 Ejecutando Factory Reset... Por favor espera...',
+          i18n.t('factoryResetProgress'),
           'progress',
           0 // No auto-hide
         );
 
         try {
           // Update progress
-          notificationSystem.updateProgress(progressId, 'Limpiando almacenamiento local...', 25);
+          notificationSystem.updateProgress(progressId, i18n.t('factoryResetClearing'), 25);
           
           // Perform complete factory reset
           await this.performFactoryReset();
@@ -3816,7 +5066,7 @@ class Personal2FAApp {
           logger.error('Factory reset error, forcing cleanup:', error);
           localStorage.clear();
           sessionStorage.clear();
-          notificationSystem.updateProgress(progressId, 'Forzando limpieza...', 90);
+          notificationSystem.updateProgress(progressId, i18n.t('factoryResetForcing'), 90);
         }
         
         // Always remove progress notification and reload
@@ -3825,9 +5075,7 @@ class Personal2FAApp {
           
           // Show completion and reload immediately
           notificationSystem.showNotification(
-            '✅ FACTORY RESET COMPLETADO<br><br>' +
-            'La aplicación ha sido completamente reseteada.<br>' +
-            '🔄 Recargando página...',
+            i18n.t('factoryResetComplete'),
             'success',
             2000
           );
@@ -3844,13 +5092,40 @@ class Personal2FAApp {
         logger.log('🔒 Factory reset cancelled by user (final confirmation)');
         resolve();
       },
-      'Ejecutar Reset',
-      'Cancelar'
+      i18n.t('executeResetBtn'),
+      i18n.t('cancel')
     );
   }
 
   /**
    * Clear all application data from all storage mechanisms
+   */
+  /**
+   * Clear only TOTP codes but keep master password and app configuration
+   */
+  async clearOnlyTOTPCodes() {
+    logger.log('🧹 Starting TOTP codes cleanup (keeping config)...');
+    
+    try {
+      // Only clear TOTP secrets from IndexedDB, keep other data
+      logger.log('🗑️ Clearing TOTP codes from storage...');
+      if (storageManager) {
+        await storageManager.clearAllTOTPSecrets();
+      }
+      
+      // Reset display state but keep authentication
+      this.currentCodes = [];
+      
+      logger.log('✅ TOTP codes cleared successfully (configuration preserved)');
+      
+    } catch (error) {
+      logger.error('❌ Error during TOTP cleanup:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Clear all application data including configuration and master password
    */
   async clearAllApplicationData() {
     logger.log('🧹 Starting complete data cleanup...');
@@ -3879,6 +5154,29 @@ class Personal2FAApp {
       
     } catch (error) {
       logger.error('❌ Error during data cleanup:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Clear only TOTP codes while preserving configuration and master password
+   */
+  async clearOnlyTOTPCodes() {
+    logger.log('🧹 Starting TOTP codes cleanup...');
+    
+    try {
+      // Only clear TOTP secrets from storage
+      if (storageManager) {
+        await storageManager.clearAllTOTPSecrets();
+      }
+      
+      // Reset application state for TOTP codes
+      this.currentCodes = [];
+      
+      logger.log('✅ TOTP codes cleared successfully (configuration preserved)');
+      
+    } catch (error) {
+      logger.error('❌ Error during TOTP codes cleanup:', error);
       throw error;
     }
   }
@@ -4024,12 +5322,21 @@ class Personal2FAApp {
    */
   async exportGoogleFormat() {
     try {
+      logger.log('🚀 Starting Google format export...');
       const secrets = await storageManager.getAllTOTPSecrets();
+      logger.log(`📊 Found ${secrets.length} secrets to export`);
+      
+      if (secrets.length === 0) {
+        notificationSystem.showNotification(i18n.t('noCodesForExport'), 'warning');
+        return;
+      }
+
       const qrCodes = await googleAuthManager.generateExportQRs(secrets, 'migration');
-      this.displayExportResult(qrCodes, 'Google Authenticator Migration');
+      logger.log(`📱 Generated ${qrCodes.length} QR codes`);
+      this.displayExportResult(qrCodes, i18n.t('googleAuthMigrationTitle'));
     } catch (error) {
       logger.error('❌ Google format export failed:', error);
-      this.showError('Export failed: ' + error.message);
+      this.showError(i18n.t('exportError') + error.message);
     }
   }
 
@@ -4038,12 +5345,21 @@ class Personal2FAApp {
    */
   async exportIndividualQR() {
     try {
+      logger.log('🚀 Starting individual QR export...');
       const secrets = await storageManager.getAllTOTPSecrets();
+      logger.log(`📊 Found ${secrets.length} secrets to export`);
+      
+      if (secrets.length === 0) {
+        notificationSystem.showNotification(i18n.t('noCodesForExport'), 'warning');
+        return;
+      }
+
       const qrCodes = await googleAuthManager.generateExportQRs(secrets, 'individual');
-      this.displayExportResult(qrCodes, 'Individual QR Codes');
+      logger.log(`📱 Generated ${qrCodes.length} QR codes`);
+      this.displayExportResult(qrCodes, i18n.t('individualQRTitle'));
     } catch (error) {
       logger.error('❌ Individual QR export failed:', error);
-      this.showError('Export failed: ' + error.message);
+      this.showError(i18n.t('exportError') + error.message);
     }
   }
 
@@ -4065,11 +5381,84 @@ class Personal2FAApp {
       
       URL.revokeObjectURL(url);
       
-      this.elements.exportResult.innerHTML = '<div class="success">✅ JSON backup downloaded!</div>';
+      this.elements.exportResult.innerHTML = `<div class="success">${i18n.t('jsonDownloaded')}</div>`;
       
     } catch (error) {
       logger.error('❌ JSON export failed:', error);
-      this.showError('Export failed: ' + error.message);
+      this.showError(i18n.t('exportError') + error.message);
+    }
+  }
+
+  /**
+   * Export encrypted backup (OpenSSL compatible)
+   */
+  async exportEncryptedBackup() {
+    try {
+      logger.log('🚀 Starting encrypted backup export...');
+      const secrets = await storageManager.getAllTOTPSecrets();
+      
+      if (secrets.length === 0) {
+        notificationSystem.showNotification(i18n.t('noCodesForExport'), 'warning');
+        return;
+      }
+
+      // Show password dialog
+      const exportOptions = [
+        { key: 'useCurrentPassword', text: i18n.t('useCurrentPassword') },
+        { key: 'useCustomPassword', text: i18n.t('useCustomPassword') }
+      ];
+
+      const passwordChoice = await notificationSystem.showOptions(
+        i18n.t('encryptedExportPasswordChoice'),
+        exportOptions,
+        i18n.t('encryptedExportTitle')
+      );
+
+      let encryptionPassword;
+      if (passwordChoice === 'useCurrentPassword') {
+        // Use current master password
+        encryptionPassword = cryptoManager.getMasterPassword();
+        if (!encryptionPassword) {
+          throw new Error(i18n.t('noMasterPasswordAvailable'));
+        }
+      } else if (passwordChoice === 'useCustomPassword') {
+        // Ask for custom password with confirmation
+        encryptionPassword = await notificationSystem.promptPasswordConfirm(
+          i18n.t('enterCustomPasswordPrompt'),
+          i18n.t('customPasswordTitle')
+        );
+        
+        if (!encryptionPassword) {
+          logger.log('🔒 Encrypted export cancelled by user');
+          return;
+        }
+      } else {
+        logger.log('🔒 Encrypted export cancelled by user');
+        return;
+      }
+
+      // Create JSON data
+      const jsonData = await googleAuthManager.exportToJSON(secrets);
+      
+      // Encrypt the data
+      const encryptedData = await cryptoManager.encryptForExport(jsonData, encryptionPassword);
+      
+      // Create download link
+      const blob = new Blob([encryptedData], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `personal-2fa-backup-${new Date().toISOString().split('T')[0]}.enc`;
+      link.click();
+      
+      URL.revokeObjectURL(url);
+      
+      this.elements.exportResult.innerHTML = `<div class="success">${i18n.t('encryptedBackupDownloaded')}</div>`;
+      logger.log('✅ Encrypted backup exported successfully');
+      
+    } catch (error) {
+      logger.error('❌ Encrypted export failed:', error);
+      this.showError(i18n.t('exportError') + error.message);
     }
   }
 
@@ -4077,18 +5466,30 @@ class Personal2FAApp {
    * Display export results
    */
   displayExportResult(qrCodes, title) {
+    if (!qrCodes || qrCodes.length === 0) {
+      this.elements.exportResult.innerHTML = `<p>${i18n.t('noQRGenerated')}</p>`;
+      return;
+    }
+
     let html = `<h4>${title}</h4>`;
     
     qrCodes.forEach((qr, index) => {
+      const qrTitle = qr.type === 'individual' 
+        ? `${qr.issuer}: ${qr.label}` 
+        : `${i18n.t('batchLabel')} ${qr.batchNumber}/${qr.totalBatches}`;
+      
       html += `
         <div class="export-qr">
-          <h5>${qr.type === 'individual' ? `${qr.issuer}: ${qr.label}` : `Batch ${qr.batchNumber}/${qr.totalBatches}`}</h5>
-          <img src="${qr.qrCode}" alt="QR Code" style="max-width: 300px;">
+          <h5>${qrTitle}</h5>
+          <img src="${qr.qrCode}" alt="QR Code ${index + 1}" style="max-width: 300px; border: 1px solid #ccc; padding: 10px;">
+          <br>
+          <small>${i18n.t('qrCodeInstruction')}</small>
         </div>
       `;
     });
     
     this.elements.exportResult.innerHTML = html;
+    logger.log(`✅ Displayed ${qrCodes.length} QR codes in export result`);
   }
 
   /**
@@ -4130,7 +5531,7 @@ class Personal2FAApp {
       
     } catch (error) {
       logger.error('❌ Failed to refresh TOTP codes:', error);
-      this.showError('Failed to load TOTP codes: ' + error.message);
+      this.showError(i18n.t('totpLoadError') + error.message);
     }
   }
 
@@ -4294,7 +5695,7 @@ class Personal2FAApp {
     this.elements.securityChecks.innerHTML = checksHtml;
     
     if (!status.isSecure) {
-      this.showError('Security warning: Web Crypto API not available. Please use HTTPS or localhost.');
+      this.showError(i18n.t('securityWarning'));
     }
   }
 
@@ -4391,6 +5792,19 @@ class Personal2FAApp {
     this.elements.cryptoStatus.textContent = status.isSecure ? window.i18n.t('encryption') : '⚠️ ' + window.i18n.t('encryption');
     this.elements.storageStatus.textContent = window.i18n.t('storage');
     this.updateNetworkStatus();
+    
+    // Update notification buttons if any are currently visible
+    document.querySelectorAll('.btn-confirm').forEach(btn => {
+      if (btn.textContent === 'Confirmar' || btn.textContent === 'Confirm') {
+        btn.textContent = window.i18n.t('confirm');
+      }
+    });
+    
+    document.querySelectorAll('.btn-cancel').forEach(btn => {
+      if (btn.textContent === 'Cancelar' || btn.textContent === 'Cancel') {
+        btn.textContent = window.i18n.t('cancel');
+      }
+    });
   }
 }
 
