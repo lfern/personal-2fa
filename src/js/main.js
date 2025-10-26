@@ -491,6 +491,68 @@ class Personal2FAApp {
   }
 
   /**
+   * Handle individual TOTP deletion
+   */
+  async handleDeleteTOTP(secretId, issuer, label) {
+    try {
+      // First confirmation dialog
+      const firstConfirm = confirm(
+        `¿Estás seguro de que quieres eliminar este código 2FA?\n\n` +
+        `Servicio: ${issuer}\n` +
+        `Cuenta: ${label}\n\n` +
+        `⚠️ Esta acción no se puede deshacer.`
+      );
+
+      if (!firstConfirm) {
+        logger.log('🔒 Delete cancelled by user (first confirmation)');
+        return;
+      }
+
+      // Second confirmation with text input for safety
+      const confirmText = prompt(
+        `Para confirmar la eliminación, escribe: ELIMINAR\n\n` +
+        `Servicio: ${issuer}\n` +
+        `Cuenta: ${label}`
+      );
+
+      if (confirmText !== 'ELIMINAR') {
+        logger.log('🔒 Delete cancelled - incorrect confirmation text');
+        return;
+      }
+
+      logger.log(`🗑️ Deleting TOTP: ${issuer}:${label} (ID: ${secretId})`);
+
+      // Add animation before deleting
+      const totpElement = document.querySelector(`[data-id="${secretId}"]`);
+      if (totpElement) {
+        totpElement.classList.add('deleting');
+        
+        // Wait for animation to complete before actually deleting
+        setTimeout(async () => {
+          // Delete from storage
+          await storageManager.deleteTOTPSecret(secretId);
+
+          logger.log(`✅ Successfully deleted TOTP: ${issuer}:${label}`);
+
+          // Refresh the display
+          this.refreshTOTPCodes();
+        }, 500); // Animation duration
+      } else {
+        // If element not found, delete immediately
+        await storageManager.deleteTOTPSecret(secretId);
+        this.refreshTOTPCodes();
+      }
+
+      // Show success message briefly (more subtle than alert)
+      logger.log(`✅ Código eliminado: ${issuer}:${label}`);
+
+    } catch (error) {
+      logger.error('❌ Failed to delete TOTP:', error);
+      this.showError(`❌ Error al eliminar: ${error.message}`);
+    }
+  }
+
+  /**
    * Initialize logs toggle state
    */
   initializeLogsToggle() {
@@ -732,8 +794,13 @@ class Personal2FAApp {
     return `
       <div class="totp-item" data-id="${secret.id}">
         <div class="totp-header">
-          <div class="totp-service">${secret.issuer}</div>
-          <div class="totp-account">${secret.label}</div>
+          <div class="totp-info">
+            <div class="totp-service">${secret.issuer}</div>
+            <div class="totp-account">${secret.label}</div>
+          </div>
+          <button class="totp-delete-btn" onclick="app.handleDeleteTOTP('${secret.id}', '${secret.issuer}', '${secret.label}')" title="Eliminar este código">
+            🗑️
+          </button>
         </div>
         <div class="totp-code" onclick="navigator.clipboard.writeText('${totpData.code}')">${totpData.code}</div>
         <div class="totp-timer">
@@ -843,6 +910,15 @@ class Personal2FAApp {
   }
 
   /**
+   * Show success message
+   */
+  showSuccess(message) {
+    logger.log('✅', message);
+    // TODO: Implement proper success display (for now using alert)
+    alert(message);
+  }
+
+  /**
    * Show login error
    */
   showLoginError(message) {
@@ -901,6 +977,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const app = new Personal2FAApp();
   app.init();
   
-  // Make app globally available for debugging
+  // Make app globally available for button actions and debugging
+  window.app = app;
   window.Personal2FA = app;
 });

@@ -429,6 +429,22 @@ select:focus {
   border-radius: 12px;
   padding: 20px;
   transition: all 0.3s ease;
+  position: relative;
+}
+
+.totp-item.deleting {
+  animation: slideOutRight 0.5s ease-in-out forwards;
+}
+
+@keyframes slideOutRight {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
 }
 
 .totp-item:hover {
@@ -439,8 +455,12 @@ select:focus {
 .totp-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 10px;
+}
+
+.totp-info {
+  flex: 1;
 }
 
 .totp-service {
@@ -452,6 +472,52 @@ select:focus {
 .totp-account {
   color: #6c757d;
   font-size: 0.9rem;
+}
+
+.totp-delete-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+
+.totp-delete-btn:hover {
+  background: #c82333;
+  transform: scale(1.1);
+}
+
+.totp-delete-btn:active {
+  transform: scale(0.95);
+}
+
+/* Tooltip for delete button */
+.totp-delete-btn {
+  position: relative;
+}
+
+.totp-delete-btn:hover::after {
+  content: attr(title);
+  position: absolute;
+  top: -35px;
+  right: 0;
+  background: #333;
+  color: white;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  opacity: 0.9;
 }
 
 .totp-code {
