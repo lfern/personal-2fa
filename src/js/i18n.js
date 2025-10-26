@@ -32,7 +32,7 @@ class I18n {
         unlockButton: 'Desbloquear',
         
         // Main Navigation
-        importBtn: '📥 Importar de Google Auth',
+        importBtn: '📥 Importar',
         exportBtn: '💾 Exportar Backup',
         addManualBtn: '➕ Añadir Manual',
         manageDataBtn: '🗑️ Gestionar Datos',
@@ -137,7 +137,7 @@ class I18n {
         
         // Section titles
         codesTitle: '🔢 Códigos de Autenticación',
-        importSectionTitle: '📱 Importar desde Google Authenticator',
+        importSectionTitle: '📱 Importar Códigos 2FA',
         exportSectionTitle: '💾 Exportar para Backup',
         dataManagementTitle: '🗑️ Gestión de Datos',
         manualAddTitle: '➕ Añadir Código Manualmente',
@@ -153,6 +153,20 @@ class I18n {
         noQRGenerated: '⚠️ No se pudieron generar códigos QR.',
         batchLabel: 'Lote',
         qrCodeInstruction: 'Escanea este código QR con tu aplicación de autenticación',
+        
+        // Import messages
+        jsonImportTitle: '📋 Importar desde JSON',
+        jsonImportDesc: 'Importa códigos desde un archivo JSON exportado previamente.',
+        qrImportTitle: '📱 Importar desde QR',
+        qrImportDesc: 'Escanea códigos QR de Google Authenticator u otras apps.',
+        selectJSONFile: '📂 Seleccionar Archivo JSON',
+        invalidFileType: '❌ Por favor selecciona un archivo JSON válido.',
+        invalidJSONFormat: '❌ El archivo no contiene JSON válido.',
+        invalidJSONStructure: '❌ La estructura del archivo JSON no es válida para importar códigos 2FA.',
+        importConfirmTitle: '📥 Confirmar Importación',
+        importConfirmMessage: '¿Estás seguro de que quieres importar {count} códigos desde este archivo JSON?',
+        importResultMessage: '📊 Importación completada: {imported} importados, {duplicates} duplicados omitidos, {errors} errores.',
+        importError: '❌ Error al importar: ',
         
         // Empty state
         emptyStateMessage: 'No hay códigos configurados.',
@@ -254,7 +268,7 @@ class I18n {
         unlockButton: 'Unlock',
         
         // Main Navigation
-        importBtn: '📥 Import from Google Auth',
+        importBtn: '📥 Import',
         exportBtn: '💾 Export Backup',
         addManualBtn: '➕ Add Manual',
         manageDataBtn: '🗑️ Manage Data',
@@ -359,7 +373,7 @@ class I18n {
         
         // Section titles
         codesTitle: '🔢 Authentication Codes',
-        importSectionTitle: '📱 Import from Google Authenticator',
+        importSectionTitle: '📱 Import 2FA Codes',
         exportSectionTitle: '💾 Export for Backup',
         dataManagementTitle: '🗑️ Data Management',
         manualAddTitle: '➕ Add Code Manually',
@@ -375,6 +389,22 @@ class I18n {
         noQRGenerated: '⚠️ Could not generate QR codes.',
         batchLabel: 'Batch',
         qrCodeInstruction: 'Scan this QR code with your authentication app',
+        
+        // Import messages
+        jsonImportTitle: '📋 Import from JSON',
+        jsonImportDesc: 'Import codes from a previously exported JSON file.',
+        qrImportTitle: '📱 Import from QR',
+        qrImportDesc: 'Scan QR codes from Google Authenticator or other apps.',
+        selectJSONFile: '📂 Select JSON File',
+        invalidFileType: '❌ Please select a valid JSON file.',
+        invalidJSONFormat: '❌ The file does not contain valid JSON.',
+        invalidJSONStructure: '❌ The JSON file structure is not valid for importing 2FA codes.',
+        importConfirmTitle: '📥 Confirm Import',
+        importConfirmMessage: 'Are you sure you want to import {count} codes from this JSON file?',
+        importResultMessage: '📊 Import completed: {imported} imported, {duplicates} duplicates skipped, {errors} errors.',
+        importError: '❌ Import error: ',
+        
+        // Empty state
         jsonBackup: '📋 JSON Backup',
         
         // Empty state

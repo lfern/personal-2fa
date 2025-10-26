@@ -88,7 +88,7 @@
       
       <!-- Action Buttons -->
       <div class="action-bar">
-        <button id="import-btn" class="btn-action" data-i18n="importBtn">📥 Importar de Google Auth</button>
+        <button id="import-btn" class="btn-action" data-i18n="importBtn">📥 Importar</button>
         <button id="export-btn" class="btn-action" data-i18n="exportBtn">💾 Exportar Backup</button>
         <button id="add-manual-btn" class="btn-action" data-i18n="addManualBtn">➕ Añadir Manual</button>
         <button id="manage-data-btn" class="btn-secondary" data-i18n="manageDataBtn">🗑️ Gestionar Datos</button>
@@ -97,17 +97,33 @@
 
       <!-- Import Section -->
       <div id="import-section" class="section hidden">
-        <h3 data-i18n="importSectionTitle">📱 Importar desde Google Authenticator</h3>
-        <div class="import-options">
+        <h3 data-i18n="importSectionTitle">📱 Importar Códigos 2FA</h3>
+        
+        <!-- JSON Import -->
+        <div class="import-method">
+          <h4 data-i18n="jsonImportTitle">📋 Importar desde JSON</h4>
+          <p data-i18n="jsonImportDesc">Importa códigos desde un archivo JSON exportado previamente.</p>
+          <div class="json-import">
+            <input type="file" id="json-file-input" accept=".json" style="display: none;">
+            <button id="select-json-file" class="btn-primary" data-i18n="selectJSONFile">📂 Seleccionar Archivo JSON</button>
+            <span id="selected-file-name" class="selected-file"></span>
+          </div>
+        </div>
+
+        <!-- QR Import -->
+        <div class="import-method">
+          <h4 data-i18n="qrImportTitle">📱 Importar desde QR</h4>
+          <p data-i18n="qrImportDesc">Escanea códigos QR de Google Authenticator u otras apps.</p>
           <div class="qr-scanner">
             <video id="qr-video" autoplay></video>
             <canvas id="qr-canvas" style="display: none;"></canvas>
             <button id="start-camera" class="btn-primary" data-i18n="activateCamera">📹 Activar Cámara</button>
             <button id="stop-camera" class="btn-secondary hidden" data-i18n="stopCamera">⏹️ Detener</button>
           </div>
-          <div class="scan-status">
-            <div id="scan-result"></div>
-          </div>
+        </div>
+        
+        <div class="scan-status">
+          <div id="scan-result"></div>
         </div>
       </div>
 

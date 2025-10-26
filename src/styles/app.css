@@ -772,6 +772,45 @@ select:focus {
   75% { transform: translateX(2px); }
 }
 
+/* Import Section */
+.import-method {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e9ecef;
+}
+
+.import-method h4 {
+  color: #2a5298;
+  margin-bottom: 8px;
+  font-size: 1.1em;
+}
+
+.import-method p {
+  color: #666;
+  margin-bottom: 15px;
+  font-size: 0.95em;
+}
+
+.json-import {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.selected-file {
+  color: #28a745;
+  font-size: 0.9em;
+  font-weight: 500;
+  margin-left: 10px;
+}
+
+.selected-file:empty {
+  display: none;
+}
+
 /* QR Scanner */
 .qr-scanner {
   text-align: center;

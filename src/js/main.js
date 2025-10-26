@@ -114,6 +114,11 @@ class Personal2FAApp {
       manualAddSection: document.getElementById('manual-add-section'),
       dataManagementSection: document.getElementById('data-management-section'),
       
+      // JSON Import
+      jsonFileInput: document.getElementById('json-file-input'),
+      selectJSONFile: document.getElementById('select-json-file'),
+      selectedFileName: document.getElementById('selected-file-name'),
+
       // QR Scanner
       qrVideo: document.getElementById('qr-video'),
       qrCanvas: document.getElementById('qr-canvas'),
@@ -186,6 +191,10 @@ class Personal2FAApp {
     this.elements.manageDataBtn.addEventListener('click', () => this.showDataManagementSection());
     this.elements.lockBtn.addEventListener('click', () => this.lockApp());
     
+    // JSON Import
+    this.elements.selectJSONFile.addEventListener('click', () => this.elements.jsonFileInput.click());
+    this.elements.jsonFileInput.addEventListener('change', (e) => this.handleJSONFileSelect(e));
+
     // QR Scanner
     this.elements.startCamera.addEventListener('click', () => this.startQRScanning());
     this.elements.stopCamera.addEventListener('click', () => this.stopQRScanning());
@@ -531,6 +540,149 @@ class Personal2FAApp {
       logger.error('❌ Manual add failed:', error);
       this.showError(i18n.t('addTotpError') + error.message);
     }
+  }
+
+  /**
+   * Handle JSON file selection for import
+   */
+  handleJSONFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) {
+      this.elements.selectedFileName.textContent = '';
+      return;
+    }
+
+    if (!file.name.toLowerCase().endsWith('.json')) {
+      notificationSystem.showNotification(i18n.t('invalidFileType'), 'error');
+      this.elements.selectedFileName.textContent = '';
+      return;
+    }
+
+    this.elements.selectedFileName.textContent = file.name;
+    this.importJSONFile(file);
+  }
+
+  /**
+   * Import TOTP codes from JSON file
+   */
+  async importJSONFile(file) {
+    try {
+      logger.log(`📥 Starting import from JSON file: ${file.name}`);
+
+      // Read file content
+      const fileContent = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.onerror = () => reject(new Error('Failed to read file'));
+        reader.readAsText(file);
+      });
+
+      // Parse JSON
+      let jsonData;
+      try {
+        jsonData = JSON.parse(fileContent);
+      } catch (parseError) {
+        throw new Error(i18n.t('invalidJSONFormat'));
+      }
+
+      // Validate JSON structure
+      if (!this.validateJSONImport(jsonData)) {
+        throw new Error(i18n.t('invalidJSONStructure'));
+      }
+
+      // Show confirmation dialog
+      const importConfirm = await notificationSystem.confirm(
+        i18n.t('importConfirmMessage').replace('{count}', jsonData.secrets?.length || 0),
+        i18n.t('importConfirmTitle')
+      );
+
+      if (!importConfirm) {
+        logger.log('🔒 JSON import cancelled by user');
+        return;
+      }
+
+      // Import secrets
+      let importedCount = 0;
+      let duplicateCount = 0;
+      let errorCount = 0;
+
+      for (const secretData of jsonData.secrets || []) {
+        try {
+          // Check if secret already exists
+          const existingSecrets = await storageManager.getAllTOTPSecrets();
+          const isDuplicate = existingSecrets.some(existing => 
+            existing.issuer === secretData.issuer && 
+            existing.label === secretData.label
+          );
+
+          if (isDuplicate) {
+            duplicateCount++;
+            logger.log(`⚠️ Skipping duplicate: ${secretData.issuer}:${secretData.label}`);
+            continue;
+          }
+
+          // Add secret to storage
+          await storageManager.storeTOTPSecret(secretData);
+          importedCount++;
+          logger.log(`✅ Imported: ${secretData.issuer}:${secretData.label}`);
+
+        } catch (error) {
+          errorCount++;
+          logger.error(`❌ Failed to import ${secretData.issuer}:${secretData.label}:`, error);
+        }
+      }
+
+      // Show results
+      const resultMessage = i18n.t('importResultMessage')
+        .replace('{imported}', importedCount)
+        .replace('{duplicates}', duplicateCount)
+        .replace('{errors}', errorCount);
+
+      notificationSystem.showNotification(resultMessage, importedCount > 0 ? 'success' : 'warning');
+
+      if (importedCount > 0) {
+        // Refresh display
+        this.refreshTOTPCodes();
+        
+        // Hide import section and show codes
+        this.hideAllSections();
+        this.updateActiveButton(this.elements.codesBtn);
+      }
+
+      // Clear file input
+      this.elements.jsonFileInput.value = '';
+      this.elements.selectedFileName.textContent = '';
+
+    } catch (error) {
+      logger.error('❌ JSON import failed:', error);
+      notificationSystem.showNotification(i18n.t('importError') + error.message, 'error');
+      
+      // Clear file input
+      this.elements.jsonFileInput.value = '';
+      this.elements.selectedFileName.textContent = '';
+    }
+  }
+
+  /**
+   * Validate JSON import structure
+   */
+  validateJSONImport(jsonData) {
+    if (!jsonData || typeof jsonData !== 'object') {
+      return false;
+    }
+
+    if (!Array.isArray(jsonData.secrets)) {
+      return false;
+    }
+
+    // Validate each secret
+    for (const secret of jsonData.secrets) {
+      if (!secret.issuer || !secret.label || !secret.secret) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   /**
