@@ -102,6 +102,8 @@ class I18n {
         clearAllTextError: '❌ Cancelado. Para confirmar debes escribir exactamente "BORRAR TODO"',
         clearAllProgress: '🗑️ Eliminando todos los datos... Por favor espera...',
         clearAllSuccess: '✅ Datos eliminados exitosamente<br><br>Todos los datos han sido eliminados de forma permanente.<br>La página se recargará para reiniciar la aplicación.',
+        clearCodesProgress: '🧹 Borrando códigos TOTP...',
+        clearCodesSuccess: '✅ Códigos TOTP eliminados<br><br>Todos los códigos han sido borrados exitosamente.<br>Tu configuración y contraseña se han preservado.',
         
         // Error messages
         initError: 'Error al inicializar la aplicación: ',
@@ -362,6 +364,8 @@ class I18n {
         clearAllTextError: '❌ Cancelled. To confirm you must type exactly "DELETE ALL"',
         clearAllProgress: '🗑️ Deleting all data... Please wait...',
         clearAllSuccess: '✅ Data deleted successfully<br><br>All data has been permanently deleted.<br>The page will reload to restart the application.',
+        clearCodesProgress: '🧹 Clearing TOTP codes...',
+        clearCodesSuccess: '✅ TOTP codes cleared<br><br>All codes have been successfully deleted.<br>Your configuration and password have been preserved.',
         
         // Error messages
         initError: 'Failed to initialize app: ',

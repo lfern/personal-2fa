@@ -493,6 +493,38 @@ export class SecureStorage {
   }
 
   /**
+   * Clear only TOTP secrets but keep configuration and master password
+   * @returns {Promise<void>}
+   */
+  async clearAllTOTPSecrets() {
+    // Fallback to localStorage if IndexedDB is not available
+    if (!this.db) {
+      try {
+        // Clear only TOTP secrets from localStorage, keep config
+        localStorage.removeItem('personal-2fa-secrets');
+        return Promise.resolve();
+      } catch (error) {
+        return Promise.reject(new Error('Failed to clear TOTP secrets from localStorage'));
+      }
+    }
+
+    return new Promise((resolve, reject) => {
+      const transaction = this.db.transaction([this.storeName], 'readwrite');
+      const store = transaction.objectStore(this.storeName);
+      const clearRequest = store.clear();
+      
+      clearRequest.onsuccess = () => {
+        // Don't reset encryptionKey or isInitialized - keep them for continued use
+        resolve();
+      };
+      
+      clearRequest.onerror = () => {
+        reject(new Error('Failed to clear TOTP secrets'));
+      };
+    });
+  }
+
+  /**
    * Get storage statistics
    * @returns {Promise<Object>} Storage stats
    */

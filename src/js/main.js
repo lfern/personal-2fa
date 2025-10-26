@@ -969,23 +969,23 @@ class Personal2FAApp {
       logger.log('🗑️ User confirmed data deletion. Proceeding...');
       
       // Show progress message
-      const progressId = notificationSystem.showNotification(i18n.t('clearAllProgress'), 'progress', 0);
+      const progressId = notificationSystem.showNotification(i18n.t('clearCodesProgress'), 'progress', 0);
       
-      // Clear all data
-      await this.clearAllApplicationData();
+      // Clear only TOTP codes (keep configuration and master password)
+      await this.clearOnlyTOTPCodes();
       
       // Remove progress notification
       notificationSystem.removeNotification(progressId);
       
       // Show success message
       notificationSystem.showNotification(
-        i18n.t('clearAllSuccess'),
+        i18n.t('clearCodesSuccess'),
         'success',
         3000
       );
       
-      // Reload the page to start fresh
-      window.location.reload();
+      // Refresh the display without reloading the page
+      this.refreshTOTPCodes();
       
     } catch (error) {
       logger.error('❌ Error clearing data:', error);
@@ -1170,6 +1170,33 @@ class Personal2FAApp {
   /**
    * Clear all application data from all storage mechanisms
    */
+  /**
+   * Clear only TOTP codes but keep master password and app configuration
+   */
+  async clearOnlyTOTPCodes() {
+    logger.log('🧹 Starting TOTP codes cleanup (keeping config)...');
+    
+    try {
+      // Only clear TOTP secrets from IndexedDB, keep other data
+      logger.log('🗑️ Clearing TOTP codes from storage...');
+      if (storageManager) {
+        await storageManager.clearAllTOTPSecrets();
+      }
+      
+      // Reset display state but keep authentication
+      this.currentCodes = [];
+      
+      logger.log('✅ TOTP codes cleared successfully (configuration preserved)');
+      
+    } catch (error) {
+      logger.error('❌ Error during TOTP cleanup:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Clear all application data including configuration and master password
+   */
   async clearAllApplicationData() {
     logger.log('🧹 Starting complete data cleanup...');
     
@@ -1197,6 +1224,29 @@ class Personal2FAApp {
       
     } catch (error) {
       logger.error('❌ Error during data cleanup:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Clear only TOTP codes while preserving configuration and master password
+   */
+  async clearOnlyTOTPCodes() {
+    logger.log('🧹 Starting TOTP codes cleanup...');
+    
+    try {
+      // Only clear TOTP secrets from storage
+      if (storageManager) {
+        await storageManager.clearAllTOTPSecrets();
+      }
+      
+      // Reset application state for TOTP codes
+      this.currentCodes = [];
+      
+      logger.log('✅ TOTP codes cleared successfully (configuration preserved)');
+      
+    } catch (error) {
+      logger.error('❌ Error during TOTP codes cleanup:', error);
       throw error;
     }
   }
