@@ -75,7 +75,7 @@ class Personal2FAApp {
       
     } catch (error) {
       logger.error('❌ App initialization failed:', error);
-      this.showError('Failed to initialize app: ' + error.message);
+      this.showError(i18n.t('initError') + error.message);
     }
   }
 
@@ -227,12 +227,12 @@ class Personal2FAApp {
       const confirmPassword = this.elements.confirmPassword.value;
       
       if (!password || password.length < 8) {
-        this.showError('La contraseña debe tener al menos 8 caracteres');
+        this.showError(i18n.t('passwordTooShort'));
         return;
       }
       
       if (password !== confirmPassword) {
-        this.showError('Las contraseñas no coinciden');
+        this.showError(i18n.t('passwordMismatch'));
         return;
       }
       
@@ -240,7 +240,7 @@ class Personal2FAApp {
       
       // Show progress notification
       const progressId = notificationSystem.showNotification(
-        '🔐 Configurando contraseña maestra...',
+        i18n.t('configuringPassword'),
         'progress',
         0
       );
@@ -255,11 +255,11 @@ class Personal2FAApp {
       this.refreshTOTPCodes();
       
       logger.log('✅ Master password setup complete');
-      this.showSuccess('✅ Contraseña maestra configurada correctamente');
+      this.showSuccess(i18n.t('setupComplete'));
       
     } catch (error) {
       logger.error('❌ Setup failed:', error);
-      this.showError('Error en la configuración: ' + error.message);
+      this.showError(i18n.t('setupError') + error.message);
     }
   }
 
@@ -270,7 +270,7 @@ class Personal2FAApp {
     const password = this.elements.loginPassword.value;
     
     if (!password) {
-      this.showLoginError('Please enter your master password');
+      this.showLoginError(i18n.t('enterPassword'));
       return;
     }
     
@@ -284,11 +284,11 @@ class Personal2FAApp {
         this.refreshTOTPCodes();
         logger.log('✅ Storage unlocked successfully');
       } else {
-        this.showLoginError('Invalid password');
+        this.showLoginError(i18n.t('invalidPassword'));
       }
     } catch (error) {
       logger.error('❌ Login failed:', error);
-      this.showLoginError('Login failed: ' + error.message);
+      this.showLoginError(i18n.t('loginFailed') + error.message);
     }
   }
 
@@ -408,7 +408,7 @@ class Personal2FAApp {
       
       this.elements.startCamera.classList.add('hidden');
       this.elements.stopCamera.classList.remove('hidden');
-      this.elements.scanResult.innerHTML = '<div class="scanning">🔍 Scanning for QR codes...</div>';
+      this.elements.scanResult.innerHTML = `<div class="scanning">${i18n.t('scanningQR')}</div>`;
       
       await qrManager.startScanning((qrData) => {
         this.handleQRDetected(qrData);
@@ -416,7 +416,7 @@ class Personal2FAApp {
       
     } catch (error) {
       logger.error('❌ Failed to start camera:', error);
-      this.elements.scanResult.innerHTML = `<div class="error">❌ Camera Error: ${error.message}</div>`;
+      this.elements.scanResult.innerHTML = `<div class="error">${i18n.t('cameraError')}${error.message}</div>`;
       this.elements.startCamera.classList.remove('hidden');
       this.elements.stopCamera.classList.add('hidden');
     }
@@ -459,7 +459,7 @@ class Personal2FAApp {
       
     } catch (error) {
       logger.error('❌ QR processing failed:', error);
-      this.elements.scanResult.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+      this.elements.scanResult.innerHTML = `<div class="error">${i18n.t('qrError')}${error.message}</div>`;
     }
   }
 
@@ -482,7 +482,7 @@ class Personal2FAApp {
       
       this.elements.scanResult.innerHTML = `
         <div class="success">
-          ✅ Successfully imported ${importedCount} TOTP secrets!
+          ${i18n.t('importSuccessMessage')} (${importedCount})
         </div>
       `;
       
@@ -491,7 +491,7 @@ class Personal2FAApp {
       
     } catch (error) {
       logger.error('❌ Import failed:', error);
-      this.elements.scanResult.innerHTML = `<div class="error">❌ Import failed: ${error.message}</div>`;
+      this.elements.scanResult.innerHTML = `<div class="error">${i18n.t('importFailedMessage')}${error.message}</div>`;
     }
   }
 
@@ -529,7 +529,7 @@ class Personal2FAApp {
       
     } catch (error) {
       logger.error('❌ Manual add failed:', error);
-      this.showError('Failed to add TOTP: ' + error.message);
+      this.showError(i18n.t('addTotpError') + error.message);
     }
   }
 
@@ -547,6 +547,14 @@ class Personal2FAApp {
    */
   async handleDeleteTOTP(secretId, issuer, label) {
     try {
+      // Ensure ID is a number (it comes as string from HTML onclick)
+      const numericId = parseInt(secretId, 10);
+      if (isNaN(numericId)) {
+        logger.error('❌ Invalid secret ID:', secretId);
+        notificationSystem.showNotification(i18n.t('deleteError'), 'error');
+        return;
+      }
+
       // First confirmation dialog
       const firstConfirm = await notificationSystem.confirm(
         i18n.t('deleteCodeMessage').replace('{issuer}', issuer).replace('{label}', label),
@@ -572,35 +580,36 @@ class Personal2FAApp {
         return;
       }
 
-      logger.log(`🗑️ Deleting TOTP: ${issuer}:${label} (ID: ${secretId})`);
+      logger.log(`🗑️ Deleting TOTP: ${issuer}:${label} (ID: ${numericId})`);
 
-      // Add animation before deleting
-      const totpElement = document.querySelector(`[data-id="${secretId}"]`);
+      // Delete from storage first
+      await storageManager.deleteTOTPSecret(numericId);
+
+      logger.log(`✅ Successfully deleted TOTP: ${issuer}:${label}`);
+
+      // Add animation to element if it exists
+      const totpElement = document.querySelector(`[data-id="${numericId}"]`);
       if (totpElement) {
         totpElement.classList.add('deleting');
         
-        // Wait for animation to complete before actually deleting
-        setTimeout(async () => {
-          // Delete from storage
-          await storageManager.deleteTOTPSecret(secretId);
-
-          logger.log(`✅ Successfully deleted TOTP: ${issuer}:${label}`);
-
-          // Refresh the display
+        // Wait for animation to complete before refreshing
+        setTimeout(() => {
           this.refreshTOTPCodes();
         }, 500); // Animation duration
       } else {
-        // If element not found, delete immediately
-        await storageManager.deleteTOTPSecret(secretId);
+        // If element not found, refresh immediately
         this.refreshTOTPCodes();
       }
 
-      // Show success message briefly (more subtle than alert)
-      logger.log(`✅ Código eliminado: ${issuer}:${label}`);
+      // Show success message
+      notificationSystem.showNotification(
+        i18n.t('deleteSuccessMessage').replace('{issuer}', issuer).replace('{label}', label),
+        'success'
+      );
 
     } catch (error) {
       logger.error('❌ Failed to delete TOTP:', error);
-      this.showError(`❌ Error al eliminar: ${error.message}`);
+      this.showError(i18n.t('deleteError') + error.message);
     }
   }
 
@@ -677,7 +686,7 @@ class Personal2FAApp {
       
     } catch (error) {
       logger.error('❌ Error clearing data:', error);
-      this.showError('Error al eliminar los datos: ' + error.message);
+      this.showError(i18n.t('clearDataError') + error.message);
     }
   }
 
@@ -690,15 +699,8 @@ class Personal2FAApp {
       return new Promise((resolve) => {
         // First confirmation
         notificationSystem.showConfirm(
-          '🔄 FACTORY RESET - ADVERTENCIA CRÍTICA',
-          '⚠️ Un Factory Reset ELIMINARÁ COMPLETAMENTE:<br><br>' +
-          '🔐 Tu contraseña maestra configurada<br>' +
-          '🗑️ TODOS los códigos 2FA guardados<br>' +
-          '⚙️ TODAS las configuraciones personalizadas<br>' +
-          '💾 TODO el historial y datos locales<br><br>' +
-          '🚨 <strong>LA APLICACIÓN VOLVERÁ AL ESTADO INICIAL</strong><br>' +
-          '🚨 <strong>COMO SI NUNCA LA HUBIERAS USADO</strong><br><br>' +
-          '¿Estás completamente seguro de que quieres continuar?',
+          i18n.t('factoryResetTitle'),
+          i18n.t('factoryResetWarning'),
           () => {
             // If confirmed, show second confirmation with text input
             this.showFactoryResetTextConfirmation(resolve);
@@ -707,14 +709,14 @@ class Personal2FAApp {
             logger.log('🔒 Factory reset cancelled by user (first confirmation)');
             resolve();
           },
-          'Sí, Continuar',
-          'Cancelar'
+          i18n.t('continueBtn'),
+          i18n.t('cancel')
         );
       });
     } catch (error) {
       logger.error('❌ Factory reset failed:', error);
       notificationSystem.showNotification(
-        '❌ Error durante el factory reset: ' + error.message,
+        i18n.t('factoryResetError') + error.message,
         'error',
         5000
       );
@@ -734,21 +736,18 @@ class Personal2FAApp {
       <div class="notification-content confirm-content">
         <div class="confirm-header">
           <span class="notification-icon">⚠️</span>
-          <strong class="confirm-title">CONFIRMACIÓN DE FACTORY RESET</strong>
+          <strong class="confirm-title">${i18n.t('factoryResetConfirmTitle')}</strong>
         </div>
         <div class="confirm-message">
-          Para proceder con el reset completo de la aplicación,<br>
-          escribe exactamente: <strong>FACTORY RESET</strong><br><br>
-          ⚠️ Esta acción es <strong>COMPLETAMENTE IRREVERSIBLE</strong><br>
-          ⚠️ Perderás <strong>TODO</strong> lo configurado en esta aplicación
+          ${i18n.t('factoryResetConfirmMessage')}
         </div>
         <div class="factory-reset-input">
-          <input type="text" id="factory-reset-text" placeholder="Escribe: FACTORY RESET" 
+          <input type="text" id="factory-reset-text" placeholder="${i18n.t('factoryResetPlaceholder')}" 
                  style="width: 100%; padding: 10px; margin: 10px 0; font-size: 14px; border: 2px solid #ccc; border-radius: 4px;">
         </div>
         <div class="confirm-buttons">
-          <button class="btn-confirm-cancel">Cancelar</button>
-          <button class="btn-confirm-ok">Continuar</button>
+          <button class="btn-confirm-cancel">${i18n.t('cancel')}</button>
+          <button class="btn-confirm-ok">${i18n.t('continueBtn')}</button>
         </div>
       </div>
     `;
@@ -788,7 +787,7 @@ class Personal2FAApp {
     // Handle confirm
     confirmBtn.addEventListener('click', () => {
       if (textInput.value !== 'FACTORY RESET') {
-        notificationSystem.showNotification('❌ Texto incorrecto. Debes escribir exactamente: FACTORY RESET', 'error');
+        notificationSystem.showNotification(i18n.t('factoryResetTextError'), 'error');
         return;
       }
       
@@ -807,27 +806,21 @@ class Personal2FAApp {
    */
   showFactoryResetFinalConfirmation(resolve) {
     notificationSystem.showConfirm(
-      '🚨 ÚLTIMA ADVERTENCIA - FACTORY RESET 🚨',
-      '⚠️ Estás a punto de realizar un <strong>RESET COMPLETO</strong>.<br>' +
-      'La aplicación volverá al estado inicial.<br><br>' +
-      '❌ <strong>NO PODRÁS RECUPERAR NADA</strong><br>' +
-      '❌ <strong>NO HAY COPIAS DE SEGURIDAD</strong><br>' +
-      '❌ <strong>NO HAY FORMA DE DESHACER ESTA ACCIÓN</strong><br><br>' +
-      'Una vez que hagas clic en "Ejecutar Reset", la aplicación<br>' +
-      'se reseteará completamente como si nunca la hubieras usado.',
+      i18n.t('factoryResetFinalTitle'),
+      i18n.t('factoryResetFinalMessage'),
       async () => {
         logger.log('🔄 User confirmed factory reset. Proceeding with complete reset...');
         
         // Show progress notification
         const progressId = notificationSystem.showNotification(
-          '🔄 Ejecutando Factory Reset... Por favor espera...',
+          i18n.t('factoryResetProgress'),
           'progress',
           0 // No auto-hide
         );
 
         try {
           // Update progress
-          notificationSystem.updateProgress(progressId, 'Limpiando almacenamiento local...', 25);
+          notificationSystem.updateProgress(progressId, i18n.t('factoryResetClearing'), 25);
           
           // Perform complete factory reset
           await this.performFactoryReset();
@@ -840,7 +833,7 @@ class Personal2FAApp {
           logger.error('Factory reset error, forcing cleanup:', error);
           localStorage.clear();
           sessionStorage.clear();
-          notificationSystem.updateProgress(progressId, 'Forzando limpieza...', 90);
+          notificationSystem.updateProgress(progressId, i18n.t('factoryResetForcing'), 90);
         }
         
         // Always remove progress notification and reload
@@ -849,9 +842,7 @@ class Personal2FAApp {
           
           // Show completion and reload immediately
           notificationSystem.showNotification(
-            '✅ FACTORY RESET COMPLETADO<br><br>' +
-            'La aplicación ha sido completamente reseteada.<br>' +
-            '🔄 Recargando página...',
+            i18n.t('factoryResetComplete'),
             'success',
             2000
           );
@@ -868,8 +859,8 @@ class Personal2FAApp {
         logger.log('🔒 Factory reset cancelled by user (final confirmation)');
         resolve();
       },
-      'Ejecutar Reset',
-      'Cancelar'
+      i18n.t('executeResetBtn'),
+      i18n.t('cancel')
     );
   }
 
@@ -1053,7 +1044,7 @@ class Personal2FAApp {
       this.displayExportResult(qrCodes, 'Google Authenticator Migration');
     } catch (error) {
       logger.error('❌ Google format export failed:', error);
-      this.showError('Export failed: ' + error.message);
+      this.showError(i18n.t('exportError') + error.message);
     }
   }
 
@@ -1067,7 +1058,7 @@ class Personal2FAApp {
       this.displayExportResult(qrCodes, 'Individual QR Codes');
     } catch (error) {
       logger.error('❌ Individual QR export failed:', error);
-      this.showError('Export failed: ' + error.message);
+      this.showError(i18n.t('exportError') + error.message);
     }
   }
 
@@ -1089,11 +1080,11 @@ class Personal2FAApp {
       
       URL.revokeObjectURL(url);
       
-      this.elements.exportResult.innerHTML = '<div class="success">✅ JSON backup downloaded!</div>';
+      this.elements.exportResult.innerHTML = `<div class="success">${i18n.t('jsonDownloaded')}</div>`;
       
     } catch (error) {
       logger.error('❌ JSON export failed:', error);
-      this.showError('Export failed: ' + error.message);
+      this.showError(i18n.t('exportError') + error.message);
     }
   }
 
@@ -1154,7 +1145,7 @@ class Personal2FAApp {
       
     } catch (error) {
       logger.error('❌ Failed to refresh TOTP codes:', error);
-      this.showError('Failed to load TOTP codes: ' + error.message);
+      this.showError(i18n.t('totpLoadError') + error.message);
     }
   }
 
@@ -1318,7 +1309,7 @@ class Personal2FAApp {
     this.elements.securityChecks.innerHTML = checksHtml;
     
     if (!status.isSecure) {
-      this.showError('Security warning: Web Crypto API not available. Please use HTTPS or localhost.');
+      this.showError(i18n.t('securityWarning'));
     }
   }
 

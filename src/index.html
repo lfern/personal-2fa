@@ -88,22 +88,22 @@
       
       <!-- Action Buttons -->
       <div class="action-bar">
-        <button id="import-btn" class="btn-action">📥 Importar de Google Auth</button>
-        <button id="export-btn" class="btn-action">💾 Exportar Backup</button>
-        <button id="add-manual-btn" class="btn-action">➕ Añadir Manual</button>
-        <button id="manage-data-btn" class="btn-secondary">🗑️ Gestionar Datos</button>
-        <button id="lock-btn" class="btn-secondary">🔒 Bloquear</button>
+        <button id="import-btn" class="btn-action" data-i18n="importBtn">📥 Importar de Google Auth</button>
+        <button id="export-btn" class="btn-action" data-i18n="exportBtn">💾 Exportar Backup</button>
+        <button id="add-manual-btn" class="btn-action" data-i18n="addManualBtn">➕ Añadir Manual</button>
+        <button id="manage-data-btn" class="btn-secondary" data-i18n="manageDataBtn">🗑️ Gestionar Datos</button>
+        <button id="lock-btn" class="btn-secondary" data-i18n="lockBtn">🔒 Bloquear</button>
       </div>
 
       <!-- Import Section -->
       <div id="import-section" class="section hidden">
-        <h3>📱 Importar desde Google Authenticator</h3>
+        <h3 data-i18n="importSectionTitle">📱 Importar desde Google Authenticator</h3>
         <div class="import-options">
           <div class="qr-scanner">
             <video id="qr-video" autoplay></video>
             <canvas id="qr-canvas" style="display: none;"></canvas>
-            <button id="start-camera" class="btn-primary">📹 Activar Cámara</button>
-            <button id="stop-camera" class="btn-secondary hidden">⏹️ Detener</button>
+            <button id="start-camera" class="btn-primary" data-i18n="activateCamera">📹 Activar Cámara</button>
+            <button id="stop-camera" class="btn-secondary hidden" data-i18n="stopCamera">⏹️ Detener</button>
           </div>
           <div class="scan-status">
             <div id="scan-result"></div>
@@ -113,46 +113,46 @@
 
       <!-- Export Section -->
       <div id="export-section" class="section hidden">
-        <h3>💾 Exportar para Backup</h3>
-        <p class="export-notice">
+        <h3 data-i18n="exportSectionTitle">💾 Exportar para Backup</h3>
+        <p class="export-notice" data-i18n-html="exportNotice">
           ⚠️ <strong>Importante:</strong> Este export es solo para backup. 
           Los códigos NO se guardarán en esta app, solo se generan para que puedas importarlos en otra aplicación.
         </p>
         <div class="export-options">
-          <button id="export-google-format" class="btn-primary">📱 Formato Google Authenticator</button>
-          <button id="export-individual-qr" class="btn-primary">📄 QR Individuales</button>
-          <button id="export-json-backup" class="btn-primary">📋 Backup JSON</button>
+          <button id="export-google-format" class="btn-primary" data-i18n="googleAuthFormat">📱 Formato Google Authenticator</button>
+          <button id="export-individual-qr" class="btn-primary" data-i18n="individualQRs">📄 QR Individuales</button>
+          <button id="export-json-backup" class="btn-primary" data-i18n="jsonBackup">📋 Backup JSON</button>
         </div>
         <div id="export-result" class="export-result"></div>
       </div>
 
       <!-- TOTP Codes Display -->
       <div id="codes-section" class="section">
-        <h3>🔢 Códigos de Autenticación</h3>
+        <h3 data-i18n="codesTitle">🔢 Códigos de Autenticación</h3>
         <div id="totp-list" class="totp-list">
           <!-- Los códigos TOTP se generarán aquí dinámicamente -->
         </div>
         <div id="empty-state" class="empty-state">
-          <p>No hay códigos configurados.</p>
-          <p>Importa desde Google Authenticator o añade manualmente.</p>
+          <p data-i18n="emptyStateMessage">No hay códigos configurados.</p>
+          <p data-i18n="emptyStateSubtext">Importa desde Google Authenticator o añade manualmente.</p>
         </div>
       </div>
 
       <!-- Data Management Section -->
       <div id="data-management-section" class="section hidden">
-        <h3>🗑️ Gestión de Datos</h3>
+        <h3 data-i18n="dataManagementTitle">🗑️ Gestión de Datos</h3>
         <div class="data-management-content">
           
           <!-- Developer Options -->
           <div class="dev-options">
-            <h4>⚙️ Opciones de Desarrollo</h4>
+            <h4 data-i18n="devOptions">⚙️ Opciones de Desarrollo</h4>
             <div class="option-item">
               <label class="toggle-label">
                 <input type="checkbox" id="logs-enabled-toggle">
                 <span class="toggle-slider"></span>
-                <span class="toggle-text">📝 Mostrar logs de depuración</span>
+                <span class="toggle-text" data-i18n="showDebugLogs">📝 Mostrar logs de depuración</span>
               </label>
-              <p class="option-description">
+              <p class="option-description" data-i18n="debugDescription">
                 Activa los mensajes de depuración en la consola del navegador (desactivado por defecto). 
                 Útil para desarrolladores y resolución de problemas. Los errores críticos siempre se muestran.
               </p>
@@ -161,68 +161,68 @@
 
           <!-- Danger Zone -->
           <div class="warning-box">
-            <h4>⚠️ Eliminar Todos los Datos</h4>
-            <p class="warning-text">
+            <h4 data-i18n="deleteAllDataTitle">⚠️ Eliminar Todos los Datos</h4>
+            <p class="warning-text" data-i18n-html="deleteAllDataWarning">
               Esta acción eliminará <strong>permanentemente</strong> todos los códigos 2FA y datos almacenados, 
               <strong>pero mantiene tu contraseña maestra y configuraciones básicas</strong>.
             </p>
-            <p class="warning-text">
+            <p class="warning-text" data-i18n-html="deleteAllDataNotice">
               <strong>🚨 NO HAY FORMA DE RECUPERAR LOS CÓDIGOS UNA VEZ ELIMINADOS</strong>
             </p>
-            <button id="clear-all-data" class="btn-danger">🗑️ Eliminar Todos los Datos</button>
+            <button id="clear-all-data" class="btn-danger" data-i18n="deleteAllDataBtn">🗑️ Eliminar Todos los Datos</button>
           </div>
 
           <!-- Factory Reset Zone -->
           <div class="factory-reset-box">
-            <h4>🔄 Reset Completo de la Aplicación</h4>
-            <p class="factory-reset-text">
+            <h4 data-i18n="factoryResetSectionTitle">🔄 Reset Completo de la Aplicación</h4>
+            <p class="factory-reset-text" data-i18n-html="factoryResetDescription">
               Esta acción <strong>RESETEA COMPLETAMENTE</strong> la aplicación, eliminando:
             </p>
             <ul class="factory-reset-list">
-              <li>🔐 Contraseña maestra configurada</li>
-              <li>🗑️ Todos los códigos 2FA y datos</li>
-              <li>⚙️ Todas las configuraciones y preferencias</li>
-              <li>💾 Todo el historial y caché local</li>
+              <li data-i18n="factoryResetItems.password">🔐 Contraseña maestra configurada</li>
+              <li data-i18n="factoryResetItems.codes">🗑️ Todos los códigos 2FA y datos</li>
+              <li data-i18n="factoryResetItems.settings">⚙️ Todas las configuraciones y preferencias</li>
+              <li data-i18n="factoryResetItems.history">💾 Todo el historial y caché local</li>
             </ul>
-            <p class="factory-reset-text">
+            <p class="factory-reset-text" data-i18n-html="factoryResetFinalWarning">
               <strong>🚨 LA APLICACIÓN VOLVERÁ AL ESTADO INICIAL COMO SI NUNCA SE HUBIERA USADO</strong>
             </p>
-            <button id="factory-reset" class="btn-factory-reset">🔄 Reset Completo</button>
+            <button id="factory-reset" class="btn-factory-reset" data-i18n="factoryResetBtn">🔄 Reset Completo</button>
           </div>
         </div>
       </div>
 
       <!-- Manual Add Section -->
       <div id="manual-add-section" class="section hidden">
-        <h3>➕ Añadir Código Manualmente</h3>
+        <h3 data-i18n="manualAddTitle">➕ Añadir Código Manualmente</h3>
         <form id="manual-add-form">
-          <input type="text" id="manual-issuer" placeholder="Servicio (ej: Google, GitHub)" required>
-          <input type="text" id="manual-label" placeholder="Cuenta (ej: user@gmail.com)" required>
-          <input type="text" id="manual-secret" placeholder="Código secreto (Base32)" required>
+          <input type="text" id="manual-issuer" data-i18n="servicePlaceholder" placeholder="Servicio (ej: Google, GitHub)" required>
+          <input type="text" id="manual-label" data-i18n="accountPlaceholder" placeholder="Cuenta (ej: user@gmail.com)" required>
+          <input type="text" id="manual-secret" data-i18n="secretPlaceholder" placeholder="Código secreto (Base32)" required>
           <div class="advanced-options">
             <label>
-              Algoritmo: 
+              <span data-i18n="algorithmLabel">Algoritmo:</span> 
               <select id="manual-algorithm">
-                <option value="SHA1">SHA1 (estándar)</option>
+                <option value="SHA1" data-i18n="sha1Standard">SHA1 (estándar)</option>
                 <option value="SHA256">SHA256</option>
                 <option value="SHA512">SHA512</option>
               </select>
             </label>
             <label>
-              Dígitos: 
+              <span data-i18n="digitsLabel">Dígitos:</span> 
               <select id="manual-digits">
-                <option value="6">6 (estándar)</option>
+                <option value="6" data-i18n="sixStandard">6 (estándar)</option>
                 <option value="8">8</option>
               </select>
             </label>
             <label>
-              Período: 
+              <span data-i18n="periodLabel">Período:</span> 
               <input type="number" id="manual-period" value="30" min="15" max="300">s
             </label>
           </div>
           <div class="form-actions">
-            <button type="submit" class="btn-primary">✅ Añadir Código</button>
-            <button type="button" id="cancel-manual" class="btn-secondary">❌ Cancelar</button>
+            <button type="submit" class="btn-primary" data-i18n="addCodeBtn">✅ Añadir Código</button>
+            <button type="button" id="cancel-manual" class="btn-secondary" data-i18n="cancelBtn">❌ Cancelar</button>
           </div>
         </form>
       </div>
@@ -233,7 +233,7 @@
 
   <!-- Security verification panel (dev mode) -->
   <div id="security-panel" class="security-panel">
-    <h4>🔍 Verificación de Seguridad</h4>
+    <h4 data-i18n="securityVerification">🔍 Verificación de Seguridad</h4>
     <div id="security-checks"></div>
   </div>
 
